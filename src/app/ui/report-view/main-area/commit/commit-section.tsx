@@ -14,15 +14,14 @@ function CommitSection({ commits }: CommitSectionProps) {
       {commits.map((commit) => {
         const analyses = commit.analyses as Analysis[];
 
-        const explanation = analyses.filter(
-          (analyses) => analyses.type === "explanation",
-        );
-        const codeDiffs = analyses.filter(
-          (analyses) => analyses.type === "code-diff",
-        );
-        const diagrams = analyses.filter(
-          (analyses) => analyses.type === "diagram",
-        );
+        const seen = new Set<string>();
+        const uniqueAnalyses: Analysis[] = [];
+        for (const analysis of analyses) {
+          if (!seen.has(analysis.type)) {
+            seen.add(analysis.type);
+            uniqueAnalyses.push(analysis);
+          }
+        }
 
         return (
           <div
@@ -58,9 +57,20 @@ function CommitSection({ commits }: CommitSectionProps) {
 
             <div className="p-6">
               <div className="space-y-8">
-                <Explanation data={explanation} />
-                <CodeDiff data={codeDiffs} />
-                <DiagramBox data={diagrams} />
+                {uniqueAnalyses.map((analysis) => {
+                  switch (analysis.type) {
+                    case "explanation":
+                      return (
+                        <Explanation key="explanation" data={[analysis]} />
+                      );
+                    case "code-diff":
+                      return <CodeDiff key="code-diff" data={[analysis]} />;
+                    case "diagram":
+                      return <DiagramBox key="diagram" data={[analysis]} />;
+                    default:
+                      return null;
+                  }
+                })}
               </div>
             </div>
           </div>
