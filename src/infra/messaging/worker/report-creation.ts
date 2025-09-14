@@ -4,6 +4,7 @@ import { logger } from "@/lib/logger";
 import { saveCompletedResult } from "@/infra/messaging/result-store";
 import { ReportProgress } from "@/types/job-progress";
 import { JOB_QUEUE } from "@/constants/report-job";
+import { AppError } from "@/errors";
 
 type ReportCreationJobData = {
   reportTitle: string;
@@ -26,8 +27,15 @@ const reportCreationWorker = new Worker<ReportCreationJobData, unknown>(
 
     try {
       const { createReport } = await import("@/services/reports/create-report");
+      if (!job.id) {
+        throw new AppError({
+          status: 500,
+          message: "Job ID is missing",
+        });
+      }
       const result = await createReport({
         ...job.data,
+        parentJobId: job.id,
         onProgress: reportProgress,
       });
 

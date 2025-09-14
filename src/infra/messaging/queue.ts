@@ -11,7 +11,7 @@ const { queue: reportCreationQueue, addJob: addReportCreationJob } =
   createQueue({
     queueName: "reportCreation",
     jobName: "createReportJob",
-    options: defaultOptions,
+    options: { ...defaultOptions, attempts: 1 },
   });
 
 const { queue: analysisBatchQueue, addJob: addAnalysisBatchJob } = createQueue({

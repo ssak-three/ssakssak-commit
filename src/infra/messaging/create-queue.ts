@@ -1,7 +1,7 @@
 import { JobsOptions, Queue } from "bullmq";
-import { getRedisClient } from "../cache/redis-connection";
+import { getRedisSubscriber } from "../cache/redis-connection";
 
-const connection = getRedisClient();
+const connection = getRedisSubscriber();
 
 type QueueCreationParams = {
   queueName: string;

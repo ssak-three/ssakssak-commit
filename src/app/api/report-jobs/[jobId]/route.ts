@@ -1,5 +1,5 @@
 import { AppError, NotFoundError } from "@/errors";
-import { getRedisClient } from "@/infra/cache/redis-connection";
+import { getRedisSubscriber } from "@/infra/cache/redis-connection";
 import { Queue } from "bullmq";
 import { NextRequest, NextResponse } from "next/server";
 import { JOB_QUEUE, JOB_PHASES, JOB_STATES } from "@/constants/report-job";
@@ -22,7 +22,7 @@ async function GET(
   }
 
   try {
-    const connection = getRedisClient();
+    const connection = getRedisSubscriber();
     const queue = new Queue(JOB_QUEUE.REPORT_CREATION, { connection });
     const job = await queue.getJob(jobId);
 
@@ -65,10 +65,10 @@ async function GET(
 
     return NextResponse.json(
       {
-        status: 500,
+        status: FAILED,
         message: message,
       },
-      { status, headers: { "Cache-Control": "no-store" } },
+      { status: status, headers: { "Cache-Control": "no-store" } },
     );
   }
 }

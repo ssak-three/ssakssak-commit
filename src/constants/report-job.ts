@@ -9,6 +9,7 @@ const JOB_PHASES = {
   ANALYZING: "analyzing",
   VISUALIZING: "visualizing",
   COMPLETED: "completed",
+  FAILED: "failed",
 };
 
 const JOB_STATES = {
