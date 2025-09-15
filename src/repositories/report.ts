@@ -15,8 +15,8 @@ const reportCommonFields = Prisma.validator<Prisma.ReportSelect>()({
 });
 
 async function getByReportId(userId: string, reportId: string) {
-  const report = await prisma.report.findFirst({
-    where: { reportId, userId },
+  const report = await prisma.report.findUnique({
+    where: { reportId, userId, isActive: true },
     select: {
       ...reportCommonFields,
       reportSummary: true,
