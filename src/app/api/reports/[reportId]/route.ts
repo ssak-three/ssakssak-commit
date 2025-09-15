@@ -14,7 +14,7 @@ async function GET(
   try {
     const report = await getByReportId(userId, reportId);
 
-    return NextResponse.json({ status: "ok", report }, { status: 200 });
+    return NextResponse.json({ report }, { status: 200 });
   } catch (error) {
     const message: string =
       error instanceof Error ? error.message : SYSTEM_ERROR_MESSAGES.UNEXPECTED;
