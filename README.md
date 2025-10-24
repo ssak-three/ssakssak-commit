@@ -10,6 +10,7 @@
 싹싹커밋은 GitHub 커밋 데이터를 AI로 분석하여 사용자에게 요약 및 분석 결과를 제공합니다.
 
 <br>
+<br>
 
 ## 목차
 
@@ -45,6 +46,7 @@
 
 - [👥 팀원](#-팀원)
 
+<br>
 <br>
 
 ## 📘 프로젝트 소개 <a id="프로젝트-소개"></a>
@@ -88,6 +90,7 @@ src/app 내부에 UI(Route)와 백엔드(API) 를 함께 구성하여
 프론트엔드·백엔드·DB·AI 분석 로직을 하나의 파이프라인으로 통합한 구조입니다.
 
 <br>
+<br>
 
 ## 🚀 핵심 기능 소개 <a id="핵심-기능-소개"></a>
 
@@ -96,7 +99,9 @@ src/app 내부에 UI(Route)와 백엔드(API) 를 함께 구성하여
 GitHub 레포지토리 URL 입력 시 브랜치 목록이 자동으로 조회되어 분석 대상을 간편하게 선택할 수 있습니다.  
 `Public` 및 로그인 시 `Private` 레포지토리 까지 모두 연결 가능합니다.
 
-> <img src="./public/readme/repository-input.png" width="500" alt="Repository Input" />
+<img src="./public/readme/repository-input.png" width="500" alt="Repository Input" />
+
+<br>
 
 ### 2️⃣ 리포트 생성 요청
 
@@ -108,14 +113,17 @@ AI 분석 요청과 리포트 생성이 한 번에 진행됩니다.
 - 리포트명을 입력해 원하는 이름으로 리포트 생성
 - 프로젝트 개요 작성 시 맥락 기반 AI 분석 제공
 
+<br>
+
 ### 3️⃣ 리포트 생성 진행 상태 표시
 
 리포트 생성 중인 진행 상황을 시각적으로 확인할 수 있습니다.
 
-| 분석 진행 중 | 분석 완료 |
-| ------------ | --------- |
+|                                     분석 진행 중                                     |                                      분석 완료                                       |
+| :----------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------: |
+| <img src="./public/readme/loading-polling-2.png" width="400" alt="Loading Step 2" /> | <img src="./public/readme/loading-polling-3.png" width="400" alt="Loading Step 3" /> |
 
-| <img src="./public/readme/loading-polling-2.png" width="300" alt="Loading Step 2" />| <img src="./public/readme/loading-polling-3.png" width="300" alt="Loading Step 3" /> |
+<br>
 
 ### 4️⃣ 분석 결과 리포트 제공
 
@@ -130,9 +138,9 @@ AI가 커밋을 분석해
 
 등을 리포트 형태로 시각화해 보여줍니다.
 
-> 예시 화면  
-> ![alt text](./public/readme/result-report.gif)
+![alt text](./public/readme/result-report.gif)
 
+<br>
 <br>
 
 ## 🛠️ 기술 스택 <a id="기술-스택"></a>
