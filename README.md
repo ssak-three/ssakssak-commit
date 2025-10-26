@@ -9,8 +9,8 @@
 
 싹싹커밋은 GitHub 커밋 데이터를 AI로 분석하여 사용자에게 요약 및 분석 결과를 제공합니다.
 
-<br>
-<br>
+<br />
+<br />
 
 ## 목차
 
@@ -26,7 +26,17 @@
   - [4️⃣ 분석 결과 리포트 제공](#4️⃣-분석-결과-리포트-제공)
 
 - [🏋️‍♀️ 기능 구현 방식 / 기술 챌린지](#기능-구현-방식--기술-챌린지)
-  - [김민지](#)
+  - [김민지](#김민지)
+  - [1. 대용량 커밋 로그를 안정적으로 분석하기 위한 설계](#대용량-커밋-로그를-안정적으로-분석하기-위한-설계)
+    - [1-1. 왜 커밋 로그를 나누어야 했을까?](#왜-커밋-로그를-나누어야-했을까)
+    - [1-2. 커밋을 토큰 기반으로 안정적으로 분할하려면?](#커밋을-토큰-기반으로-안정적으로-분할하려면)
+    - [1-3. 배치를 병렬로-분석하기](#배치를-병렬로-분석하기)
+    - [1-4. 배치별 결과를 병합해 ‘하나의 리포트 흐름’으로 재구성하기](#배치별-결과를-병합해-하나의-리포트-흐름으로-재구성하기)
+  - [2. 서버가 멈추지 않는 비동기 작업 처리 구조](#서버가-멈추지-않는-비동기-작업-처리-구조)
+    - [2-1. 긴 AI 분석 작업이 서버를 멈추게 만든 이유](#긴-ai-분석-작업이-서버를-멈추게-만든-이유)
+    - [2-2. Queue–Worker 구조로 요청과 처리 분리하기](#queue–worker-구조로-요청과-처리-분리하기)
+    - [2-3. 자동 재시도로 실패 복구 기반 다지기](#자동-재시도로-실패-복구-기반-다지기)
+    - [2-4. 재시작배포-시-진행-상태-유실을-막고-진행률-추적으로-상태-관리하기](#재시작배포-시-진행-상태-유실을-막고-진행률-추적으로-상태-관리하기)
   - [이한세](#)
   - [조혜주](#)
 
@@ -46,8 +56,8 @@
 
 - [👥 팀원](#-팀원)
 
-<br>
-<br>
+<br />
+<br />
 
 ## 📘 프로젝트 소개 <a id="프로젝트-소개"></a>
 
@@ -60,7 +70,7 @@ GitHub 커밋 로그를 **AI가 자동 분석·요약해 리포트로 시각화�
 - 👩‍💻 **개발자**는 자신의 개발 과정을 되돌아보는 학습 리포트로 활용할 수 있으며,
 - 👨‍🏫 **코드 리뷰어**는 커밋별 의도와 흐름을 한눈에 이해해 평가와 피드백 시간을 단축할 수 있습니다.
 
-<br>
+<br />
 
 ### 🗂️ 레포지토리 구조
 
@@ -89,8 +99,8 @@ GitHub 커밋 로그를 **AI가 자동 분석·요약해 리포트로 시각화�
 src/app 내부에 UI(Route)와 백엔드(API) 를 함께 구성하여  
 프론트엔드·백엔드·DB·AI 분석 로직을 하나의 파이프라인으로 통합한 구조입니다.
 
-<br>
-<br>
+<br />
+<br />
 
 ## 🚀 핵심 기능 소개 <a id="핵심-기능-소개"></a>
 
@@ -101,7 +111,7 @@ GitHub 레포지토리 URL 입력 시 브랜치 목록이 자동으로 조회되
 
 <img src="./public/readme/repository-input.png" width="500" alt="Repository Input" />
 
-<br>
+<br />
 
 ### 2️⃣ 리포트 생성 요청
 
@@ -113,7 +123,7 @@ AI 분석 요청과 리포트 생성이 한 번에 진행됩니다.
 - 리포트명을 입력해 원하는 이름으로 리포트 생성
 - 프로젝트 개요 작성 시 맥락 기반 AI 분석 제공
 
-<br>
+<br />
 
 ### 3️⃣ 리포트 생성 진행 상태 표시
 
@@ -123,7 +133,7 @@ AI 분석 요청과 리포트 생성이 한 번에 진행됩니다.
 | :----------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------: |
 | <img src="./public/readme/loading-polling-2.png" width="400" alt="Loading Step 2" /> | <img src="./public/readme/loading-polling-3.png" width="400" alt="Loading Step 3" /> |
 
-<br>
+<br />
 
 ### 4️⃣ 분석 결과 리포트 제공
 
@@ -140,8 +150,8 @@ AI가 커밋을 분석해
 
 ![alt text](./public/readme/result-report.gif)
 
-<br>
-<br>
+<br />
+<br />
 
 ## 🛠️ 기술 스택 <a id="기술-스택"></a>
 
@@ -180,17 +190,35 @@ AI가 커밋을 분석해
 > 🔗 세부 기술 선정 이유 및 대안 비교는 Wiki에서 확인할 수 있습니다.  
 > [프론트엔드](https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%9B%A0%EF%B8%8F-%EA%B8%B0%EC%88%A0-%EC%8A%A4%ED%83%9D#1-%EF%B8%8F-front-end) · [백엔드](https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%9B%A0%EF%B8%8F-%EA%B8%B0%EC%88%A0-%EC%8A%A4%ED%83%9D#2-%EF%B8%8F-back-end) · [데이터](https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%9B%A0%EF%B8%8F-%EA%B8%B0%EC%88%A0-%EC%8A%A4%ED%83%9D#3--%EB%8D%B0%EC%9D%B4%ED%84%B0) ·[AI & 오케스트레이션](https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%9B%A0%EF%B8%8F-%EA%B8%B0%EC%88%A0-%EC%8A%A4%ED%83%9D#4--ai--%EC%98%A4%EC%BC%80%EC%8A%A4%ED%8A%B8%EB%A0%88%EC%9D%B4%EC%85%98) · [배포](https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%9B%A0%EF%B8%8F-%EA%B8%B0%EC%88%A0-%EC%8A%A4%ED%83%9D#5--%EB%B0%B0%ED%8F%AC)
 
-<br>
+<br />
 
 ## 🏋️‍♀️ 기능 구현 방식 / 기술 챌린지 <a id="기능-구현-방식--기술-챌린지"></a>
 
-### 김민지
+> 🔗 해당 내용을 클릭하시면 Wiki에서 세부 내용을 확인할 수 있습니다.
+
+### [💁‍♀️ 김민지](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)>) <a id="김민지"></a>
+
+#### [1. 대용량 커밋 로그를 안정적으로 분석하기 위한 설계](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#1-%EB%8C%80%EC%9A%A9%EB%9F%89-%EC%BB%A4%EB%B0%8B-%EB%A1%9C%EA%B7%B8%EB%A5%BC-%EC%95%88%EC%A0%95%EC%A0%81%EC%9C%BC%EB%A1%9C-%EB%B6%84%EC%84%9D%ED%95%98%EA%B8%B0-%EC%9C%84%ED%95%9C-%EC%84%A4%EA%B3%84>) <a id="대용량-커밋-로그를-안정적으로-분석하기-위한-설계"></a>
+
+[**1-1. 왜 커밋 로그를 나누어야 했을까?**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#1-%EB%8C%80%EC%9A%A9%EB%9F%89-%EC%BB%A4%EB%B0%8B-%EB%A1%9C%EA%B7%B8%EB%A5%BC-%EC%95%88%EC%A0%95%EC%A0%81%EC%9C%BC%EB%A1%9C-%EB%B6%84%EC%84%9D%ED%95%98%EA%B8%B0-%EC%9C%84%ED%95%9C-%EC%84%A4%EA%B3%84>) <a id="왜-커밋-로그를-나누어야-했을까"></a>  
+[**1-2. 커밋을 토큰 기반으로 안정적으로 분할하려면?**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#1-2-%EC%BB%A4%EB%B0%8B%EC%9D%84-%ED%86%A0%ED%81%B0-%EA%B8%B0%EB%B0%98%EC%9C%BC%EB%A1%9C-%EC%95%88%EC%A0%95%EC%A0%81%EC%9C%BC%EB%A1%9C-%EB%B6%84%ED%95%A0%ED%95%98%EB%A0%A4%EB%A9%B4>) <a id="커밋을-토큰-기반으로-안정적으로-분할하려면"></a>  
+[**1-3. 배치를 병렬로 분석하기**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#1-3-%EB%B0%B0%EC%B9%98%EB%A5%BC-%EB%B3%91%EB%A0%AC-%EB%B6%84%EC%84%9D%ED%95%98%EA%B8%B0>) <a id="배치를-병렬로-분석하기"></a>  
+[**1-4. 배치별 결과를 병합해 ‘하나의 리포트 흐름’으로 재구성하기**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#1-4-%EB%B0%B0%EC%B9%98%EB%B3%84-%EA%B2%B0%EA%B3%BC%EB%A5%BC-%EB%B3%91%ED%95%A9%ED%95%B4-%ED%95%98%EB%82%98%EC%9D%98-%EB%A6%AC%ED%8F%AC%ED%8A%B8-%ED%9D%90%EB%A6%84%EC%9C%BC%EB%A1%9C-%EC%9E%AC%EA%B5%AC%EC%84%B1%ED%95%98%EA%B8%B0>) <a id="배치별-결과를-병합해-하나의-리포트-흐름으로-재구성하기"></a>
+
+#### [2. 서버가 멈추지 않는 비동기 작업 처리 구조](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#2-%EC%84%9C%EB%B2%84%EA%B0%80-%EB%A9%88%EC%B6%94%EC%A7%80-%EC%95%8A%EB%8A%94-%EB%B9%84%EB%8F%99%EA%B8%B0-%EC%9E%91%EC%97%85-%EC%B2%98%EB%A6%AC-%EA%B5%AC%EC%A1%B0>) <a id="서버가-멈추지-않는-비동기-작업-처리-구조"></a>
+
+[**2-1. 긴 AI 분석 작업이 서버를 멈추게 만든 이유**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#2-%EC%84%9C%EB%B2%84%EA%B0%80-%EB%A9%88%EC%B6%94%EC%A7%80-%EC%95%8A%EB%8A%94-%EB%B9%84%EB%8F%99%EA%B8%B0-%EC%9E%91%EC%97%85-%EC%B2%98%EB%A6%AC-%EA%B5%AC%EC%A1%B0>) <a id="긴-ai-분석-작업이-서버를-멈추게-만든-이유"></a>  
+[**2-2. Queue–Worker 구조로 요청과 처리 분리하기**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#2-%EC%84%9C%EB%B2%84%EA%B0%80-%EB%A9%88%EC%B6%94%EC%A7%80-%EC%95%8A%EB%8A%94-%EB%B9%84%EB%8F%99%EA%B8%B0-%EC%9E%91%EC%97%85-%EC%B2%98%EB%A6%AC-%EA%B5%AC%EC%A1%B0>) <a id="queue–worker-구조로-요청과-처리-분리하기"></a>  
+[**2-3. 자동 재시도로 실패 복구 기반 다지기**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#2-%EC%84%9C%EB%B2%84%EA%B0%80-%EB%A9%88%EC%B6%94%EC%A7%80-%EC%95%8A%EB%8A%94-%EB%B9%84%EB%8F%99%EA%B8%B0-%EC%9E%91%EC%97%85-%EC%B2%98%EB%A6%AC-%EA%B5%AC%EC%A1%B0>) <a id="자동-재시도로-실패-복구-기반-다지기"></a>  
+[**2-4. 재시작/배포 시 진행 상태 유실을 막고 진행률 추적으로 상태 관리하기**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#2-%EC%84%9C%EB%B2%84%EA%B0%80-%EB%A9%88%EC%B6%94%EC%A7%80-%EC%95%8A%EB%8A%94-%EB%B9%84%EB%8F%99%EA%B8%B0-%EC%9E%91%EC%97%85-%EC%B2%98%EB%A6%AC-%EA%B5%AC%EC%A1%B0>) <a id="재시작배포-시-진행-상태-유실을-막고-진행률-추적으로-상태-관리하기"></a>
+
+<br />
 
 ### [이한세](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8E%AF-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%9D%B4%ED%95%9C%EC%84%B8)>)
 
 ### 조혜주
 
-<br>
+<br />
 
 ## 🪄 작업 방식 / 회고 <a id="작업-방식--회고"></a>
 
@@ -244,7 +272,7 @@ AI가 커밋을 분석해
   따라서 팀 프로젝트에서는 안정성과 기록 일관성을 우선시해 Merge 방식을 선택했습니다.
 </details>
 
-<br>
+<br />
 
 ---
 
@@ -265,7 +293,7 @@ AI가 커밋을 분석해
 
 > 💬 **PR은 변경 의도와 배경을 함께 기록하여, 나중에 히스토리를 읽는 사람도 이해할 수 있도록 작성합니다.**
 
-<br>
+<br />
 
 ### 💭 개인별 회고
 
