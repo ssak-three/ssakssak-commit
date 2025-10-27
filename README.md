@@ -222,7 +222,30 @@ AI가 커밋을 분석해
 
 <br />
 
-### [💁 이한세](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8E%AF-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%9D%B4%ED%95%9C%EC%84%B8)>)
+### [💁 이한세](<Wiki 링크>)
+
+#### [1. GitHub API 기반 커밋 데이터 수집 파이프라인](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%9D%B4%ED%95%9C%EC%84%B8)#-github-api-%EA%B8%B0%EB%B0%98-%EC%BB%A4%EB%B0%8B-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%88%98%EC%A7%91-%ED%8C%8C%EC%9D%B4%ED%94%84%EB%9D%BC%EC%9D%B8>)
+
+[**1-1. TypeScript 타입 안정성 확보**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%9D%B4%ED%95%9C%EC%84%B8)#-%EA%B8%B0%EC%88%A0%EC%A0%81-%EC%B1%8C%EB%A6%B0%EC%A7%80>)  
+[**1-2. GitHub API 파라미터 명명 규칙**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%9D%B4%ED%95%9C%EC%84%B8)#2-github-api-%ED%8C%8C%EB%9D%BC%EB%AF%B8%ED%84%B0-%EB%AA%85%EB%AA%85-%EA%B7%9C%EC%B9%99>)  
+[**1-3. GitHub API Rate Limit 실시간 관리**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%9D%B4%ED%95%9C%EC%84%B8)#3-github-api-rate-limit-%EC%8B%A4%EC%8B%9C%EA%B0%84-%EA%B4%80%EB%A6%AC>)
+
+#### [2. 폴링 기반 리포트 생성 상태 실시간 전달](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%9D%B4%ED%95%9C%EC%84%B8)#-%ED%8F%B4%EB%A7%81-%EA%B8%B0%EB%B0%98-%EB%A6%AC%ED%8F%AC%ED%8A%B8-%EC%83%9D%EC%84%B1-%EC%83%81%ED%83%9C-%EC%8B%A4%EC%8B%9C%EA%B0%84-%EC%A0%84%EB%8B%AC>)
+
+[**2-1. 3단계 상태 관리 설계**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%9D%B4%ED%95%9C%EC%84%B8)#1-3%EB%8B%A8%EA%B3%84-%EC%83%81%ED%83%9C-%EA%B4%80%EB%A6%AC-%EC%84%A4%EA%B3%84>)  
+[**2-2. 폴링 로직 구현**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%9D%B4%ED%95%9C%EC%84%B8)#2-%ED%8F%B4%EB%A7%81-%EB%A1%9C%EC%A7%81-%EA%B5%AC%ED%98%84>)  
+[**2-3. 시각적 진행 표시**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%9D%B4%ED%95%9C%EC%84%B8)#3-%EC%8B%9C%EA%B0%81%EC%A0%81-%EC%A7%84%ED%96%89-%ED%91%9C%EC%8B%9C>)
+[**2-4. 서버측 상태 관리 API**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%9D%B4%ED%95%9C%EC%84%B8)#4-%EC%84%9C%EB%B2%84-%EC%B8%A1-%EC%83%81%ED%83%9C-%EA%B4%80%EB%A6%AC-api>)
+
+#### [3. Monaco Editor와 다층 구조로 분석 결과 시각화](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%9D%B4%ED%95%9C%EC%84%B8)#-monaco-editor%EC%99%80-%EB%8B%A4%EC%B8%B5-%EA%B5%AC%EC%A1%B0%EB%A1%9C-%EB%B6%84%EC%84%9D-%EA%B2%B0%EA%B3%BC-%EC%8B%9C%EA%B0%81%ED%99%94>)
+
+[**3-1. Monaco Editor로 코드 변경 사항 시각화**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%9D%B4%ED%95%9C%EC%84%B8)#1-monaco-editor%EB%A1%9C-%EC%BD%94%EB%93%9C-%EB%B3%80%EA%B2%BD-%EC%82%AC%ED%95%AD-%EC%8B%9C%EA%B0%81%ED%99%94>)  
+[**3-2. 기술적 챌린지**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%9D%B4%ED%95%9C%EC%84%B8)#2-%EA%B8%B0%EC%88%A0%EC%A0%81-%EC%B1%8C%EB%A6%B0%EC%A7%80>)  
+[**3-3. Mermaid 다이어그램**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%9D%B4%ED%95%9C%EC%84%B8)#3-mermaid-%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8%EC%9C%BC%EB%A1%9C-%EC%BB%A4%EB%B0%8B-%ED%9D%90%EB%A6%84-%EC%8B%9C%EA%B0%81%ED%99%94>)  
+[**3-4. 텍스트 분석 요약**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%9D%B4%ED%95%9C%EC%84%B8)#4-%ED%85%8D%EC%8A%A4%ED%8A%B8-%EB%B6%84%EC%84%9D-%EC%9A%94%EC%95%BD>)  
+[**3-5. 분석 결과 페이지 통합**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%9D%B4%ED%95%9C%EC%84%B8)#5-%EB%B6%84%EC%84%9D-%EA%B2%B0%EA%B3%BC-%ED%8E%98%EC%9D%B4%EC%A7%80-%ED%86%B5%ED%95%A9>)
+
+<br/>
 
 ### [💁‍♀️ 조혜주](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%A1%B0%ED%98%9C%EC%A3%BC)>)
 
