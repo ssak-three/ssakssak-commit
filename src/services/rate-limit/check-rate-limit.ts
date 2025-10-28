@@ -21,7 +21,7 @@ const checkRateLimit = async (): Promise<
         resetTime,
       );
 
-      throw new TooManyRequestsError(message);
+      throw new TooManyRequestsError({ message });
     }
 
     return {

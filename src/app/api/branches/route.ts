@@ -3,15 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { validateRepositoryUrl } from "@/lib/validators/repository-url";
 import AppError from "@/errors/app-error";
 import { BranchName } from "@/app/types/branch";
-import { checkRateLimit } from "@/services/rate-limit/check-rate-limit";
 
 async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const repositoryUrl: string = validateRepositoryUrl(
       request.nextUrl.searchParams,
     );
-
-    await checkRateLimit();
 
     const branches: BranchName[] = await getBranchList(repositoryUrl);
 

@@ -71,7 +71,7 @@ const DATA_ERROR_MESSAGES = {
 
 const RATE_LIMIT_MESSAGES = {
   INSUFFICIENT_REQUESTS:
-    "너무 많은 요청을 하셨습니다. 로그인하시거나, {resetTime} 이후에 다시 시도해주세요.",
+    "현재 비회원 이용 한도가 초과되었습니다. 로그인 후 다시 시도하거나 {restTime} 이후에 이용해주세요.",
 };
 
 export {

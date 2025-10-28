@@ -1,10 +1,12 @@
 import AppError from "./app-error";
+import { ErrorArgs } from "@/app/types/error-args";
 
 class TooManyRequestsError extends AppError {
-  constructor(message: string) {
-    super({ message, status: 429 });
-
-    this.name = "TooManyRequestsError";
+  constructor(args: Omit<ErrorArgs, "status">) {
+    super({
+      status: 429,
+      ...args,
+    });
   }
 }
 
