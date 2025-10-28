@@ -1,5 +1,8 @@
-import { SYSTEM_ERROR_MESSAGES } from "@/constants/error-messages";
-import { AppError } from "@/errors";
+import {
+  REPORT_ERROR_MESSAGES,
+  SYSTEM_ERROR_MESSAGES,
+} from "@/constants/error-messages";
+import { AppError, NotFoundError } from "@/errors";
 import { requireUserId } from "@/lib/auth/require-session";
 import { getByReportId } from "@/repositories/report";
 import { NextRequest, NextResponse } from "next/server";
@@ -13,6 +16,10 @@ async function GET(
 
   try {
     const report = await getByReportId(userId, reportId);
+
+    if (!report) {
+      throw new NotFoundError({ message: REPORT_ERROR_MESSAGES.NOT_FOUND });
+    }
 
     return NextResponse.json({ report }, { status: 200 });
   } catch (error) {
