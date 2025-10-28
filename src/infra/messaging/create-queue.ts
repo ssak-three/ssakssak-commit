@@ -9,10 +9,14 @@ type QueueCreationParams = {
   options: JobsOptions;
 };
 
-const createQueue = ({ queueName, jobName, options }: QueueCreationParams) => {
+const createQueue = <T>({
+  queueName,
+  jobName,
+  options,
+}: QueueCreationParams) => {
   const queue = new Queue(queueName, { connection });
 
-  const addJob = async (data: unknown) => {
+  const addJob = async (data: T) => {
     return await queue.add(jobName, data, {
       ...options,
     });
