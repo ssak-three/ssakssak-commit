@@ -4,6 +4,7 @@ import { analysisBatchQueue } from "@/infra/messaging/queue";
 import createQueueEvents from "@/infra/messaging/queue-events";
 import { GithubCommit } from "@/types/commit";
 import { ReportProgress } from "@/types/job-progress";
+import { JOB } from "@/constants/report-job";
 
 const analyzeCommitBatchesQueued = async ({
   parentJobId,
@@ -18,7 +19,7 @@ const analyzeCommitBatchesQueued = async ({
 }) => {
   const jobs = await analysisBatchQueue.addBulk(
     commitBatches.map((batch, index) => ({
-      name: "analysisBatchJob",
+      name: JOB.ANALYSIS_BATCH,
       data: {
         parentJobId,
         batchIndex: index,

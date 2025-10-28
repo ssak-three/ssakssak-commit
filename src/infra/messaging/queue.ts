@@ -1,4 +1,5 @@
 import createQueue from "./create-queue";
+import { JOB_QUEUE, JOB } from "@/constants/report-job";
 
 const defaultOptions = {
   attempts: 3,
@@ -9,14 +10,14 @@ const defaultOptions = {
 
 const { queue: reportCreationQueue, addJob: addReportCreationJob } =
   createQueue({
-    queueName: "reportCreation",
-    jobName: "createReportJob",
+    queueName: JOB_QUEUE.REPORT_CREATION,
+    jobName: JOB.CREATE_REPORT,
     options: { ...defaultOptions, attempts: 1 },
   });
 
 const { queue: analysisBatchQueue, addJob: addAnalysisBatchJob } = createQueue({
-  queueName: "analysisBatch",
-  jobName: "analysisBatchJob",
+  queueName: JOB_QUEUE.ANALYSIS_BATCH,
+  jobName: JOB.ANALYSIS_BATCH,
   options: defaultOptions,
 });
 
