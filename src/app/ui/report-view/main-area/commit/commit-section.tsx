@@ -4,6 +4,12 @@ import CodeDiff from "@/app/ui/report-view/main-area/commit/code-diff";
 import DiagramBox from "@/app/ui/report-view/main-area/commit/diagram-box";
 import Explanation from "@/app/ui/report-view/main-area/commit/explanation";
 
+const ANALYSIS_TYPES = {
+  EXPLANATION: "explanation",
+  CODE_DIFF: "code-diff",
+  DIAGRAM: "diagram",
+} as const;
+
 interface CommitSectionProps {
   commits: CommitDetail[];
 }
@@ -13,15 +19,6 @@ function CommitSection({ commits }: CommitSectionProps) {
     <div className="space-y-6">
       {commits.map((commit) => {
         const analyses = commit.analyses as Analysis[];
-
-        const seen = new Set<string>();
-        const uniqueAnalyses: Analysis[] = [];
-        for (const analysis of analyses) {
-          if (!seen.has(analysis.type)) {
-            seen.add(analysis.type);
-            uniqueAnalyses.push(analysis);
-          }
-        }
 
         return (
           <div
@@ -57,16 +54,16 @@ function CommitSection({ commits }: CommitSectionProps) {
 
             <div className="p-6">
               <div className="space-y-8">
-                {uniqueAnalyses.map((analysis) => {
+                {analyses.map((analysis, index) => {
+                  const key = `${commit.commitId}-${analysis.type}-${index}`;
+
                   switch (analysis.type) {
-                    case "explanation":
-                      return (
-                        <Explanation key="explanation" data={[analysis]} />
-                      );
-                    case "code-diff":
-                      return <CodeDiff key="code-diff" data={[analysis]} />;
-                    case "diagram":
-                      return <DiagramBox key="diagram" data={[analysis]} />;
+                    case ANALYSIS_TYPES.EXPLANATION:
+                      return <Explanation key={key} data={[analysis]} />;
+                    case ANALYSIS_TYPES.CODE_DIFF:
+                      return <CodeDiff key={key} data={[analysis]} />;
+                    case ANALYSIS_TYPES.DIAGRAM:
+                      return <DiagramBox key={key} data={[analysis]} />;
                     default:
                       return null;
                   }
