@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { useReportHistory } from "@/hooks/useVerifiedContext";
 import handleApiError from "@/lib/handle-api-error";
 import { AlertModal } from "@/app/ui/common/Modal";
+import { cookieUtils } from "@/lib/util/cookie-utils";
 
 function ReportForm() {
   const router = useRouter();
@@ -95,11 +96,8 @@ function ReportForm() {
         return;
       }
 
-      const { result } = resultData;
-      const id = crypto.randomUUID();
-      sessionStorage.setItem(`guest:report:${id}`, JSON.stringify(result));
-
-      router.replace(`/report-view/${id}`);
+      const { jobId } = resultData;
+      cookieUtils.setJobId(jobId);
     } catch {
       setErrorText(SYSTEM_ERROR_MESSAGES.NETWORK);
       setIsSubmitting(false);

@@ -46,6 +46,7 @@ const createReport = async ({
   const commitAnalysisResults = await getAnalysisResults(
     commitDetailsList,
     repositoryOverview,
+    onProgress,
   );
 
   await onProgress({ phase: "visualizing" });

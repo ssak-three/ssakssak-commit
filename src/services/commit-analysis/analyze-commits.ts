@@ -14,6 +14,7 @@ import { structuredTextGenerator } from "@/infra/integrations/openai/openai-clie
 import createInputBlocks from "@/infra/integrations/openai/helpers/create-input-blocks";
 import sortMergedResultsByCommitDate from "./helpers/sort-merged-results";
 import extractCommitSummaries from "./helpers/extract-commit-summaries";
+import { ReportProgress } from "@/types/job-progress";
 
 interface ExtractedCommitSummaries {
   commitId: string;
@@ -28,6 +29,7 @@ const { COMMIT_ANALYSIS_REQUEST, OVERALL_ANALYSIS_REQUEST } =
 const getAnalysisResults = async (
   commits: GithubCommit[],
   repositoryOverview: string | undefined,
+  onProgress?: ReportProgress,
 ) => {
   const commitBatches = chunkCommitsByTokens(
     commits,
@@ -36,6 +38,7 @@ const getAnalysisResults = async (
   const resultPerBatch = await analyzeCommitBatches(
     commitBatches,
     repositoryOverview,
+    onProgress,
   );
 
   const mergedResults = resultPerBatch.flatMap((result) => result.commits);
@@ -69,8 +72,11 @@ const getAnalysisResults = async (
 const analyzeCommitBatches = async (
   commitBatches: GithubCommit[][],
   repositoryOverview?: string,
+  onProgress?: ReportProgress,
 ) => {
-  return Promise.all(
+  let completedCount = 0;
+
+  const results = await Promise.all(
     commitBatches.map(async (batch, index) => {
       logger.info(
         { batchIndex: index, commitCount: batch.length },
@@ -78,6 +84,18 @@ const analyzeCommitBatches = async (
       );
 
       const result = await requestCommitAnalysis(batch, repositoryOverview);
+
+      completedCount++;
+      if (onProgress) {
+        await onProgress({
+          phase: "analyzing",
+          meta: {
+            done: completedCount,
+            total: commitBatches.length,
+            percent: Math.round((completedCount / commitBatches.length) * 100),
+          },
+        });
+      }
 
       logger.info(
         { batchIndex: index, commitCount: batch.length },
@@ -87,6 +105,8 @@ const analyzeCommitBatches = async (
       return result;
     }),
   );
+
+  return results;
 };
 
 const requestCommitAnalysis = async (
