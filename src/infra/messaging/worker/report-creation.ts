@@ -62,7 +62,7 @@ reportCreationWorker.on("ready", () => {
   logger.info("Worker connected to Redis and ready!");
 });
 
-reportCreationWorker.on("completed", async (job) => {
+reportCreationWorker.on("completed", (job) => {
   logger.info(`${job.id} has completed!`);
 });
 
