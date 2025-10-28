@@ -1,4 +1,5 @@
 import { JOB_QUEUE } from "@/constants/report-job";
+import { WORKER_CONCURRENCY } from "@/constants/worker-config";
 import { getRedisSubscriber } from "@/infra/cache/redis-connection";
 import { logger } from "@/lib/logger";
 import { GithubCommit } from "@/types/commit";
@@ -38,7 +39,7 @@ const analysisBatchWorker = new Worker(
 
     return result;
   },
-  { connection, concurrency: 5 },
+  { connection, concurrency: WORKER_CONCURRENCY.ANALYSIS_BATCH },
 );
 
 analysisBatchWorker.on("ready", () => {

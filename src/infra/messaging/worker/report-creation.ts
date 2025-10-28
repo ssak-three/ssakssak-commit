@@ -5,6 +5,7 @@ import { saveCompletedResult } from "@/infra/messaging/result-store";
 import { ReportProgress } from "@/types/job-progress";
 import { JOB_QUEUE } from "@/constants/report-job";
 import { AppError } from "@/errors";
+import { WORKER_CONCURRENCY } from "@/constants/worker-config";
 
 type ReportCreationJobData = {
   reportTitle: string;
@@ -53,7 +54,7 @@ const reportCreationWorker = new Worker<ReportCreationJobData, unknown>(
       throw error;
     }
   },
-  { connection, concurrency: 3 },
+  { connection, concurrency: WORKER_CONCURRENCY.REPORT_CREATION },
 );
 
 reportCreationWorker.on("ready", () => {
