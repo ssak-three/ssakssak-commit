@@ -3,9 +3,10 @@ import { getRedisSubscriber } from "@/infra/cache/redis-connection";
 import { logger } from "@/lib/logger";
 import { saveCompletedResult } from "@/infra/messaging/result-store";
 import { ReportProgress } from "@/types/job-progress";
-import { JOB_QUEUE } from "@/constants/report-job";
+import { JOB_PHASES, JOB_QUEUE } from "@/constants/report-job";
 import { AppError } from "@/errors";
 import { WORKER_CONCURRENCY } from "@/constants/worker-config";
+import { JOB_ERROR_MESSAGES } from "@/constants/error-messages";
 
 type ReportCreationJobData = {
   reportTitle: string;
@@ -31,7 +32,7 @@ const reportCreationWorker = new Worker<ReportCreationJobData, unknown>(
       if (!job.id) {
         throw new AppError({
           status: 500,
-          message: "Job ID is missing",
+          message: JOB_ERROR_MESSAGES.JOB_ID_REQUIRED,
         });
       }
       const result = await createReport({
@@ -46,7 +47,7 @@ const reportCreationWorker = new Worker<ReportCreationJobData, unknown>(
         result,
       );
       logger.info(`[job ${job.id}] DONE`);
-      await reportProgress({ phase: "completed" });
+      await reportProgress({ phase: JOB_PHASES.COMPLETED });
 
       return { reportKey };
     } catch (error) {
