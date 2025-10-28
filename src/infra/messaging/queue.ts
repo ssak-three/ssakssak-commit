@@ -22,6 +22,7 @@ const { queue: analysisBatchQueue, addJob: addAnalysisBatchJob } = createQueue({
 });
 
 export {
+  defaultOptions,
   reportCreationQueue,
   addReportCreationJob,
   analysisBatchQueue,
