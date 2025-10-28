@@ -9,7 +9,7 @@ datasource db {
 
 model User {
   userId          String          @id @default(dbgenerated("gen_random_uuid()")) @map("user_id") @db.Uuid
-  githubId        BigInt          @unique @map("github_id")
+  githubId        String          @unique @map("github_id")
   userEmail       String          @unique @map("user_email")
   userName        String          @map("user_name")
   avatarUrl       String?         @map("avatar_url")
@@ -44,7 +44,6 @@ model Repository {
   repositoryOwner     String   @map("repository_owner")
   repositoryUrl       String   @map("repository_url")
   visibility          String
-  encryptedCredential Bytes?   @map("encrypted_credential")
   connectedStatus     String   @default("connected") @map("connected_status")
   isActive            Boolean  @default(true) @map("is_active")
   createdAt           DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
@@ -57,7 +56,7 @@ model Repository {
 model Report {
   reportId          String    @id @default(dbgenerated("gen_random_uuid()")) @map("report_id")@db.Uuid
   userId            String?   @map("user_id") @db.Uuid
-  reportTitle       String    @map("report_title") @db.VarChar(100)
+  reportTitle       String    @map("report_title") @db.VarChar(30)
   reportSummary     String    @map("report_summary") @db.Text
   reportConclusion  String    @map("report_conclusion") @db.Text
   owner             String    @map("owner") @db.VarChar(50)

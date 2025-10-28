@@ -4,7 +4,7 @@ import authOptions from "@/lib/auth/auth-options";
 import { createReport } from "@/services/reports/create-report";
 import { validateReportInput } from "@/lib/validators/report-fields";
 import AppError from "@/errors/app-error";
-import { saveAnalysisReport } from "@/services/database/save-report";
+import { saveAnalysisReport } from "@/services/reports/save-report";
 import { getToken } from "next-auth/jwt";
 
 async function POST(request: NextRequest): Promise<NextResponse> {

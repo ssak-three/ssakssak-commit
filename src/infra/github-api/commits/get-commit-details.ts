@@ -1,7 +1,6 @@
 import { Octokit } from "octokit";
 import { Endpoints } from "@octokit/types";
-import { CommitFile } from "@/app/types/commit";
-import { GithubCommit } from "@/app/types/commit";
+import { CommitFile, GithubCommit } from "@/app/types/commit";
 import { GITHUB_API } from "@/constants/github-api";
 import { EXCLUDED_FILES_LIST } from "@/constants/file-filters";
 import { shouldExcludeFile } from "@/lib/file-filter";
