@@ -22,6 +22,12 @@ const statusColors = {
   pending: "bg-gray-50 border-gray-200 text-gray-500",
 } as const;
 
+const statusIconColors = {
+  completed: "bg-green-500 text-white",
+  inProgress: "bg-blue-500 text-white",
+  pending: "bg-gray-300 text-gray-600",
+} as const;
+
 const JobProgressItem: React.FC<JobProgressItemProps> = ({
   status,
   icon: Icon,
@@ -33,13 +39,7 @@ const JobProgressItem: React.FC<JobProgressItemProps> = ({
       className={`flex items-center rounded-lg border p-3 ${statusColors[status]} transition-all duration-500`}
     >
       <div
-        className={`flex h-8 w-8 items-center justify-center rounded-full ${
-          status === "completed"
-            ? "bg-green-500 text-white"
-            : status === "inProgress"
-              ? "bg-blue-500 text-white"
-              : "bg-gray-300 text-gray-600"
-        }`}
+        className={`flex h-8 w-8 items-center justify-center rounded-full ${statusIconColors[status]}`}
       >
         {status === "completed" ? (
           <CheckCircle className="h-5 w-5" />

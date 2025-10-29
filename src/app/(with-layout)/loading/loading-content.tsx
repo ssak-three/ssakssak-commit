@@ -13,6 +13,8 @@ import {
 } from "@/app/ui/common/loading/status-card";
 import { Phase } from "@/types/job";
 
+const PHASES = ["collecting", "analyzing", "visualizing"] as const;
+
 const phaseLabels: Record<Phase, string> = {
   collecting: "커밋 데이터 수집",
   analyzing: "커밋 분석",
@@ -48,9 +50,8 @@ const LoadingContent: React.FC = () => {
     if (!currentJob?.progress) return "pending";
 
     const currentPhase = currentJob.progress.phase;
-    const order: Phase[] = ["collecting", "analyzing", "visualizing"];
-    const currentIndex = order.indexOf(currentPhase);
-    const phaseIndex = order.indexOf(phase);
+    const currentIndex = PHASES.indexOf(currentPhase);
+    const phaseIndex = PHASES.indexOf(phase);
 
     if (phaseIndex < currentIndex) return "completed";
     if (phaseIndex === currentIndex) return "inProgress";
@@ -71,7 +72,7 @@ const LoadingContent: React.FC = () => {
 
   return (
     <div className="flex w-[320px] flex-col gap-3">
-      {(["collecting", "analyzing", "visualizing"] as Phase[]).map((phase) => (
+      {PHASES.map((phase) => (
         <JobProgressItem
           key={phase}
           phase={phase}
@@ -80,7 +81,10 @@ const LoadingContent: React.FC = () => {
           label={phaseLabels[phase]}
           progressInfo={
             getPhaseStatus(phase) === "inProgress"
-              ? currentJob.progress?.meta
+              ? (currentJob.progress?.meta ??
+                (currentJob.derivedPercent !== undefined
+                  ? { percent: currentJob.derivedPercent }
+                  : undefined))
               : undefined
           }
         />

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { JobResponse } from "@/types/job";
 import { jobStatusService } from "@/services/polling/job-status-service";
 import { cookieUtils } from "@/lib/util/cookie-utils";
+import { JOB_ERROR_MESSAGES } from "@/constants/error-messages";
 
 interface UseJobStatusReturn {
   currentJob: JobResponse | null;
@@ -24,7 +25,7 @@ const useJobStatus = (): UseJobStatusReturn => {
 
       return data.status === "completed" || data.status === "failed";
     } catch {
-      setError("서버와의 통신에 실패했습니다.");
+      setError(JOB_ERROR_MESSAGES.NETWORK_FAILED);
       return true;
     }
   }, []);
@@ -38,7 +39,7 @@ const useJobStatus = (): UseJobStatusReturn => {
       const jobId = cookieUtils.getJobId();
 
       if (!jobId) {
-        setError("작업 ID를 찾을 수 없습니다.");
+        setError(JOB_ERROR_MESSAGES.JOB_ID_NOT_FOUND);
         setIsLoading(false);
         return;
       }
