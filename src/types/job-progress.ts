@@ -1,16 +1,12 @@
-type ProgressPhase =
-  | "pending"
-  | "collecting"
-  | "analyzing"
-  | "visualizing"
-  | "completed"
-  | "failed";
+import { JOB_PHASES } from "@/constants/report-job";
 
-type ProgreessPayload = {
+type ProgressPhase = (typeof JOB_PHASES)[keyof typeof JOB_PHASES];
+
+type ProgressPayload = {
   phase: ProgressPhase;
   meta?: Record<string, unknown>;
 };
 
-type ReportProgress = (progress: ProgreessPayload) => Promise<void> | void;
+type ReportProgress = (progress: ProgressPayload) => Promise<void> | void;
 
 export type { ProgressPhase, ReportProgress };

@@ -27,6 +27,7 @@ const SYSTEM_ERROR_MESSAGES = {
   SERVER: "서버 오류가 발생했습니다.",
   NETWORK: "네트워크 에러가 발생했습니다. 잠시 후 다시 시도해 주세요.",
   UNKNOWN: "알 수 없는 오류가 발생했습니다.",
+  UNEXPECTED: "예상치 못한 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
 };
 
 const MERMAID_ERROR_MESSAGES = {
@@ -47,6 +48,7 @@ const AUTH_ERROR_MESSAGES = {
   UNKNOWN: "로그인 처리 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.",
   SESSION_EXPIRED:
     "세션이 만료되었거나 올바르지 않습니다. 로그인 후 이용해 주세요.",
+  UNAUTHORIZED: "로그인이 필요합니다.",
 };
 
 const OPENAI_ERROR_MESSAGES = {
@@ -71,9 +73,17 @@ const DATA_ERROR_MESSAGES = {
   DELETE: "삭제를 실패했습니다. 잠시 후 다시 시도해 주세요.",
 };
 
+const RATE_LIMIT_MESSAGES = {
+  INSUFFICIENT_REQUESTS:
+    "현재 비회원 이용 한도가 초과되었습니다. 로그인 후 다시 시도하거나 {restTime} 이후에 이용해주세요.",
+};
 const JOB_ERROR_MESSAGES = {
   JOB_ID_REQUIRED: "jobId 값이 필요합니다.",
   NOT_FOUND: "해당 작업을 찾을 수 없습니다",
+};
+
+const REPORT_ERROR_MESSAGES = {
+  NOT_FOUND: "요청하신 리포트를 찾을 수 없습니다.",
 };
 
 export {
@@ -86,5 +96,7 @@ export {
   AUTH_ERROR_MESSAGES,
   PROVIDER_ERROR_MESSAGES,
   DATA_ERROR_MESSAGES,
+  RATE_LIMIT_MESSAGES,
   JOB_ERROR_MESSAGES,
+  REPORT_ERROR_MESSAGES,
 };

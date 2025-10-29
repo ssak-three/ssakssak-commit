@@ -6,6 +6,7 @@ import { z } from "zod";
 import { analysisResultSchema } from "@/lib/validators/structured-analysis-result";
 type AnalysisResult = z.infer<typeof analysisResultSchema>;
 import { ReportProgress } from "@/types/job-progress";
+import { JOB_PHASES } from "@/constants/report-job";
 
 type CreateReportParams = {
   accessToken?: string;
@@ -13,6 +14,7 @@ type CreateReportParams = {
   repositoryUrl: string;
   branch: string;
   repositoryOverview: string;
+  parentJobId: string;
   onProgress: ReportProgress;
 };
 
@@ -22,11 +24,12 @@ const createReport = async ({
   branch,
   repositoryOverview,
   accessToken,
+  parentJobId,
   onProgress,
 }: CreateReportParams): Promise<AnalysisResult> => {
   const { owner, repositoryName } = parseRepositoryUrl(repositoryUrl);
 
-  await onProgress({ phase: "collecting" });
+  await onProgress({ phase: JOB_PHASES.COLLECTING });
   const commitList = await getGithubCommitList(
     owner,
     repositoryName,
@@ -42,14 +45,15 @@ const createReport = async ({
     accessToken,
   );
 
-  await onProgress({ phase: "analyzing" });
-  const commitAnalysisResults = await getAnalysisResults(
-    commitDetailsList,
+  await onProgress({ phase: JOB_PHASES.ANALYZING });
+  const commitAnalysisResults = await getAnalysisResults({
+    commits: commitDetailsList,
     repositoryOverview,
-  );
+    parentJobId,
+    onProgress,
+  });
 
-  await onProgress({ phase: "visualizing" });
-
+  await onProgress({ phase: JOB_PHASES.VISUALIZING });
   const commitsWithLink = commitAnalysisResults.commits.map((commit) => ({
     ...commit,
     commitLink: repositoryUrl.replace(/\/$/, "") + `/commit/${commit.commitId}`,
