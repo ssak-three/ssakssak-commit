@@ -1,4 +1,5 @@
-import { CommitDetail, Analysis } from "@/app/types/commit";
+import { Analysis } from "@/types/analysis";
+import { CommitDetail } from "@/types/commit";
 import CodeDiff from "@/app/ui/report-view/main-area/commit/code-diff";
 import DiagramBox from "@/app/ui/report-view/main-area/commit/diagram-box";
 import Explanation from "@/app/ui/report-view/main-area/commit/explanation";

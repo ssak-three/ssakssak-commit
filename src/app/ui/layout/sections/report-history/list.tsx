@@ -1,4 +1,4 @@
-import { ReportHistory } from "@/app/types/report-history";
+import { ReportHistory } from "@/types/report-history";
 import ReportHistoryItem from "@/app/ui/layout/sections/report-history/item";
 
 function ReportHistoryList({

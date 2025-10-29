@@ -1,7 +1,7 @@
 import { CommitDetail } from "./commit";
 
 interface ReportData {
-  reportId: string;
+  reportId?: string;
   reportTitle: string;
   reportSummary: string;
   commits: CommitDetail[];

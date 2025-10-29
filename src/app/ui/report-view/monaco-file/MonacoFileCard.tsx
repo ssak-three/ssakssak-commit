@@ -1,5 +1,5 @@
 import { MonacoFileViewer } from "@/app/ui/report-view/monaco-file/MonacoFileViewer";
-import type { AnalysisData } from "@/app/types/monaco";
+import type { AnalysisData } from "@/types/monaco";
 import { getStatusIcon } from "@/lib/util/monacoUtils";
 
 type MonacoFileCardProps = {

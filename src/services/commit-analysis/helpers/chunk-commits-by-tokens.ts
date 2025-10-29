@@ -1,4 +1,4 @@
-import { GithubCommit } from "@/app/types/commit";
+import { GithubCommit } from "@/types/commit";
 import { TOKEN_LIMITS } from "@/constants/open-ai";
 import { logger } from "@/lib/logger";
 

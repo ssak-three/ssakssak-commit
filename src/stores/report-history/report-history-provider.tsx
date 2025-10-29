@@ -1,6 +1,6 @@
 "use client";
 
-import { ReportHistory } from "@/app/types/report-history";
+import { ReportHistory } from "@/types/report-history";
 import { createContext, useCallback, useMemo, useState } from "react";
 
 type ContextValue = {

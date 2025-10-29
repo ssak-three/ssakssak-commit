@@ -1,11 +1,16 @@
-import "server-only";
 import pino from "pino";
 
-const isDev = process.env.NODE_ENV === "development";
+const isProduction = process.env.NODE_ENV === "production";
+const isWorker = process.env.WORKER === "1";
 
 let logger: pino.Logger;
 
-if (isDev) {
+if (isProduction || isWorker) {
+  logger = pino({
+    level: isProduction ? "info" : "debug",
+    base: undefined,
+  });
+} else {
   const pretty = await import("pino-pretty");
   const stream = pretty.default({
     colorize: true,
@@ -21,11 +26,6 @@ if (isDev) {
     },
     stream,
   );
-} else {
-  logger = pino({
-    level: "info",
-    base: undefined,
-  });
 }
 
 export { logger };

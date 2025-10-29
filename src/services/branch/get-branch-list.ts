@@ -1,5 +1,5 @@
-import { BranchName } from "@/app/types/branch";
-import { getGithubBranchList } from "@/infra/github-api/branches/get-branch-list";
+import { BranchName } from "@/types/branch";
+import { getGithubBranchList } from "@/infra/integrations/github/branches/get-branch-list";
 import parseRepositoryUrl from "@/lib/parse-repository-url";
 import { checkRateLimit } from "../rate-limit/check-rate-limit";
 

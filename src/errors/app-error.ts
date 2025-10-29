@@ -1,4 +1,4 @@
-import { ErrorArgs } from "@/app/types/error-args";
+import { ErrorArgs } from "@/types/error-args";
 
 class AppError extends Error {
   status: number;

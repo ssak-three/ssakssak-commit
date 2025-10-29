@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
 import type * as monaco from "monaco-editor";
 import { createHighlightDecorations } from "@/lib/util/monacoDecorations";
-import type { MonacoFileBaseProps } from "@/app/types/monaco";
+import type { MonacoFileBaseProps } from "@/types/monaco";
 
 function useMonacoEditorDecorations({
   code,

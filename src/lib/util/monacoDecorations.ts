@@ -3,7 +3,7 @@ import {
   getHighlightClassName,
   getHighlightColor,
 } from "@/lib/util/monacoUtils";
-import type { FileStatus } from "@/app/types/monaco";
+import type { FileStatus } from "@/types/monaco";
 
 function createHighlightDecorations({
   highlights,

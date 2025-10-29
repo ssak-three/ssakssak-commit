@@ -1,5 +1,5 @@
 import { Octokit, RequestError } from "octokit";
-import { RateLimitInfo } from "@/app/types/rate-limit";
+import { RateLimitInfo } from "@/types/rate-limit";
 import { GITHUB_API } from "@/constants/github-api";
 import { getServerSession } from "next-auth";
 import authOptions from "@/lib/auth/auth-options";

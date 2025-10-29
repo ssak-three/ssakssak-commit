@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ReportHistory } from "@/app/types/report-history";
+import { ReportHistory } from "@/types/report-history";
 import { Modal } from "@/app/ui/common/Modal";
 import { Trash2 } from "lucide-react";
 

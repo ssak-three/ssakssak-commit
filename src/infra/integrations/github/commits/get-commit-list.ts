@@ -3,8 +3,6 @@ import { Endpoints } from "@octokit/types";
 import NotFoundError from "@/errors/not-found-error";
 import { GITHUB_API } from "@/constants/github-api";
 import { GITHUB_REPOSITORY_ERROR_MESSAGES } from "@/constants/error-messages";
-import { getServerSession } from "next-auth";
-import authOptions from "@/lib/auth/auth-options";
 
 type ListCommitsResponse =
   Endpoints["GET /repos/{owner}/{repo}/commits"]["response"]["data"];
@@ -18,10 +16,8 @@ const getGithubCommitList = async (
   owner: string,
   repositoryName: string,
   branch: string,
+  accessToken?: string,
 ): Promise<SimpleCommit[]> => {
-  const session = await getServerSession(authOptions);
-  const accessToken = session?.accessToken;
-
   const octokit = new Octokit({ auth: accessToken });
 
   try {

@@ -1,0 +1,7 @@
+# GitHub / CI/CD 관련
+.github/
+.husky/
+
+# 문서 및 개발용 데이터
+docs/
+mocks/

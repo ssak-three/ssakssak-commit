@@ -1,5 +1,5 @@
 import { Octokit, RequestError } from "octokit";
-import { BranchName } from "@/app/types/branch";
+import { BranchName } from "@/types/branch";
 import NotFoundError from "@/errors/not-found-error";
 import { GITHUB_REPOSITORY_ERROR_MESSAGES } from "@/constants/error-messages";
 import { GITHUB_API } from "@/constants/github-api";

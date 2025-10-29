@@ -1,4 +1,4 @@
-import { RateLimitCheckResult } from "@/app/types/rate-limit";
+import { RateLimitCheckResult } from "@/types/rate-limit";
 import { GITHUB_RATE_LIMIT_CONFIG } from "@/constants/rate-limit";
 import { RATE_LIMIT_MESSAGES } from "@/constants/error-messages";
 import { formatUnixToKoreanTime } from "@/lib/util/time-formatter";

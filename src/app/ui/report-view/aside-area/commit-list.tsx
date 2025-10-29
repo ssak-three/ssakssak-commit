@@ -1,5 +1,5 @@
 import CommitBox from "@/app/ui/report-view/aside-area/commit-box";
-import { CommitDetail } from "@/app/types/commit";
+import { CommitDetail } from "@/types/commit";
 
 interface CommitListProps {
   commits: CommitDetail[];

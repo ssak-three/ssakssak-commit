@@ -1,4 +1,4 @@
-import { Analysis } from "@/app/types/commit";
+import { Analysis } from "@/types/analysis";
 import { MonacoFileViewer } from "@/app/ui/report-view/monaco-file/MonacoFileViewer";
 
 interface AnalysisSummaryProps {

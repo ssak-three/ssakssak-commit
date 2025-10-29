@@ -1,6 +1,5 @@
 import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod.mjs";
-import { OPENAI_MODEL } from "@/constants/open-ai";
 import { ZodError, ZodSchema } from "zod";
 import { BadGatewayError, UnprocessableEntityError } from "@/errors";
 import {
@@ -31,7 +30,7 @@ const structuredTextGenerator = async <T>({
 }: StructuredTextGenerationParams<T>): Promise<T> => {
   try {
     const response = await client.responses.create({
-      model: OPENAI_MODEL,
+      model: process.env.OPENAI_MODEL,
       max_output_tokens: maxOutputTokens,
       instructions: instructions,
       input: [

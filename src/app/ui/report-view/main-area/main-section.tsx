@@ -1,6 +1,6 @@
 import SummarySection from "./summary/summary-box";
 import CommitSection from "./commit/commit-section";
-import { CommitDetail } from "@/app/types/commit";
+import { CommitDetail } from "@/types/commit";
 
 interface MainSectionProps {
   reportSummary: string;

@@ -1,12 +1,10 @@
 import { Octokit } from "octokit";
 import { Endpoints } from "@octokit/types";
-import { CommitFile } from "@/app/types/commit";
-import { GithubCommit } from "@/app/types/commit";
+import { CommitFile } from "@/types/commit";
+import { GithubCommit } from "@/types/commit";
 import { GITHUB_API } from "@/constants/github-api";
 import { EXCLUDED_FILES_LIST } from "@/constants/file-filters";
 import { shouldExcludeFile } from "@/lib/file-filter";
-import { getServerSession } from "next-auth";
-import authOptions from "@/lib/auth/auth-options";
 
 type CommitDetailResponse =
   Endpoints["GET /repos/{owner}/{repo}/commits/{ref}"]["response"]["data"];
@@ -15,10 +13,8 @@ const getGithubCommitDetails = async (
   owner: string,
   repositoryName: string,
   shaList: string[],
+  accessToken?: string,
 ): Promise<GithubCommit[]> => {
-  const session = await getServerSession(authOptions);
-  const accessToken = session?.accessToken;
-
   const octokit = new Octokit(accessToken ? { auth: accessToken } : undefined);
 
   const commitDetails = await Promise.all(

@@ -3,7 +3,7 @@ import {
   CreateReportHistoryParams,
   UpdateReportHistoryParams,
   DeleteReportHistoryParams,
-} from "@/app/types/report-history";
+} from "@/types/report-history";
 
 const findReportHistoriesByUser = async (userId: string) => {
   return await prisma.reportHistory.findMany({

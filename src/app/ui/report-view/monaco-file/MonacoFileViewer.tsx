@@ -1,7 +1,7 @@
 "use client";
 
 import MonacoEditor from "@monaco-editor/react";
-import type { MonacoFileViewerProps } from "@/app/types/monaco";
+import type { MonacoFileViewerProps } from "@/types/monaco";
 import { useMonacoEditorDecorations } from "@/hooks/useMonacoEditorDecorations";
 import { MonacoFileHeader } from "@/app/ui/report-view/monaco-file/MonacoFileHeader";
 import { MonacoAutoHeight } from "@/app/ui/report-view/monaco-file/MonacoAutoHeight";
