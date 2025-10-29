@@ -19,7 +19,7 @@ const upsertUser = async ({
     isActive: true,
   };
 
-  return await prisma.user.upsert({
+  return prisma.user.upsert({
     where: {
       githubId: githubId,
     },
