@@ -1,4 +1,4 @@
-import mockdata from "@/mocks/data/report.json";
+import mockdata from "@mocks/data/report.json";
 
 function RequirementList() {
   return (

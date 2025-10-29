@@ -1,4 +1,4 @@
-import type { FileStatus } from "@/app/types/monaco";
+import type { FileStatus } from "@/types/monaco";
 
 const STATUS_STYLES = {
   added: "bg-green-100 text-green-800",

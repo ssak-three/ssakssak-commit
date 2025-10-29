@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import url("pretendard/dist/web/static/pretendard.css");
 
 @custom-variant dark (&:is(.dark *));
 
@@ -76,6 +77,11 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --font-pretendard:
+    "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto,
+    "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR",
+    "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    sans-serif;
 }
 
 .dark {
@@ -119,4 +125,9 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+html,
+body {
+  font-family: var(--font-pretendard);
 }

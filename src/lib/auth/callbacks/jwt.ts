@@ -1,5 +1,5 @@
 import type { CallbacksOptions } from "next-auth";
-import type { GitHubProfile } from "@/app/types/github-profile";
+import type { GitHubProfile } from "@/types/github-profile";
 import initializeGitHubToken from "@/lib/auth/helpers/initialize-github-token";
 import updateValidAccessToken from "@/lib/auth/helpers/update-valid-access-token";
 import { findUserIdByGithubId } from "@/repositories/user";

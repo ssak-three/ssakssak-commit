@@ -1,6 +1,6 @@
 "use client";
 
-import type { MonacoAutoHeightProps } from "@/app/types/monaco";
+import type { MonacoAutoHeightProps } from "@/types/monaco";
 
 function MonacoAutoHeight({
   code,

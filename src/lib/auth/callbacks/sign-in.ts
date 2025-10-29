@@ -1,5 +1,5 @@
 import type { CallbacksOptions } from "next-auth";
-import type { GitHubProfile } from "@/app/types/github-profile";
+import type { GitHubProfile } from "@/types/github-profile";
 import { upsertUser } from "@/repositories/user";
 
 const signInCallback: NonNullable<CallbacksOptions["signIn"]> = async ({

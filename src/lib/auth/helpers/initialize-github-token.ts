@@ -1,6 +1,6 @@
 import { Account } from "next-auth";
 import { JWT } from "next-auth/jwt";
-import { GitHubProfile } from "@/app/types/github-profile";
+import { GitHubProfile } from "@/types/github-profile";
 
 const initializeGitHubToken = (
   token: JWT,

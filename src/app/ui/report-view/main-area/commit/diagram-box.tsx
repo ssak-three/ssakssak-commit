@@ -1,4 +1,4 @@
-import { Analysis } from "@/app/types/commit";
+import { Analysis } from "@/types/analysis";
 import Mermaid from "@/app/ui/report-view/mermaid";
 import { MermaidConfig } from "mermaid";
 
@@ -27,12 +27,7 @@ function DiagramBox({ data }: AnalysisSummaryProps) {
 
           {item.type === "diagram" && item.chart && (
             <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
-              <Mermaid
-                chart={item.chart}
-                title={item.title}
-                description={item.description}
-                config={defaultMermaidConfig}
-              />
+              <Mermaid chart={item.chart} config={defaultMermaidConfig} />
               {item.caption && (
                 <p className="mt-4 text-center text-sm text-gray-500 italic">
                   {item.caption}

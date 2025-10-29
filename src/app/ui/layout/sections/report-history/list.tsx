@@ -1,4 +1,4 @@
-import { ReportHistory } from "@/app/types/report-history";
+import { ReportHistory } from "@/types/report-history";
 import ReportHistoryItem from "@/app/ui/layout/sections/report-history/item";
 
 function ReportHistoryList({
@@ -14,7 +14,7 @@ function ReportHistoryList({
 }) {
   return (
     <ul
-      className="divide-y overflow-y-auto rounded"
+      className="divide-y divide-neutral-200 overflow-y-auto rounded-md bg-white"
       style={{ height: `${rows * 40 + 10}px` }}
     >
       {reportHistories.map((history) => (

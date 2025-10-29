@@ -2,9 +2,9 @@
 
 import { useReportHistory } from "@/hooks/useVerifiedContext";
 import { useState } from "react";
-import { ReportHistory } from "@/app/types/report-history";
+import { ReportHistory } from "@/types/report-history";
 import ReportHistoryList from "@/app/ui/layout/sections/report-history/list";
-import historyList from "@/mocks/data/report-history-list.json";
+import historyList from "@mocks/data/report-history-list.json";
 import { AlertModal } from "@/app/ui/common/Modal";
 import {
   DATA_ERROR_MESSAGES,
@@ -50,11 +50,13 @@ function ReportHistoryPanel() {
   };
 
   return (
-    <div className="hidden w-full rounded-md bg-gray-50 md:block">
-      <p className="rounded-t bg-black p-2 text-white">리포트 생성 기록</p>
+    <div className="hidden w-full gap-10 rounded-lg border border-neutral-200 bg-white md:block">
+      <p className="rounded-t border-b border-neutral-200 bg-neutral-50 px-3 py-2 text-xs font-medium text-neutral-600">
+        리포트 생성 기록
+      </p>
 
       <input
-        className="w-full border-orange-300 bg-[#F3EEE3] bg-gray-200 px-2 py-2 text-black placeholder:text-gray-400 focus:border-orange-400"
+        className="w-full border border-neutral-200 bg-white px-3 py-2 text-sm text-slate-800 placeholder:text-neutral-400 focus:border-neutral-300 focus:ring-0 focus:outline-none"
         onChange={(e) => setSearch(e.target.value)}
         placeholder="생성 기록 검색"
       />

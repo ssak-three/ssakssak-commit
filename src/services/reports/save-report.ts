@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { analysisResultSchema } from "@/lib/validators/structured-analysis-result";
+import parseRepositoryUrl from "@/lib/parse-repository-url";
 import {
   findReportsByTitlePrefix,
   saveReportToDatabase,
@@ -10,8 +11,9 @@ import { DATA_ERROR_MESSAGES } from "@/constants/error-messages";
 
 type AnalysisResult = z.infer<typeof analysisResultSchema>;
 
-async function saveAnalysisReport(data: AnalysisResult) {
+async function saveAnalysisReport(userId: string, data: AnalysisResult) {
   try {
+    const { owner, repositoryName } = parseRepositoryUrl(data.repositoryUrl);
     const conflictingReports = await findReportsByTitlePrefix(data.reportTitle);
 
     let finalReportTitle = data.reportTitle;
@@ -22,19 +24,23 @@ async function saveAnalysisReport(data: AnalysisResult) {
     }
 
     const report = await saveReportToDatabase({
-      userId: data.userId || undefined,
+      userId,
+      owner,
+      repositoryName,
       reportTitle: finalReportTitle,
       reportSummary: data.reportSummary,
       reportConclusion: data.reportConclusion,
-      owner: data.owner,
-      repositoryName: data.repositoryName,
       repositoryUrl: data.repositoryUrl,
       branch: data.branch,
       commits: data.commits,
     });
 
     logger.info({ reportId: report.reportId }, "Report saved successfully");
-    return report;
+
+    return {
+      reportId: report.reportId,
+      reportTitle: report.reportTitle,
+    };
   } catch (error) {
     logger.error({ error, data }, "Failed to save report");
 

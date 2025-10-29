@@ -1,13 +1,18 @@
 import prisma from "@/lib/prisma";
 
 type UpsertUserParams = {
-  githubId: string;
+  githubId: bigint;
   email: string;
   name: string;
   avatarUrl?: string | null;
 };
 
-const upsertUser = ({ githubId, email, name, avatarUrl }: UpsertUserParams) => {
+const upsertUser = async ({
+  githubId,
+  email,
+  name,
+  avatarUrl,
+}: UpsertUserParams) => {
   const baseData = {
     userEmail: email,
     userName: name,
@@ -30,10 +35,11 @@ const upsertUser = ({ githubId, email, name, avatarUrl }: UpsertUserParams) => {
   });
 };
 
-const findUserIdByGithubId = async (githubId: string) => {
+const findUserIdByGithubId = async (githubId: bigint) => {
   return prisma.user.findUnique({
     where: { githubId: githubId },
     select: { userId: true },
   });
 };
+
 export { upsertUser, findUserIdByGithubId };

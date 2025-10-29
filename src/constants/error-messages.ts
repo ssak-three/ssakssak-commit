@@ -19,13 +19,16 @@ const VALIDATION_ERROR_MESSAGES = {
 
 const GITHUB_REPOSITORY_ERROR_MESSAGES = {
   INVALID_URL:
-    "유효한 GitHub 리포지토리 URL을 입력해주세요. \n (예: https://github.com/owner/repository(.git), owner: 리포지토리 소유자, repository: 리포지토리 이름)",
-  NOT_FOUND: "존재하지 않거나 접근할 수 없는 Repository입니다.",
+    "유효한 GitHub 리포지토리 URL을 입력해주세요. \n(예: https://github.com/owner/repository(.git), owner: 리포지토리 소유자, repository: 리포지토리 이름)",
+  NOT_FOUND:
+    "존재하지 않거나 접근할 수 없는 리포지토리입니다.\n비회원일 경우, 해당 리포지토리가 private 리포지토리인지 확인해 주세요.",
 };
 
 const SYSTEM_ERROR_MESSAGES = {
   SERVER: "서버 오류가 발생했습니다.",
   NETWORK: "네트워크 에러가 발생했습니다. 잠시 후 다시 시도해 주세요.",
+  UNKNOWN: "알 수 없는 오류가 발생했습니다.",
+  UNEXPECTED: "예상치 못한 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
 };
 
 const MERMAID_ERROR_MESSAGES = {
@@ -44,6 +47,9 @@ const AUTH_ERROR_MESSAGES = {
   INVALID_REDIRECT_URL: "허용되지 않은 redirect URL입니다.",
   INTERNAL_ERROR: "내부 오류로 인해 요청이 실패했습니다.",
   UNKNOWN: "로그인 처리 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.",
+  SESSION_EXPIRED:
+    "세션이 만료되었거나 올바르지 않습니다. 로그인 후 이용해 주세요.",
+  UNAUTHORIZED: "로그인이 필요합니다.",
 };
 
 const OPENAI_ERROR_MESSAGES = {
@@ -69,6 +75,19 @@ const DATA_ERROR_MESSAGES = {
   SAVE_REPORT_FAILED: "리포트 저장에 실패했습니다.",
 };
 
+const RATE_LIMIT_MESSAGES = {
+  INSUFFICIENT_REQUESTS:
+    "현재 비회원 이용 한도가 초과되었습니다. 로그인 후 다시 시도하거나 {restTime} 이후에 이용해주세요.",
+};
+const JOB_ERROR_MESSAGES = {
+  JOB_ID_REQUIRED: "jobId 값이 필요합니다.",
+  NOT_FOUND: "해당 작업을 찾을 수 없습니다",
+};
+
+const REPORT_ERROR_MESSAGES = {
+  NOT_FOUND: "요청하신 리포트를 찾을 수 없습니다.",
+};
+
 export {
   VALIDATION_ERROR_MESSAGES,
   GITHUB_REPOSITORY_ERROR_MESSAGES,
@@ -79,4 +98,7 @@ export {
   AUTH_ERROR_MESSAGES,
   PROVIDER_ERROR_MESSAGES,
   DATA_ERROR_MESSAGES,
+  RATE_LIMIT_MESSAGES,
+  JOB_ERROR_MESSAGES,
+  REPORT_ERROR_MESSAGES,
 };

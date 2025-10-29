@@ -1,5 +1,5 @@
 import CommitList from "@/app/ui/report-view/aside-area/commit-list";
-import { CommitDetail } from "@/app/types/commit";
+import { CommitDetail } from "@/types/commit";
 
 interface AsideSectionProps {
   commits: CommitDetail[];

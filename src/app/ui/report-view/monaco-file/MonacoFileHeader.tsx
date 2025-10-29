@@ -1,5 +1,5 @@
 import { getStatusTagStyle } from "@/lib/util/monacoUtils";
-import type { FileStatus } from "@/app/types/monaco";
+import type { FileStatus } from "@/types/monaco";
 
 interface MonacoFileHeaderProps {
   filename: string;

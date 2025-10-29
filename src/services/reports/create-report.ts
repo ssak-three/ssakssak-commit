@@ -1,52 +1,71 @@
-import { getGithubCommitList } from "@/infra/github-api/commits/get-commit-list";
-import { getGithubCommitDetails } from "@/infra/github-api/commits/get-commit-details";
+import { getGithubCommitList } from "@/infra/integrations/github/commits/get-commit-list";
+import { getGithubCommitDetails } from "@/infra/integrations/github/commits/get-commit-details";
 import parseRepositoryUrl from "@/lib/parse-repository-url";
 import getAnalysisResults from "../commit-analysis/analyze-commits";
 import { z } from "zod";
 import { analysisResultSchema } from "@/lib/validators/structured-analysis-result";
-
 type AnalysisResult = z.infer<typeof analysisResultSchema>;
+import { ReportProgress } from "@/types/job-progress";
+import { JOB_PHASES } from "@/constants/report-job";
 
-const createReport = async (
-  userId: string | null,
-  reportTitle: string,
-  repositoryOverview: string,
-  repositoryUrl: string,
-  branch: string,
-): Promise<AnalysisResult> => {
+type CreateReportParams = {
+  accessToken?: string;
+  reportTitle: string;
+  repositoryUrl: string;
+  branch: string;
+  repositoryOverview: string;
+  parentJobId: string;
+  onProgress: ReportProgress;
+};
+
+const createReport = async ({
+  reportTitle,
+  repositoryUrl,
+  branch,
+  repositoryOverview,
+  accessToken,
+  parentJobId,
+  onProgress,
+}: CreateReportParams): Promise<AnalysisResult> => {
   const { owner, repositoryName } = parseRepositoryUrl(repositoryUrl);
 
-  const commitList = await getGithubCommitList(owner, repositoryName, branch);
+  await onProgress({ phase: JOB_PHASES.COLLECTING });
+  const commitList = await getGithubCommitList(
+    owner,
+    repositoryName,
+    branch,
+    accessToken,
+  );
   const shaList = commitList.map((commit) => commit.sha);
 
   const commitDetailsList = await getGithubCommitDetails(
     owner,
     repositoryName,
     shaList,
+    accessToken,
   );
 
-  const commitAnalysisResults = await getAnalysisResults(
-    commitDetailsList,
+  await onProgress({ phase: JOB_PHASES.ANALYZING });
+  const commitAnalysisResults = await getAnalysisResults({
+    commits: commitDetailsList,
     repositoryOverview,
-  );
+    parentJobId,
+    onProgress,
+  });
 
+  await onProgress({ phase: JOB_PHASES.VISUALIZING });
   const commitsWithLink = commitAnalysisResults.commits.map((commit) => ({
     ...commit,
     commitLink: repositoryUrl.replace(/\/$/, "") + `/commit/${commit.commitId}`,
   }));
 
-  const result = {
-    userId,
+  return {
     ...commitAnalysisResults,
     reportTitle: reportTitle || commitAnalysisResults.reportTitle,
     repositoryUrl,
     branch,
-    owner,
-    repositoryName,
     commits: commitsWithLink,
   };
-
-  return result;
 };
 
 export { createReport };

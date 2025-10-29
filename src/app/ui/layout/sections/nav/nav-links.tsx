@@ -10,6 +10,7 @@ function NavLinks() {
   const currentPath = usePathname();
   const showHistoryList = currentPath === "/";
   const { clearSelection } = useReportHistory();
+  const isDev = process.env.NODE_ENV === "development";
 
   return (
     <>
@@ -21,7 +22,7 @@ function NavLinks() {
         <ClipboardCheckIcon className="w-6" />
       </NavLink>
 
-      {showHistoryList && <ReportHistoryPanel />}
+      {isDev && showHistoryList && <ReportHistoryPanel />}
 
       <NavLink href={"/reports"} label={"리포트 결과 보관함"}>
         <ClipboardCheckIcon className="w-6" />

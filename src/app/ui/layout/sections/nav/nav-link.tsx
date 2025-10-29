@@ -2,13 +2,13 @@ import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-type Parmas = {
+type NavLinkParams = {
   href: string;
   label: string;
   children: React.ReactNode;
 } & React.AnchorHTMLAttributes<HTMLAnchorElement>;
 
-function NavLink({ href, label, children, ...props }: Parmas) {
+function NavLink({ href, label, children, ...props }: NavLinkParams) {
   const currentPath = usePathname();
 
   return (
@@ -16,8 +16,9 @@ function NavLink({ href, label, children, ...props }: Parmas) {
       href={href}
       {...props}
       className={clsx(
-        "flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium text-slate-800 hover:bg-orange-300 hover:text-orange-600 md:flex-none md:justify-start md:p-2 md:px-3",
-        { "bg-orange-300 text-black": currentPath === href },
+        "flex h-[40px] grow items-center justify-center gap-2 rounded-md bg-gray-50 px-3 text-lg text-slate-700 transition md:flex-none md:justify-start",
+        "hover:bg-purple-100 hover:text-purple-800",
+        currentPath === href && "bg-purple-50 text-slate-900",
       )}
     >
       {children} <span className="hidden md:inline">{label}</span>

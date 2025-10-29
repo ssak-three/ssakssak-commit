@@ -1,73 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import authOptions from "@/lib/auth/auth-options";
-import { createReport } from "@/services/reports/create-report";
 import { validateReportInput } from "@/lib/validators/report-fields";
 import AppError from "@/errors/app-error";
-import { saveAnalysisReport } from "@/services/reports/save-report";
-import { getToken } from "next-auth/jwt";
+import { addReportCreationJob } from "@/infra/messaging/queue";
+import { checkRateLimit } from "@/services/rate-limit/check-rate-limit";
+import getAccessToken from "@/lib/auth/get-access-token";
+import { SYSTEM_ERROR_MESSAGES } from "@/constants/error-messages";
+import { deleteReports, getReports } from "@/repositories/report";
+import { requireUserId } from "@/lib/auth/require-session";
 
-async function POST(request: NextRequest): Promise<NextResponse> {
+async function GET() {
+  const userId = await requireUserId();
+
   try {
-    const session = await getServerSession(authOptions);
-    const userId = session?.user?.userId || null;
-    const token = await getToken({
-      req: request,
-      secret: process.env.NEXTAUTH_SECRET,
-    });
+    const items = await getReports(userId);
 
-    const body = await request.json();
-    const validatedInput = validateReportInput(body);
+    await checkRateLimit();
 
-    const result = await createReport(
-      userId,
-      validatedInput.reportTitle,
-      validatedInput.repositoryOverview,
-      validatedInput.repositoryUrl,
-      validatedInput.branch,
-    );
-
-    if (userId) {
-      const savedReport = await saveAnalysisReport(result);
-      return NextResponse.json(
-        {
-          result,
-          message:
-            "리포트가 성공적으로 생성되어 데이터베이스에 저장되었습니다.",
-          reportId: savedReport.reportId,
-          storageType: "database",
-        },
-        { status: 201 },
-      );
-    } else {
-      if (token) {
-        token.reportHistory = token.reportHistory || [];
-
-        const newReportHistoryItem = {
-          reportHistoryId: `temp_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
-          reportTitle: result.reportTitle,
-          repositoryOverview: validatedInput.repositoryOverview,
-          repositoryUrl: result.repositoryUrl,
-        };
-
-        token.reportHistory.push(newReportHistoryItem);
-      }
-
-      const tempReportId = `temp_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
-
-      return NextResponse.json(
-        {
-          result,
-          message: "리포트가 성공적으로 생성되어 세션에 저장되었습니다.",
-          reportId: tempReportId,
-          storageType: "session",
-        },
-        { status: 201 },
-      );
-    }
+    return NextResponse.json({ status: "ok", items }, { status: 200 });
   } catch (error) {
     const message: string =
-      error instanceof Error ? error.message : "Unexpected error";
+      error instanceof Error ? error.message : SYSTEM_ERROR_MESSAGES.UNEXPECTED;
     const status: number = error instanceof AppError ? error.status : 500;
 
     return NextResponse.json(
@@ -79,4 +31,53 @@ async function POST(request: NextRequest): Promise<NextResponse> {
   }
 }
 
-export { POST };
+async function POST(request: NextRequest): Promise<NextResponse> {
+  try {
+    const body = await request.json();
+    const validatedResult = validateReportInput(body);
+    const accessToken = await getAccessToken();
+
+    const job = await addReportCreationJob({ ...validatedResult, accessToken });
+
+    return NextResponse.json(
+      { status: "queued", jobId: job.id },
+      { status: 202, headers: { Location: `/api/report-jobs/${job.id}` } },
+    );
+  } catch (error) {
+    const message: string =
+      error instanceof Error ? error.message : SYSTEM_ERROR_MESSAGES.UNEXPECTED;
+    const status: number = error instanceof AppError ? error.status : 500;
+
+    return NextResponse.json(
+      {
+        error: { message, status },
+      },
+      { status },
+    );
+  }
+}
+
+async function DELETE(request: NextRequest) {
+  const userId = await requireUserId();
+
+  try {
+    const body = await request.json();
+    const reportIds = body.reportIds;
+
+    const deleted = await deleteReports({ userId, reportIds: reportIds });
+
+    return NextResponse.json({ status: "ok", deleted }, { status: 200 });
+  } catch (error) {
+    const message: string =
+      error instanceof Error ? error.message : SYSTEM_ERROR_MESSAGES.UNEXPECTED;
+    const status: number = error instanceof AppError ? error.status : 500;
+    return NextResponse.json(
+      {
+        error: { message, status },
+      },
+      { status },
+    );
+  }
+}
+
+export { GET, POST, DELETE };

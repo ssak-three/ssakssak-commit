@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ReportHistory } from "@/app/types/report-history";
+import { ReportHistory } from "@/types/report-history";
 import { Modal } from "@/app/ui/common/Modal";
 import { Trash2 } from "lucide-react";
 
@@ -17,12 +17,12 @@ function ReportHistoryItem({
   const [open, setOpen] = useState(false);
 
   return (
-    <li>
+    <li className="group">
       <div
         role="button"
         onClick={() => onSelect(item)}
-        className="flex h-10 w-full items-center justify-between truncate px-2 text-left hover:bg-orange-300 hover:text-white"
         title={item.reportTitle}
+        className="flex h-11 w-full items-center justify-between px-3 text-sm text-slate-700 hover:bg-purple-50"
       >
         <span className="truncate">{item.reportTitle}</span>
         <button
@@ -31,12 +31,11 @@ function ReportHistoryItem({
             e.stopPropagation();
             setOpen(true);
           }}
-          className="p-1 hover:text-red-500"
+          className="rounded p-1 text-neutral-400 opacity-0 transition group-hover:opacity-100 hover:bg-neutral-100 hover:text-red-500"
         >
-          <Trash2 className="w-6 shrink-0" />
+          <Trash2 className="w-4" />
         </button>
       </div>
-
       <Modal
         open={open}
         title={`"${item.reportTitle}" 기록을(를)\n삭제하시겠습니까?`}
