@@ -1,5 +1,7 @@
 import { CommitDetail } from "./commit";
 
+type ReportFormState = undefined | { ok: false; formError: string };
+
 interface ReportData {
   reportId?: string;
   reportTitle: string;
@@ -10,4 +12,4 @@ interface ReportData {
   branch: string;
 }
 
-export type { ReportData };
+export type { ReportData, ReportFormState };
