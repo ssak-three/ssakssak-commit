@@ -12,7 +12,7 @@
     "check": "eslint . && prettier --check",
     "prepare": "husky",
     "svgo": "svgo -f public -o public",
-    "worker:start": "WORKER=1 tsx --env-file=.env src/infra/messaging/worker.ts"
+    "worker:start": "WORKER=1 tsx --env-file=.env src/infra/messaging/worker/worker.ts"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",

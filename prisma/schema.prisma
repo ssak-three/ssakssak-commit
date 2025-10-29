@@ -18,6 +18,7 @@ model User {
   updatedAt       DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
   reportHistories ReportHistory[]
   repositories    Repository[]
+  reports         Report[]
 
   @@map("users")
 }
@@ -51,4 +52,23 @@ model Repository {
   user                User     @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: NoAction, map: "fk_repositories_user_id")
 
   @@map("repositories")
+}
+
+model Report {
+  reportId          String    @id @default(dbgenerated("gen_random_uuid()")) @map("report_id")@db.Uuid
+  userId            String    @map("user_id") @db.Uuid
+  reportTitle       String    @map("report_title") @db.VarChar(100)
+  reportSummary     String    @map("report_summary") @db.Text
+  reportConclusion  String    @map("report_conclusion") @db.Text
+  owner             String    @map("owner") @db.VarChar(50)
+  repositoryName    String    @map("repository_name") @db.VarChar(100)
+  repositoryUrl     String    @map("repository_url") @db.VarChar(255)
+  branch            String    @map("branch") @db.VarChar(80)
+  commits           Json      @map("commits") @db.JsonB
+  isActive           Boolean  @default(true) @map("is_active")
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  user              User      @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: NoAction, map:"fk_report_user_id")
+
+  @@map("reports")
 }

@@ -1,0 +1,6 @@
+const WORKER_CONCURRENCY = {
+  REPORT_CREATION: 3,
+  ANALYSIS_BATCH: 5,
+} as const;
+
+export { WORKER_CONCURRENCY };
