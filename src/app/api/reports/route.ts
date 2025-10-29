@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateReportInput } from "@/lib/validators/report-fields";
 import AppError from "@/errors/app-error";
+import { addReportCreationJob } from "@/infra/messaging/queue";
 import { checkRateLimit } from "@/services/rate-limit/check-rate-limit";
-import { addJobs } from "@/infra/messaging/report-creation-queue";
 import getAccessToken from "@/lib/auth/get-access-token";
 import { SYSTEM_ERROR_MESSAGES } from "@/constants/error-messages";
 import { deleteReports, getReports } from "@/repositories/report";
@@ -37,7 +37,7 @@ async function POST(request: NextRequest): Promise<NextResponse> {
     const validatedResult = validateReportInput(body);
     const accessToken = await getAccessToken();
 
-    const job = await addJobs({ ...validatedResult, accessToken });
+    const job = await addReportCreationJob({ ...validatedResult, accessToken });
 
     return NextResponse.json(
       { status: "queued", jobId: job.id },
