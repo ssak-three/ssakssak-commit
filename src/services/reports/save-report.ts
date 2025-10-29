@@ -6,6 +6,7 @@ import {
 } from "@/repositories/report";
 import { logger } from "@/lib/logger";
 import { BadGatewayError } from "@/errors";
+import { DATA_ERROR_MESSAGES } from "@/constants/error-messages";
 
 type AnalysisResult = z.infer<typeof analysisResultSchema>;
 
@@ -38,7 +39,7 @@ async function saveAnalysisReport(data: AnalysisResult) {
     logger.error({ error, data }, "Failed to save report");
 
     throw new BadGatewayError({
-      message: "Failed to save report to database",
+      message: DATA_ERROR_MESSAGES.SAVE_REPORT,
     });
   }
 }

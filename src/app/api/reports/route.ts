@@ -32,7 +32,8 @@ async function POST(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json(
         {
           result,
-          message: "Report successfully created and saved to database.",
+          message:
+            "리포트가 성공적으로 생성되어 데이터베이스에 저장되었습니다.",
           reportId: savedReport.reportId,
           storageType: "database",
         },
@@ -57,7 +58,7 @@ async function POST(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json(
         {
           result,
-          message: "Report successfully created and saved to session.",
+          message: "리포트가 성공적으로 생성되어 세션에 저장되었습니다.",
           reportId: tempReportId,
           storageType: "session",
         },
