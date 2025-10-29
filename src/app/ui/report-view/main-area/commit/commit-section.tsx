@@ -4,6 +4,12 @@ import CodeDiff from "@/app/ui/report-view/main-area/commit/code-diff";
 import DiagramBox from "@/app/ui/report-view/main-area/commit/diagram-box";
 import Explanation from "@/app/ui/report-view/main-area/commit/explanation";
 
+const ANALYSIS_TYPES = {
+  EXPLANATION: "explanation",
+  CODE_DIFF: "code-diff",
+  DIAGRAM: "diagram",
+} as const;
+
 interface CommitSectionProps {
   commits: CommitDetail[];
 }
@@ -13,16 +19,6 @@ function CommitSection({ commits }: CommitSectionProps) {
     <div className="space-y-6">
       {commits.map((commit) => {
         const analyses = commit.analyses as Analysis[];
-
-        const explanation = analyses.filter(
-          (analyses) => analyses.type === "explanation",
-        );
-        const codeDiffs = analyses.filter(
-          (analyses) => analyses.type === "code-diff",
-        );
-        const diagrams = analyses.filter(
-          (analyses) => analyses.type === "diagram",
-        );
 
         return (
           <div
@@ -58,9 +54,20 @@ function CommitSection({ commits }: CommitSectionProps) {
 
             <div className="p-6">
               <div className="space-y-8">
-                <Explanation data={explanation} />
-                <CodeDiff data={codeDiffs} />
-                <DiagramBox data={diagrams} />
+                {analyses.map((analysis, index) => {
+                  const key = `${commit.commitId}-${analysis.type}-${index}`;
+
+                  switch (analysis.type) {
+                    case ANALYSIS_TYPES.EXPLANATION:
+                      return <Explanation key={key} data={[analysis]} />;
+                    case ANALYSIS_TYPES.CODE_DIFF:
+                      return <CodeDiff key={key} data={[analysis]} />;
+                    case ANALYSIS_TYPES.DIAGRAM:
+                      return <DiagramBox key={key} data={[analysis]} />;
+                    default:
+                      return null;
+                  }
+                })}
               </div>
             </div>
           </div>
