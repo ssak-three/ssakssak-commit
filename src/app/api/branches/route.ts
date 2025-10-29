@@ -10,6 +10,7 @@ async function GET(request: NextRequest): Promise<NextResponse> {
     const repositoryUrl: string = validateRepositoryUrl(
       request.nextUrl.searchParams,
     );
+
     const branches: BranchName[] = await getBranchList(repositoryUrl);
 
     return NextResponse.json({ branches });

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateReportInput } from "@/lib/validators/report-fields";
 import AppError from "@/errors/app-error";
+import { checkRateLimit } from "@/services/rate-limit/check-rate-limit";
 import { addJobs } from "@/infra/messaging/report-creation-queue";
 import getAccessToken from "@/lib/auth/get-access-token";
 import { SYSTEM_ERROR_MESSAGES } from "@/constants/error-messages";
@@ -12,6 +13,8 @@ async function GET() {
 
   try {
     const items = await getReports(userId);
+
+    await checkRateLimit();
 
     return NextResponse.json({ status: "ok", items }, { status: 200 });
   } catch (error) {
