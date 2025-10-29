@@ -39,7 +39,7 @@ async function saveAnalysisReport(data: AnalysisResult) {
     logger.error({ error, data }, "Failed to save report");
 
     throw new BadGatewayError({
-      message: DATA_ERROR_MESSAGES.SAVE_REPORT,
+      message: DATA_ERROR_MESSAGES.SAVE_REPORT_FAILED,
     });
   }
 }

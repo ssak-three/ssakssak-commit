@@ -66,7 +66,7 @@ const DATA_ERROR_MESSAGES = {
   READ: "데이터를 불러오는 데 실패했습니다. 다시 시도해 주세요.",
   UPDATE: "업데이트를 실패했습니다. 잠시 후 다시 시도해 주세요.",
   DELETE: "삭제를 실패했습니다. 잠시 후 다시 시도해 주세요.",
-  SAVE_REPORT: "리포트 저장에 실패했습니다.",
+  SAVE_REPORT_FAILED: "리포트 저장에 실패했습니다.",
 };
 
 export {
