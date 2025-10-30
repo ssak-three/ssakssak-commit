@@ -36,10 +36,10 @@ async function GET(
     const progress = job.progress;
 
     if (state === COMPLETED) {
-      const returnValue = job.returnvalue as { reportKey?: string } | null;
-      if (returnValue?.reportKey) {
+      const returnValue = job.returnvalue as { reportId?: string } | null;
+      if (returnValue?.reportId) {
         return NextResponse.json(
-          { status: COMPLETED, reportKey: returnValue.reportKey },
+          { status: COMPLETED, reportId: returnValue.reportId },
           { status: 200, headers: { "Cache-Control": "no-store" } },
         );
       }

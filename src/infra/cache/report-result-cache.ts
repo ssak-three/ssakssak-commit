@@ -1,19 +1,21 @@
 import type IORedis from "ioredis";
 import { randomBytes } from "crypto";
+import { REPORT_ID_PREFIX } from "@/constants/report-key";
 
 const REPORT_TTL_SEC = 48 * 60 * 60;
 
-const keyForResult = (cachedReportId: string) =>
+const redisKeyForResult = (cachedReportId: string) =>
   `report:result:${cachedReportId}`;
 
-function generateReportKey(bytes = 32): string {
-  return randomBytes(bytes).toString("base64url");
+function generateReportId(bytes = 32): string {
+  const randomKey = randomBytes(bytes).toString("base64url");
+  return `${REPORT_ID_PREFIX.GUEST}${randomKey}`;
 }
 
 type ResultPayload<T> = {
   status: "completed" | "failed";
   jobId: string;
-  reportKey: string;
+  reportId: string;
   data: T;
   reason?: string;
   createdAt: string;
@@ -26,34 +28,34 @@ async function saveCompletedResult<T>(
   result: T,
   ttlSecond: number = REPORT_TTL_SEC,
 ): Promise<string> {
-  const reportKey = generateReportKey();
+  const reportId = generateReportId();
   const now = new Date();
   const expiresAt = new Date(now.getTime() + ttlSecond * 1000);
 
   const payload: ResultPayload<T> = {
     status: "completed",
     jobId,
-    reportKey,
+    reportId,
     data: result,
     createdAt: now.toISOString(),
     expiresAt: expiresAt.toISOString(),
   };
 
   await redis.setex(
-    keyForResult(reportKey),
+    redisKeyForResult(reportId),
     ttlSecond,
     JSON.stringify(payload),
   );
 
-  return reportKey;
+  return reportId;
 }
 
 async function getResultByReportKey<T = unknown>(
   redis: IORedis,
-  reportKey: string,
+  reportId: string,
 ): Promise<ResultPayload<T> | null> {
-  const cachedResult = await redis.get(keyForResult(reportKey));
+  const cachedResult = await redis.get(redisKeyForResult(reportId));
   return cachedResult ? (JSON.parse(cachedResult) as ResultPayload<T>) : null;
 }
 
-export { generateReportKey, saveCompletedResult, getResultByReportKey };
+export { generateReportId, saveCompletedResult, getResultByReportKey };

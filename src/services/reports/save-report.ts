@@ -37,12 +37,9 @@ async function saveAnalysisReport(userId: string, data: AnalysisResult) {
 
     logger.info({ reportId: report.reportId }, "Report saved successfully");
 
-    return {
-      reportId: report.reportId,
-      reportTitle: report.reportTitle,
-    };
+    return report.reportId;
   } catch (error) {
-    logger.error({ error, data }, "Failed to save report");
+    logger.error({ error }, "Failed to save report");
 
     throw new BadGatewayError({
       message: DATA_ERROR_MESSAGES.SAVE_REPORT_FAILED,
