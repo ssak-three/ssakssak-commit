@@ -2,7 +2,10 @@ import type { CallbacksOptions } from "next-auth";
 import type { GitHubProfile } from "@/types/github-profile";
 import initializeGitHubToken from "@/lib/auth/helpers/initialize-github-token";
 import updateValidAccessToken from "@/lib/auth/helpers/update-valid-access-token";
-import { findUserIdByGithubId } from "@/repositories/user";
+import { upsertUser } from "@/repositories/user";
+import { logger } from "@/lib/logger";
+import { AppError } from "@/errors";
+import { AUTH_ERROR_MESSAGES } from "@/constants/error-messages";
 
 const isAccessTokenExpired = (expiresAt?: number) => {
   if (!expiresAt) {
@@ -18,27 +21,30 @@ const jwtCallback: NonNullable<CallbacksOptions["jwt"]> = async ({
   profile,
 }) => {
   if (account && profile) {
-    const resultToken = initializeGitHubToken(
-      token,
-      account,
-      profile as GitHubProfile,
-    );
-
     const githubProfile = profile as GitHubProfile;
-    const user = await findUserIdByGithubId(BigInt(githubProfile.id));
+    const resultToken = initializeGitHubToken(token, account, githubProfile);
 
-    if (user) {
+    try {
+      const user = await upsertUser({
+        githubId: BigInt(githubProfile.id),
+        email: githubProfile.email ?? "",
+        name: githubProfile.name ?? githubProfile.login,
+        avatarUrl: githubProfile.avatar_url ?? null,
+      });
+
       resultToken.userId = user.userId;
-    }
 
-    if (token.reportHistory) {
-      resultToken.reportHistory = token.reportHistory;
+      return resultToken;
+    } catch (error) {
+      logger?.error?.(
+        { error, ghId: githubProfile.id },
+        "jwtCallback upsertUser failed",
+      );
+      throw new AppError({
+        status: 500,
+        message: AUTH_ERROR_MESSAGES.UNKNOWN,
+      });
     }
-    return resultToken;
-  }
-
-  if (!token.reportHistory) {
-    token.reportHistory = [];
   }
 
   if (!isAccessTokenExpired(token.accessTokenExpires)) {
