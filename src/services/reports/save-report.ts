@@ -8,15 +8,22 @@ import { DATA_ERROR_MESSAGES } from "@/constants/error-messages";
 
 type AnalysisResult = z.infer<typeof analysisResultSchema>;
 
-async function saveReportToDatabase(userId: string, data: AnalysisResult) {
+const REPORT_TITLE_NUMBER_SUFFIX_PATTERN = /\s?\(\d+\)$/;
+
+const saveReportToDatabase = async (userId: string, data: AnalysisResult) => {
   try {
     const { owner, repositoryName } = parseRepositoryUrl(data.repositoryUrl);
-    const conflictingReports = await findReportsByTitlePrefix(data.reportTitle);
+    const existingReportsWithSameTitle = await findReportsByTitlePrefix(
+      userId,
+      data.reportTitle,
+    );
 
     let finalReportTitle = data.reportTitle;
-    if (conflictingReports.length > 0) {
-      const baseTitle = data.reportTitle.replace(/\s?\(\d+\)$/, "").trim();
-      const newIndex = conflictingReports.length;
+    if (existingReportsWithSameTitle.length > 0) {
+      const baseTitle = data.reportTitle
+        .replace(REPORT_TITLE_NUMBER_SUFFIX_PATTERN, "")
+        .trim();
+      const newIndex = existingReportsWithSameTitle.length;
       finalReportTitle = `${baseTitle} (${newIndex})`;
     }
 
@@ -42,6 +49,6 @@ async function saveReportToDatabase(userId: string, data: AnalysisResult) {
       message: DATA_ERROR_MESSAGES.SAVE_REPORT_FAILED,
     });
   }
-}
+};
 
 export { saveReportToDatabase };

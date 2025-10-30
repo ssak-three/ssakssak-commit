@@ -48,9 +48,11 @@ async function deleteReports({ userId, reportIds }: DeleteManyArgs) {
   return result;
 }
 
-const findReportsByTitlePrefix = async (titlePrefix: string) => {
+const findReportsByTitlePrefix = (userId: string, titlePrefix: string) => {
   return prisma.report.findMany({
     where: {
+      userId,
+      isActive: true,
       reportTitle: {
         startsWith: titlePrefix,
       },
@@ -58,7 +60,7 @@ const findReportsByTitlePrefix = async (titlePrefix: string) => {
   });
 };
 
-const saveReport = async (data: {
+const saveReport = (data: {
   userId: string;
   reportTitle: string;
   reportSummary: string;
