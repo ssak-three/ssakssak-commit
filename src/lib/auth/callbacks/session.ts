@@ -16,10 +16,6 @@ const sessionCallback: NonNullable<CallbacksOptions["session"]> = async ({
     session.user.userId = token.userId ?? null;
   }
 
-  if (token.reportHistory) {
-    session.reportHistory = token.reportHistory;
-  }
-
   return session;
 };
 
