@@ -1,0 +1,3 @@
+const JOB_ID_COOKIE_MAX_AGE = 3600;
+
+export { JOB_ID_COOKIE_MAX_AGE };

@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { JobResponse } from "@/types/job";
-import { jobStatusService } from "@/services/polling/job-status-service";
-import { cookieUtils } from "@/lib/util/cookie-utils";
+import jobApiClient from "@/lib/api/job-api-client";
+import { getJobId } from "@/lib/util/cookie-utils";
 import { JOB_ERROR_MESSAGES } from "@/constants/error-messages";
+import { JOB_STATUS, POLLING_INTERVAL } from "@/constants/report-job";
 
 interface UseJobStatusReturn {
   currentJob: JobResponse | null;
@@ -19,11 +20,14 @@ const useJobStatus = (): UseJobStatusReturn => {
 
   const pollJobStatus = useCallback(async (jobId: string) => {
     try {
-      const data = await jobStatusService.getJobStatus(jobId);
+      const data = await jobApiClient.getJobStatus(jobId);
       setCurrentJob(data);
       setError(null);
 
-      return data.status === "completed" || data.status === "failed";
+      return (
+        data.status === JOB_STATUS.COMPLETED ||
+        data.status === JOB_STATUS.FAILED
+      );
     } catch {
       setError(JOB_ERROR_MESSAGES.NETWORK_FAILED);
       return true;
@@ -36,7 +40,7 @@ const useJobStatus = (): UseJobStatusReturn => {
 
     const startPolling = async () => {
       setIsLoading(true);
-      const jobId = cookieUtils.getJobId();
+      const jobId = getJobId();
 
       if (!jobId) {
         setError(JOB_ERROR_MESSAGES.JOB_ID_NOT_FOUND);
@@ -58,7 +62,7 @@ const useJobStatus = (): UseJobStatusReturn => {
         if (shouldStop && isMounted) {
           clearInterval(intervalId!);
         }
-      }, 2000);
+      }, POLLING_INTERVAL);
     };
 
     startPolling();

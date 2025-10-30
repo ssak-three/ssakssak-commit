@@ -1,19 +1,22 @@
 "use client";
 
-import React, { useEffect } from "react";
+import { useEffect, ComponentType, SVGProps } from "react";
 import { useRouter } from "next/navigation";
 import { GitBranch, Code, BarChart3 } from "lucide-react";
 import { useJobStatus } from "@/hooks/useJobStatus";
 import { jobNavigationService } from "@/services/polling/job-navigation-service";
-import { JobProgressItem } from "@/app/ui/common/loading/job-progress-item";
-import {
-  JobCompletedCard,
-  JobErrorCard,
-  JobLoadingCard,
-} from "@/app/ui/common/loading/status-card";
+import JobProgressItem from "@/app/ui/common/loading/job-progress-item";
+import JobCompletedCard from "@/app/ui/common/loading/job-completed-card";
+import JobErrorCard from "@/app/ui/common/loading/job-error-card";
+import JobLoadingCard from "@/app/ui/common/loading/job-loading-card";
 import { Phase } from "@/types/job";
+import { JOB_PHASES, JOB_STATUS } from "@/constants/report-job";
 
-const PHASES = ["collecting", "analyzing", "visualizing"] as const;
+const PHASES = [
+  JOB_PHASES.COLLECTING,
+  JOB_PHASES.ANALYZING,
+  JOB_PHASES.VISUALIZING,
+] as Phase[];
 
 const phaseLabels: Record<Phase, string> = {
   collecting: "커밋 데이터 수집",
@@ -21,16 +24,13 @@ const phaseLabels: Record<Phase, string> = {
   visualizing: "시각화",
 };
 
-const phaseIcons: Record<
-  Phase,
-  React.ComponentType<React.SVGProps<SVGSVGElement>>
-> = {
+const phaseIcons: Record<Phase, ComponentType<SVGProps<SVGSVGElement>>> = {
   collecting: GitBranch,
   analyzing: Code,
   visualizing: BarChart3,
 };
 
-const LoadingContent: React.FC = () => {
+const LoadingContent = () => {
   const router = useRouter();
   const { currentJob, error, isLoading } = useJobStatus();
 
@@ -46,16 +46,19 @@ const LoadingContent: React.FC = () => {
 
   const getPhaseStatus = (
     phase: Phase,
-  ): "completed" | "inProgress" | "pending" => {
-    if (!currentJob?.progress) return "pending";
+  ):
+    | typeof JOB_PHASES.PENDING
+    | typeof JOB_STATUS.IN_PROGRESS
+    | typeof JOB_STATUS.COMPLETED => {
+    if (!currentJob?.progress) return JOB_PHASES.PENDING;
 
     const currentPhase = currentJob.progress.phase;
     const currentIndex = PHASES.indexOf(currentPhase);
     const phaseIndex = PHASES.indexOf(phase);
 
-    if (phaseIndex < currentIndex) return "completed";
-    if (phaseIndex === currentIndex) return "inProgress";
-    return "pending";
+    if (phaseIndex < currentIndex) return JOB_STATUS.COMPLETED;
+    if (phaseIndex === currentIndex) return JOB_STATUS.IN_PROGRESS;
+    return JOB_PHASES.PENDING;
   };
 
   if (error) {
@@ -66,7 +69,7 @@ const LoadingContent: React.FC = () => {
     return <JobLoadingCard />;
   }
 
-  if (currentJob.status === "completed") {
+  if (currentJob.status === JOB_STATUS.COMPLETED) {
     return <JobCompletedCard />;
   }
 
@@ -80,7 +83,7 @@ const LoadingContent: React.FC = () => {
           icon={phaseIcons[phase]}
           label={phaseLabels[phase]}
           progressInfo={
-            getPhaseStatus(phase) === "inProgress"
+            getPhaseStatus(phase) === JOB_STATUS.IN_PROGRESS
               ? (currentJob.progress?.meta ??
                 (currentJob.derivedPercent !== undefined
                   ? { percent: currentJob.derivedPercent }

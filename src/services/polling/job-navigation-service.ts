@@ -1,24 +1,31 @@
 import { JobResponse } from "@/types/job";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { JOB_STATUS } from "@/constants/report-job";
 
-class JobNavigationService {
-  shouldNavigateToResult(jobData: JobResponse): boolean {
-    return jobData.status === "completed" && !!jobData.reportKey;
-  }
+const NAVIGATION_DELAY_MS = 1500;
 
-  navigateToResult(
-    router: AppRouterInstance,
-    reportKey: string,
-    delay: number = 1500,
-  ): void {
-    setTimeout(() => {
-      router.replace(`/report-view/${reportKey}`);
-    }, delay);
-  }
-
-  navigateToHome(router: AppRouterInstance): void {
-    router.push("/");
-  }
+function shouldNavigateToResult(jobData: JobResponse): boolean {
+  return jobData.status === JOB_STATUS.COMPLETED && !!jobData.reportKey;
 }
 
-export const jobNavigationService = new JobNavigationService();
+function navigateToResult(
+  router: AppRouterInstance,
+  reportKey: string,
+  delay: number = NAVIGATION_DELAY_MS,
+): void {
+  setTimeout(() => {
+    router.replace(`/report-view/${reportKey}`);
+  }, delay);
+}
+
+function navigateToHome(router: AppRouterInstance): void {
+  router.push("/");
+}
+
+const jobNavigationService = {
+  shouldNavigateToResult,
+  navigateToResult,
+  navigateToHome,
+};
+
+export { jobNavigationService };

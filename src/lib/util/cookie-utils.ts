@@ -1,25 +1,25 @@
-class CookieUtils {
-  getJobId(): string | null {
-    if (typeof document === "undefined") return null;
+import { JOB_ID_COOKIE_MAX_AGE } from "@/constants/cookie";
 
-    const cookies = document.cookie.split(";");
-    const jobIdCookie = cookies.find((cookie) =>
-      cookie.trim().startsWith("jobId="),
-    );
-    return jobIdCookie ? jobIdCookie.split("=")[1] : null;
-  }
+function getJobId(): string | null {
+  if (typeof document === "undefined") return null;
 
-  setJobId(jobId: string, maxAge: number = 3600): void {
-    if (typeof document === "undefined") return;
-
-    document.cookie = `jobId=${jobId}; path=/; max-age=${maxAge}`;
-  }
-
-  removeJobId(): void {
-    if (typeof document === "undefined") return;
-
-    document.cookie = "jobId=; path=/; max-age=0";
-  }
+  const cookies = document.cookie.split(";");
+  const jobIdCookie = cookies.find((cookie) =>
+    cookie.trim().startsWith("jobId="),
+  );
+  return jobIdCookie ? jobIdCookie.split("=")[1] : null;
 }
 
-export const cookieUtils = new CookieUtils();
+function setJobId(jobId: string, maxAge: number = JOB_ID_COOKIE_MAX_AGE): void {
+  if (typeof document === "undefined") return;
+
+  document.cookie = `jobId=${jobId}; path=/; max-age=${maxAge}`;
+}
+
+function removeJobId(): void {
+  if (typeof document === "undefined") return;
+
+  document.cookie = "jobId=; path=/; max-age=0";
+}
+
+export { getJobId, setJobId, removeJobId };
