@@ -1,13 +1,13 @@
 import { Worker, Job } from "bullmq";
 import { getRedisSubscriber } from "@/infra/cache/redis-connection";
 import { logger } from "@/lib/logger";
-import { saveCompletedResult } from "@/infra/cache/report-result-cache";
+import { saveReportToRedis } from "@/infra/cache/report-result-cache";
 import { ReportProgress } from "@/types/job-progress";
 import { JOB_PHASES, JOB_QUEUE } from "@/constants/report-job";
 import { AppError } from "@/errors";
 import { WORKER_CONCURRENCY } from "@/constants/worker-config";
 import { JOB_ERROR_MESSAGES } from "@/constants/error-messages";
-import { saveAnalysisReport } from "@/services/reports/save-report";
+import { saveReportToDatabase } from "@/services/reports/save-report";
 
 type ReportCreationJobData = {
   userId?: string;
@@ -46,9 +46,9 @@ const reportCreationWorker = new Worker<ReportCreationJobData, unknown>(
       let reportId: string;
 
       if (job.data.userId) {
-        reportId = await saveAnalysisReport(job.data.userId!, result);
+        reportId = await saveReportToDatabase(job.data.userId!, result);
       } else {
-        reportId = await saveCompletedResult(
+        reportId = await saveReportToRedis(
           connection,
           job.id as string,
           result,

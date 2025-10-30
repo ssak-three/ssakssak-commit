@@ -58,7 +58,7 @@ const findReportsByTitlePrefix = async (titlePrefix: string) => {
   });
 };
 
-const saveReportToDatabase = async (data: {
+const saveReport = async (data: {
   userId: string;
   reportTitle: string;
   reportSummary: string;
@@ -89,5 +89,5 @@ export {
   getReports,
   deleteReports,
   findReportsByTitlePrefix,
-  saveReportToDatabase,
+  saveReport,
 };

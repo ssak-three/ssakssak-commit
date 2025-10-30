@@ -1,17 +1,14 @@
 import { z } from "zod";
 import { analysisResultSchema } from "@/lib/validators/structured-analysis-result";
 import parseRepositoryUrl from "@/lib/parse-repository-url";
-import {
-  findReportsByTitlePrefix,
-  saveReportToDatabase,
-} from "@/repositories/report";
+import { findReportsByTitlePrefix, saveReport } from "@/repositories/report";
 import { logger } from "@/lib/logger";
 import { BadGatewayError } from "@/errors";
 import { DATA_ERROR_MESSAGES } from "@/constants/error-messages";
 
 type AnalysisResult = z.infer<typeof analysisResultSchema>;
 
-async function saveAnalysisReport(userId: string, data: AnalysisResult) {
+async function saveReportToDatabase(userId: string, data: AnalysisResult) {
   try {
     const { owner, repositoryName } = parseRepositoryUrl(data.repositoryUrl);
     const conflictingReports = await findReportsByTitlePrefix(data.reportTitle);
@@ -23,7 +20,7 @@ async function saveAnalysisReport(userId: string, data: AnalysisResult) {
       finalReportTitle = `${baseTitle} (${newIndex})`;
     }
 
-    const report = await saveReportToDatabase({
+    const report = await saveReport({
       userId,
       owner,
       repositoryName,
@@ -47,4 +44,4 @@ async function saveAnalysisReport(userId: string, data: AnalysisResult) {
   }
 }
 
-export { saveAnalysisReport };
+export { saveReportToDatabase };

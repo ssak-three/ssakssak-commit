@@ -22,7 +22,7 @@ type ResultPayload<T> = {
   expiresAt: string;
 };
 
-async function saveCompletedResult<T>(
+async function saveReportToRedis<T>(
   redis: IORedis,
   jobId: string,
   result: T,
@@ -58,4 +58,4 @@ async function getResultByReportKey<T = unknown>(
   return cachedResult ? (JSON.parse(cachedResult) as ResultPayload<T>) : null;
 }
 
-export { generateReportId, saveCompletedResult, getResultByReportKey };
+export { generateReportId, saveReportToRedis, getResultByReportKey };
