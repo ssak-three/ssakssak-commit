@@ -31,7 +31,6 @@ interface JobResponse {
     unprocessed: number;
     ignored: number;
   };
-  derivedPercent?: number;
 }
 
 export type { JobStatus, Phase, JobProgress, JobResponse };

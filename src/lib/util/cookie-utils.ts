@@ -1,6 +1,6 @@
 import { JOB_ID_COOKIE_MAX_AGE } from "@/constants/cookie";
 
-function getJobId(): string | null {
+const getJobId = (): string | null => {
   if (typeof document === "undefined") return null;
 
   const cookies = document.cookie.split(";");
@@ -8,18 +8,21 @@ function getJobId(): string | null {
     cookie.trim().startsWith("jobId="),
   );
   return jobIdCookie ? jobIdCookie.split("=")[1] : null;
-}
+};
 
-function setJobId(jobId: string, maxAge: number = JOB_ID_COOKIE_MAX_AGE): void {
+const setJobId = (
+  jobId: string,
+  maxAge: number = JOB_ID_COOKIE_MAX_AGE,
+): void => {
   if (typeof document === "undefined") return;
 
   document.cookie = `jobId=${jobId}; path=/; max-age=${maxAge}`;
-}
+};
 
-function removeJobId(): void {
+const removeJobId = (): void => {
   if (typeof document === "undefined") return;
 
   document.cookie = "jobId=; path=/; max-age=0";
-}
+};
 
 export { getJobId, setJobId, removeJobId };

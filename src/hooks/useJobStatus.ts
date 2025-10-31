@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { JobResponse } from "@/types/job";
-import jobApiClient from "@/lib/api/job-api-client";
+import getJobStatus from "@/lib/api/job-api-client";
 import { getJobId } from "@/lib/util/cookie-utils";
 import { JOB_ERROR_MESSAGES } from "@/constants/error-messages";
 import { JOB_STATUS, POLLING_INTERVAL } from "@/constants/report-job";
@@ -20,7 +20,7 @@ const useJobStatus = (): UseJobStatusReturn => {
 
   const pollJobStatus = useCallback(async (jobId: string) => {
     try {
-      const data = await jobApiClient.getJobStatus(jobId);
+      const data = await getJobStatus(jobId);
       setCurrentJob(data);
       setError(null);
 

@@ -30,7 +30,7 @@ const phaseIcons: Record<Phase, ComponentType<SVGProps<SVGSVGElement>>> = {
   visualizing: BarChart3,
 };
 
-const LoadingContent = () => {
+function LoadingContent() {
   const router = useRouter();
   const { currentJob, error, isLoading } = useJobStatus();
 
@@ -84,16 +84,13 @@ const LoadingContent = () => {
           label={phaseLabels[phase]}
           progressInfo={
             getPhaseStatus(phase) === JOB_STATUS.IN_PROGRESS
-              ? (currentJob.progress?.meta ??
-                (currentJob.derivedPercent !== undefined
-                  ? { percent: currentJob.derivedPercent }
-                  : undefined))
+              ? currentJob.progress?.meta
               : undefined
           }
         />
       ))}
     </div>
   );
-};
+}
 
 export default LoadingContent;
