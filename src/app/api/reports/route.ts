@@ -7,6 +7,7 @@ import getAccessToken from "@/lib/auth/get-access-token";
 import { SYSTEM_ERROR_MESSAGES } from "@/constants/error-messages";
 import { deleteReports, getReports } from "@/repositories/report";
 import { requireUserId } from "@/lib/auth/require-session";
+import getUserId from "@/lib/auth/get-user-id";
 
 async function GET() {
   const userId = await requireUserId();
@@ -36,8 +37,13 @@ async function POST(request: NextRequest): Promise<NextResponse> {
     const body = await request.json();
     const validatedResult = validateReportInput(body);
     const accessToken = await getAccessToken();
+    const userId = await getUserId();
 
-    const job = await addReportCreationJob({ ...validatedResult, accessToken });
+    const job = await addReportCreationJob({
+      ...validatedResult,
+      userId,
+      accessToken,
+    });
 
     return NextResponse.json(
       { status: "queued", jobId: job.id },

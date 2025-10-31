@@ -13,6 +13,7 @@ const VALIDATION_ERROR_MESSAGES = {
       "유효한 Github 레포지토리 URL 형식이 아닙니다. 예: https://github.com/owner/repo",
     BRANCH_REQUIRED: "branch는 필수 항목입니다.",
     BRANCH_INVALID_TYPE: "branch는 문자열이어야 합니다.",
+    USER_ID_REQUIRED: "사용자 ID는 필수 항목입니다.",
   },
 };
 
@@ -71,6 +72,7 @@ const DATA_ERROR_MESSAGES = {
   READ: "데이터를 불러오는 데 실패했습니다. 다시 시도해 주세요.",
   UPDATE: "업데이트를 실패했습니다. 잠시 후 다시 시도해 주세요.",
   DELETE: "삭제를 실패했습니다. 잠시 후 다시 시도해 주세요.",
+  SAVE_REPORT_FAILED: "리포트 저장에 실패했습니다.",
 };
 
 const RATE_LIMIT_MESSAGES = {

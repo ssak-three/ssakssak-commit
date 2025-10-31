@@ -34,7 +34,10 @@ const submitReportAction = async (
 
     const response = await fetch(`${process.env.NEXTAUTH_URL}/api/reports`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        cookie: (await cookies()).toString(),
+      },
       body: JSON.stringify(body),
       cache: "no-store",
     });
