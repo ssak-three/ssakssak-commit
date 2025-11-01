@@ -12,7 +12,9 @@ function JobErrorCard({ error, onReturnHome }: JobErrorCardProps) {
         <span className="text-xl font-bold">!</span>
       </div>
       <p className="text-lg font-semibold text-red-800">오류가 발생했습니다</p>
-      <p className="text-center text-sm text-red-700">{error}</p>
+      <p className="text-center text-sm break-words whitespace-pre-wrap text-red-700">
+        {error}
+      </p>
       <button
         onClick={onReturnHome}
         className="mt-2 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
