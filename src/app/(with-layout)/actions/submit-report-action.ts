@@ -56,8 +56,8 @@ const submitReportAction = async (
 
     const cookieStore = await cookies();
     cookieStore.set("jobId", jobId, {
-      path: "/loading",
-      httpOnly: true,
+      path: "/",
+      httpOnly: false,
       sameSite: "lax",
       secure: true,
       maxAge: 60 * 5,
