@@ -5,16 +5,16 @@ import { JOB_STATUS } from "@/constants/report-job";
 const NAVIGATION_DELAY_MS = 1500;
 
 const shouldNavigateToResult = (jobData: JobResponse): boolean => {
-  return jobData.status === JOB_STATUS.COMPLETED && !!jobData.reportKey;
+  return jobData.status === JOB_STATUS.COMPLETED && !!jobData.reportId;
 };
 
 const navigateToResult = (
   router: AppRouterInstance,
-  reportKey: string,
+  reportId: string,
   delay: number = NAVIGATION_DELAY_MS,
 ): void => {
   setTimeout(() => {
-    router.replace(`/report-view/${reportKey}`);
+    router.replace(`/report-view/${reportId}`);
   }, delay);
 };
 

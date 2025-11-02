@@ -36,7 +36,7 @@ function LoadingContent() {
 
   useEffect(() => {
     if (currentJob && jobNavigationService.shouldNavigateToResult(currentJob)) {
-      jobNavigationService.navigateToResult(router, currentJob.reportKey!);
+      jobNavigationService.navigateToResult(router, currentJob.reportId!);
     }
   }, [currentJob, router]);
 

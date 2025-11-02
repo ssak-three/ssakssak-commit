@@ -21,7 +21,7 @@ interface JobProgress {
 
 interface JobResponse {
   status: JobStatus;
-  reportKey?: string;
+  reportId?: string;
   reason?: string;
   state?: string;
   progress?: JobProgress;
