@@ -13,6 +13,7 @@ const VALIDATION_ERROR_MESSAGES = {
       "유효한 Github 레포지토리 URL 형식이 아닙니다. 예: https://github.com/owner/repo",
     BRANCH_REQUIRED: "branch는 필수 항목입니다.",
     BRANCH_INVALID_TYPE: "branch는 문자열이어야 합니다.",
+    USER_ID_REQUIRED: "사용자 ID는 필수 항목입니다.",
   },
 };
 
@@ -27,6 +28,7 @@ const SYSTEM_ERROR_MESSAGES = {
   SERVER: "서버 오류가 발생했습니다.",
   NETWORK: "네트워크 에러가 발생했습니다. 잠시 후 다시 시도해 주세요.",
   UNKNOWN: "알 수 없는 오류가 발생했습니다.",
+  UNEXPECTED: "예상치 못한 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
 };
 
 const MERMAID_ERROR_MESSAGES = {
@@ -47,6 +49,7 @@ const AUTH_ERROR_MESSAGES = {
   UNKNOWN: "로그인 처리 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.",
   SESSION_EXPIRED:
     "세션이 만료되었거나 올바르지 않습니다. 로그인 후 이용해 주세요.",
+  UNAUTHORIZED: "로그인이 필요합니다.",
 };
 
 const OPENAI_ERROR_MESSAGES = {
@@ -69,8 +72,13 @@ const DATA_ERROR_MESSAGES = {
   READ: "데이터를 불러오는 데 실패했습니다. 다시 시도해 주세요.",
   UPDATE: "업데이트를 실패했습니다. 잠시 후 다시 시도해 주세요.",
   DELETE: "삭제를 실패했습니다. 잠시 후 다시 시도해 주세요.",
+  SAVE_REPORT_FAILED: "리포트 저장에 실패했습니다.",
 };
 
+const RATE_LIMIT_MESSAGES = {
+  INSUFFICIENT_REQUESTS:
+    "현재 비회원 이용 한도가 초과되었습니다. 로그인 후 다시 시도하거나 {restTime} 이후에 이용해주세요.",
+};
 const JOB_ERROR_MESSAGES = {
   JOB_ID_REQUIRED: "jobId 값이 필요합니다.",
   NOT_FOUND: "해당 작업을 찾을 수 없습니다",
@@ -78,6 +86,10 @@ const JOB_ERROR_MESSAGES = {
     "분석 작업을 불러올 수 없어요.\n홈으로 돌아가 새로 시작해 주세요.",
   NETWORK_FAILED: "일시적인 오류가 발생했어요.\n잠시 후 다시 시도해 주세요.",
   FETCH_FAILED: "작업 상태를 불러오는 데 실패했습니다.",
+};
+
+const REPORT_ERROR_MESSAGES = {
+  NOT_FOUND: "요청하신 리포트를 찾을 수 없습니다.",
 };
 
 export {
@@ -90,5 +102,7 @@ export {
   AUTH_ERROR_MESSAGES,
   PROVIDER_ERROR_MESSAGES,
   DATA_ERROR_MESSAGES,
+  RATE_LIMIT_MESSAGES,
   JOB_ERROR_MESSAGES,
+  REPORT_ERROR_MESSAGES,
 };

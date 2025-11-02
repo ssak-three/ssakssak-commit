@@ -3,7 +3,7 @@ import { ReportData } from "@/types/report";
 import Header from "@/app/ui/report-view/header/header";
 import MainSection from "@/app/ui/report-view/main-area/main-section";
 import AsideSection from "@/app/ui/report-view/aside-area/aside-section";
-import { getResultByReportKey } from "@/infra/messaging/result-store";
+import { getResultByReportKey } from "@/infra/cache/report-result-cache";
 import { getRedisClient } from "@/infra/cache/redis-connection";
 import { notFound } from "next/navigation";
 

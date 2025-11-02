@@ -19,7 +19,7 @@ const upsertUser = async ({
     isActive: true,
   };
 
-  return await prisma.user.upsert({
+  return prisma.user.upsert({
     where: {
       githubId: githubId,
     },
@@ -35,11 +35,4 @@ const upsertUser = async ({
   });
 };
 
-const findUserIdByGithubId = async (githubId: bigint) => {
-  return prisma.user.findUnique({
-    where: { githubId: githubId },
-    select: { userId: true },
-  });
-};
-
-export { upsertUser, findUserIdByGithubId };
+export { upsertUser };
