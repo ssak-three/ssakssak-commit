@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function ExportButton() {
   const [open, setOpen] = useState(false);
   const [copyDone, setCopyDone] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const handleCopyLink = async () => {
     setCopyDone(false);
@@ -23,8 +24,19 @@ function ExportButton() {
     }
   };
 
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    <div className="relative inline-block text-left">
+    <div ref={menuRef} className="relative inline-block text-left">
       <button
         onClick={() => setOpen((isOpen) => !isOpen)}
         className="cursor-pointer rounded-lg border px-3 py-2 text-sm hover:bg-gray-50"
