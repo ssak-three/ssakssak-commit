@@ -12,8 +12,10 @@ import {
 } from "@/constants/error-messages";
 import { BranchList } from "@/types/branch";
 import ComboboxPopover from "@/app/ui/common/combobox";
+import { InfoTooltip } from "@/app/ui/common/tooltip";
 
 function RepositoryBranchSelector() {
+  const [repositoryUrl, setRepositoryUrl] = useState("");
   const [branches, setBranches] = useState<BranchList[]>([]);
   const [selectedBranch, setSelectedBranch] = useState<string | null>(null);
   const [fetchError, setFetchError] = useState<string | null>(null);
@@ -28,13 +30,9 @@ function RepositoryBranchSelector() {
     setBranches([]);
     setSelectedBranch(null);
 
-    const form = e.currentTarget.form;
-    if (!form) return;
+    const trimmedRepositoryUrl = repositoryUrl.trim();
 
-    const formData = new FormData(form);
-    const repositoryUrl = String(formData.get("repositoryUrl") || "").trim();
-
-    if (!GITHUB_REPOSITORY_RULES.REPOSITORY_REGEX.test(repositoryUrl)) {
+    if (!GITHUB_REPOSITORY_RULES.REPOSITORY_REGEX.test(trimmedRepositoryUrl)) {
       setFetchError(GITHUB_REPOSITORY_ERROR_MESSAGES.INVALID_URL);
       return;
     }
@@ -43,7 +41,7 @@ function RepositoryBranchSelector() {
       setLoading(true);
 
       const response = await fetch(
-        `/api/branches?repositoryUrl=${repositoryUrl}`,
+        `/api/branches?repositoryUrl=${trimmedRepositoryUrl}`,
       );
 
       const data = await response.json().catch(() => null);
@@ -73,6 +71,15 @@ function RepositoryBranchSelector() {
         <div className="flex items-center justify-center gap-1">
           <Label>리포지토리 URL</Label>
           <Label className="text-[#ff0000]">*</Label>
+          <InfoTooltip
+            content={
+              <>
+                분석할 GitHub 리포지토리의 전체 URL을 입력해 주세요.
+                <br />
+                예시: https://github.com/owner/repository
+              </>
+            }
+          />
         </div>
 
         <Button
@@ -85,19 +92,22 @@ function RepositoryBranchSelector() {
         </Button>
       </div>
 
-      <Input
-        required
-        name="repositoryUrl"
-        placeholder="https://github.com/{리포지토리 소유자}/{리포지토리 이름}"
-        className="rounded-lg border border-neutral-300 bg-white px-4 py-3 text-base text-neutral-900 placeholder:text-neutral-400 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 focus:outline-none"
-      />
+      <div className="flex flex-col gap-2">
+        <Input
+          required
+          name="repositoryUrl"
+          value={repositoryUrl}
+          onChange={(e) => setRepositoryUrl(e.target.value)}
+          placeholder="https://github.com/{리포지토리 소유자}/{리포지토리 이름}"
+          className={`rounded-lg border bg-white px-4 py-3 text-base text-neutral-900 placeholder:text-neutral-400 focus:ring-2 focus:outline-none ${
+            fetchError
+              ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+              : "border-neutral-300 focus:border-sky-400 focus:ring-sky-100"
+          }`}
+        />
 
-      <div className="flex h-[30px] items-center">
         {fetchError ? (
-          <ErrorMessage
-            className="pt-5 whitespace-pre-wrap"
-            message={String(fetchError)}
-          />
+          <ErrorMessage message={fetchError} />
         ) : branches.length > 0 ? (
           <ComboboxPopover
             items={branches}

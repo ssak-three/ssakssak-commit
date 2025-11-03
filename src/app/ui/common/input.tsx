@@ -5,7 +5,8 @@ import { Label } from "@/app/ui/common/label";
 
 type InputFieldProps = Omit<React.ComponentProps<"input">, "id"> & {
   id: string;
-  label: string;
+  label?: string;
+  labelSlot?: React.ReactNode;
 };
 
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
@@ -24,10 +25,13 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   );
 }
 
-function InputField({ id, label, ...props }: InputFieldProps) {
+function InputField({ id, label, labelSlot, ...props }: InputFieldProps) {
   return (
     <div className="grid w-full items-center gap-3">
-      <Label htmlFor={id}>{label}</Label>
+      <div className="flex items-center gap-1">
+        <Label htmlFor={id}>{label}</Label>
+        {labelSlot}
+      </div>
       <Input id={id} {...props} />
     </div>
   );
