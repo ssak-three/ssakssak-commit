@@ -16,26 +16,12 @@ model User {
   isActive        Boolean         @default(true) @map("is_active")
   createdAt       DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt       DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
-  reportHistories ReportHistory[]
   repositories    Repository[]
   reports         Report[]
 
   @@map("users")
 }
 
-model ReportHistory {
-  reportHistoryId    String   @id @default(dbgenerated("gen_random_uuid()")) @map("report_history_id") @db.Uuid
-  userId             String   @map("user_id") @db.Uuid
-  reportTitle        String   @map("report_title")
-  repositoryOverview String?  @map("repository_overview")
-  isActive           Boolean  @default(true) @map("is_active")
-  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt          DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
-  repositoryUrl      String   @map("repository_url")
-  user               User     @relation(fields: [userId], references: [userId], onDelete: NoAction, onUpdate: NoAction, map: "fk_report_histories_user_id")
-
-  @@map("report_histories")
-}
 
 model Repository {
   repositoryId        String   @id @default(dbgenerated("gen_random_uuid()")) @map("repository_id") @db.Uuid
