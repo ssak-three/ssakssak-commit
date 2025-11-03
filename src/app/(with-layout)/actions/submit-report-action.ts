@@ -20,9 +20,6 @@ const submitReportAction = async (
       ).trim(),
       repositoryUrl: String(formData.get("repositoryUrl") ?? "").trim(),
       branch: String(formData.get("branch") ?? "").trim(),
-      reportHistoryId: formData.get("reportHistoryId")
-        ? String(formData.get("reportHistoryId"))
-        : null,
     };
 
     if (!body.repositoryUrl || !body.branch) {
