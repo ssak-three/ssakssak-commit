@@ -18,6 +18,7 @@ const VALIDATION_ERROR_MESSAGES = {
 };
 
 const GITHUB_REPOSITORY_ERROR_MESSAGES = {
+  EMPTY_URL: "리포지토리 URL을 입력해 주세요.",
   INVALID_URL: "유효한 GitHub 리포지토리 URL을 입력해 주세요.",
   NOT_FOUND:
     "존재하지 않거나 접근할 수 없는 리포지토리입니다.\n비회원일 경우, 해당 리포지토리가 비공개 리포지토리인지 확인해 주세요.",

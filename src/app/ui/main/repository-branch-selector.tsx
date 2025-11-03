@@ -32,6 +32,11 @@ function RepositoryBranchSelector() {
 
     const trimmedRepositoryUrl = repositoryUrl.trim();
 
+    if (!trimmedRepositoryUrl) {
+      setFetchError(GITHUB_REPOSITORY_ERROR_MESSAGES.EMPTY_URL);
+      return;
+    }
+
     if (!GITHUB_REPOSITORY_RULES.REPOSITORY_REGEX.test(trimmedRepositoryUrl)) {
       setFetchError(GITHUB_REPOSITORY_ERROR_MESSAGES.INVALID_URL);
       return;
