@@ -5,6 +5,14 @@ import { VALIDATION_ERROR_MESSAGES } from "@/constants/error-messages";
 import { GITHUB_REPOSITORY_RULES } from "@/constants/validations";
 
 const reportInputSchema = z.strictObject({
+  userId: z
+    .string({
+      required_error: VALIDATION_ERROR_MESSAGES.REPORT_INPUT.USER_ID_REQUIRED,
+    })
+    .uuid()
+    .optional()
+    .nullable(),
+
   reportTitle: z
     .string()
     .max(20, VALIDATION_ERROR_MESSAGES.REPORT_INPUT.TITLE_MAX_LENGTH)
@@ -45,8 +53,6 @@ const reportInputSchema = z.strictObject({
     invalid_type_error:
       VALIDATION_ERROR_MESSAGES.REPORT_INPUT.BRANCH_INVALID_TYPE,
   }),
-
-  reportHistoryId: z.string().optional().nullable(),
 });
 
 type ValidatedReportInput = z.infer<typeof reportInputSchema>;

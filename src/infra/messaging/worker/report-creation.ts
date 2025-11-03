@@ -1,14 +1,16 @@
 import { Worker, Job } from "bullmq";
 import { getRedisSubscriber } from "@/infra/cache/redis-connection";
 import { logger } from "@/lib/logger";
-import { saveCompletedResult } from "@/infra/messaging/result-store";
+import { saveReportToRedis } from "@/infra/cache/report-result-cache";
 import { ReportProgress } from "@/types/job-progress";
 import { JOB_PHASES, JOB_QUEUE } from "@/constants/report-job";
 import { AppError } from "@/errors";
 import { WORKER_CONCURRENCY } from "@/constants/worker-config";
 import { JOB_ERROR_MESSAGES } from "@/constants/error-messages";
+import { saveReportToDatabase } from "@/services/reports/save-report";
 
 type ReportCreationJobData = {
+  userId?: string;
   reportTitle: string;
   repositoryUrl: string;
   branch: string;
@@ -41,15 +43,22 @@ const reportCreationWorker = new Worker<ReportCreationJobData, unknown>(
         onProgress: reportProgress,
       });
 
-      const reportKey = await saveCompletedResult(
-        connection,
-        job.id as string,
-        result,
-      );
+      let reportId: string;
+
+      if (job.data.userId) {
+        reportId = await saveReportToDatabase(job.data.userId!, result);
+      } else {
+        reportId = await saveReportToRedis(
+          connection,
+          job.id as string,
+          result,
+        );
+      }
+
       logger.info(`[job ${job.id}] DONE`);
       await reportProgress({ phase: JOB_PHASES.COMPLETED });
 
-      return { reportKey };
+      return { reportId };
     } catch (error) {
       logger.error(`[job ${job.id}] FAILED : ${error}`);
       throw error;

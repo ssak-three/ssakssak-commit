@@ -59,11 +59,11 @@ function CommitSection({ commits }: CommitSectionProps) {
 
                   switch (analysis.type) {
                     case ANALYSIS_TYPES.EXPLANATION:
-                      return <Explanation key={key} data={[analysis]} />;
+                      return <Explanation key={key} data={analysis} />;
                     case ANALYSIS_TYPES.CODE_DIFF:
-                      return <CodeDiff key={key} data={[analysis]} />;
+                      return <CodeDiff key={key} data={analysis} />;
                     case ANALYSIS_TYPES.DIAGRAM:
-                      return <DiagramBox key={key} data={[analysis]} />;
+                      return <DiagramBox key={key} data={analysis} />;
                     default:
                       return null;
                   }

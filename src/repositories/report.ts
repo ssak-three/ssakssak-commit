@@ -48,4 +48,48 @@ async function deleteReports({ userId, reportIds }: DeleteManyArgs) {
   return result;
 }
 
-export { getByReportId, getReports, deleteReports };
+const findReportsByTitlePrefix = (userId: string, titlePrefix: string) => {
+  return prisma.report.findMany({
+    where: {
+      userId,
+      isActive: true,
+      reportTitle: {
+        startsWith: titlePrefix,
+      },
+    },
+  });
+};
+
+const saveReport = (data: {
+  userId: string;
+  reportTitle: string;
+  reportSummary: string;
+  reportConclusion: string;
+  owner: string;
+  repositoryName: string;
+  repositoryUrl: string;
+  branch: string;
+  commits: Prisma.JsonValue;
+}) => {
+  return prisma.report.create({
+    data: {
+      userId: data.userId,
+      reportTitle: data.reportTitle,
+      reportSummary: data.reportSummary,
+      reportConclusion: data.reportConclusion,
+      owner: data.owner,
+      repositoryName: data.repositoryName,
+      repositoryUrl: data.repositoryUrl,
+      branch: data.branch,
+      commits: data.commits as Prisma.InputJsonValue,
+    },
+  });
+};
+
+export {
+  getByReportId,
+  getReports,
+  deleteReports,
+  findReportsByTitlePrefix,
+  saveReport,
+};

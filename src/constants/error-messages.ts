@@ -13,6 +13,7 @@ const VALIDATION_ERROR_MESSAGES = {
       "유효한 Github 레포지토리 URL 형식이 아닙니다. 예: https://github.com/owner/repo",
     BRANCH_REQUIRED: "branch는 필수 항목입니다.",
     BRANCH_INVALID_TYPE: "branch는 문자열이어야 합니다.",
+    USER_ID_REQUIRED: "사용자 ID는 필수 항목입니다.",
   },
 };
 
@@ -71,6 +72,7 @@ const DATA_ERROR_MESSAGES = {
   READ: "데이터를 불러오는 데 실패했습니다. 다시 시도해 주세요.",
   UPDATE: "업데이트를 실패했습니다. 잠시 후 다시 시도해 주세요.",
   DELETE: "삭제를 실패했습니다. 잠시 후 다시 시도해 주세요.",
+  SAVE_REPORT_FAILED: "리포트 저장에 실패했습니다.",
 };
 
 const RATE_LIMIT_MESSAGES = {
@@ -80,6 +82,10 @@ const RATE_LIMIT_MESSAGES = {
 const JOB_ERROR_MESSAGES = {
   JOB_ID_REQUIRED: "jobId 값이 필요합니다.",
   NOT_FOUND: "해당 작업을 찾을 수 없습니다",
+  JOB_ID_NOT_FOUND:
+    "분석 작업을 불러올 수 없어요.\n홈으로 돌아가 새로 시작해 주세요.",
+  NETWORK_FAILED: "일시적인 오류가 발생했어요.\n잠시 후 다시 시도해 주세요.",
+  FETCH_FAILED: "작업 상태를 불러오는 데 실패했습니다.",
 };
 
 const REPORT_ERROR_MESSAGES = {

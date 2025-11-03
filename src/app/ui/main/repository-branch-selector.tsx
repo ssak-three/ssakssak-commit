@@ -12,10 +12,8 @@ import {
 } from "@/constants/error-messages";
 import { BranchList } from "@/types/branch";
 import ComboboxPopover from "@/app/ui/common/combobox";
-import { useReportHistory } from "@/hooks/useVerifiedContext";
 
 function RepositoryBranchSelector() {
-  const { selected } = useReportHistory();
   const [branches, setBranches] = useState<BranchList[]>([]);
   const [selectedBranch, setSelectedBranch] = useState<string | null>(null);
   const [fetchError, setFetchError] = useState<string | null>(null);
@@ -90,7 +88,6 @@ function RepositoryBranchSelector() {
       <Input
         required
         name="repositoryUrl"
-        defaultValue={selected?.repositoryUrl ?? ""}
         placeholder="https://github.com/{리포지토리 소유자}/{리포지토리 이름}"
         className="rounded-lg border border-neutral-300 bg-white px-4 py-3 text-base text-neutral-900 placeholder:text-neutral-400 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 focus:outline-none"
       />

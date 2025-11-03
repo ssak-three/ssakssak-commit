@@ -2,10 +2,10 @@ import { AppError, NotFoundError } from "@/errors";
 import { getRedisSubscriber } from "@/infra/cache/redis-connection";
 import { Queue } from "bullmq";
 import { NextRequest, NextResponse } from "next/server";
-import { JOB_QUEUE, JOB_PHASES, JOB_STATES } from "@/constants/report-job";
+import { JOB_QUEUE, JOB_PHASES, JOB_STATUS } from "@/constants/report-job";
 import { JOB_ERROR_MESSAGES } from "@/constants/error-messages";
 
-const { PROCESSING, COMPLETED, FAILED } = JOB_STATES;
+const { PROCESSING, COMPLETED, FAILED } = JOB_STATUS;
 const { JOB_ID_REQUIRED, NOT_FOUND } = JOB_ERROR_MESSAGES;
 
 async function GET(
@@ -36,10 +36,10 @@ async function GET(
     const progress = job.progress;
 
     if (state === COMPLETED) {
-      const returnValue = job.returnvalue as { reportKey?: string } | null;
-      if (returnValue?.reportKey) {
+      const returnValue = job.returnvalue as { reportId?: string } | null;
+      if (returnValue?.reportId) {
         return NextResponse.json(
-          { status: COMPLETED, reportKey: returnValue.reportKey },
+          { status: COMPLETED, reportId: returnValue.reportId },
           { status: 200, headers: { "Cache-Control": "no-store" } },
         );
       }
