@@ -1,11 +1,9 @@
 import { ReportData } from "@/types/report";
-
 import Header from "@/app/ui/report-view/header/header";
 import MainSection from "@/app/ui/report-view/main-area/main-section";
 import AsideSection from "@/app/ui/report-view/aside-area/aside-section";
-import { getResultByReportKey } from "@/infra/cache/report-result-cache";
-import { getRedisClient } from "@/infra/cache/redis-connection";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 
 async function ReportViewPage({
   params,
@@ -13,14 +11,21 @@ async function ReportViewPage({
   params: Promise<{ reportId: string }>;
 }) {
   const { reportId } = await params;
-  const redis = getRedisClient();
-  const result = await getResultByReportKey<ReportData>(redis, reportId);
 
-  if (!result) {
+  const baseUrl = process.env.NEXTAUTH_URL;
+  const cookieStore = await cookies();
+  const response = await fetch(`${baseUrl}/api/reports/${reportId}`, {
+    cache: "no-store",
+    headers: {
+      Cookie: cookieStore.toString(),
+    },
+  });
+
+  if (!response.ok) {
     notFound();
   }
 
-  const reportData = result.data;
+  const { report: reportData }: { report: ReportData } = await response.json();
 
   return (
     <div className="flex min-h-screen w-full flex-col scroll-smooth px-[10%] font-sans break-words break-keep whitespace-normal">

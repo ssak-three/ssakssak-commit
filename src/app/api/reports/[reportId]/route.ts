@@ -7,7 +7,7 @@ import { requireUserId } from "@/lib/auth/require-session";
 import { getByReportId } from "@/repositories/report";
 import { NextRequest, NextResponse } from "next/server";
 import type { ReportData } from "@/types/report";
-import { getResultByReportKey } from "@/infra/messaging/result-store";
+import { getResultByReportKey } from "@/infra/cache/report-result-cache";
 import { getRedisClient } from "@/infra/cache/redis-connection";
 import { REPORT_ID_PREFIX } from "@/constants/report-key";
 
