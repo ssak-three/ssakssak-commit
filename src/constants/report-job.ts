@@ -1,3 +1,5 @@
+const POLLING_INTERVAL = 2000;
+
 const JOB_QUEUE = {
   REPORT_CREATION: "reportCreation",
   ANALYSIS_BATCH: "analysisBatch",
@@ -17,15 +19,16 @@ const JOB_PHASES = {
   FAILED: "failed",
 } as const;
 
-const JOB_STATES = {
+const JOB_STATUS = {
   WAITING: "waiting",
   DELAYED: "delayed",
   PAUSED: "paused",
   ACTIVE: "active",
   WAITING_CHILDREN: "waiting-children",
   PROCESSING: "processing",
+  IN_PROGRESS: "inProgress",
   COMPLETED: "completed",
   FAILED: "failed",
 } as const;
 
-export { JOB_QUEUE, JOB_PHASES, JOB_STATES, JOB };
+export { POLLING_INTERVAL, JOB_QUEUE, JOB_PHASES, JOB_STATUS, JOB };
