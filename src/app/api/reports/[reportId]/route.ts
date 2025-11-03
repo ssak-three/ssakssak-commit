@@ -4,7 +4,7 @@ import {
 } from "@/constants/error-messages";
 import { AppError, NotFoundError } from "@/errors";
 import { requireUserId } from "@/lib/auth/require-session";
-import { getByReportId } from "@/repositories/report";
+import { getReportByReportId } from "@/repositories/report";
 import { NextRequest, NextResponse } from "next/server";
 import type { ReportData } from "@/types/report";
 import { getResultByReportKey } from "@/infra/cache/report-result-cache";
@@ -18,28 +18,28 @@ async function GET(
   const { reportId } = await params;
 
   try {
-    const guestReportId = reportId.startsWith(REPORT_ID_PREFIX.GUEST);
-    const sharedReportId = reportId.startsWith(REPORT_ID_PREFIX.SHARE);
+    const isGuestReportId = reportId.startsWith(REPORT_ID_PREFIX.GUEST);
+    const isSharedReportId = reportId.startsWith(REPORT_ID_PREFIX.SHARE);
 
-    if (guestReportId || sharedReportId) {
+    if (isGuestReportId || isSharedReportId) {
       const redis = getRedisClient();
 
-      const redisResult = await getResultByReportKey<ReportData>(
+      const cacheResult = await getResultByReportKey<ReportData>(
         redis,
         reportId,
       );
 
-      if (!redisResult) {
+      if (!cacheResult) {
         throw new NotFoundError({
           message: REPORT_ERROR_MESSAGES.NOT_FOUND,
         });
       }
 
-      return NextResponse.json({ report: redisResult.data }, { status: 200 });
+      return NextResponse.json({ report: cacheResult.data }, { status: 200 });
     }
     const userId = await requireUserId();
 
-    const dbResult = await getByReportId(userId, reportId);
+    const dbResult = await getReportByReportId(userId, reportId);
 
     if (!dbResult) {
       throw new NotFoundError({
