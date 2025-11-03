@@ -82,6 +82,10 @@ const RATE_LIMIT_MESSAGES = {
 const JOB_ERROR_MESSAGES = {
   JOB_ID_REQUIRED: "jobId 값이 필요합니다.",
   NOT_FOUND: "해당 작업을 찾을 수 없습니다",
+  JOB_ID_NOT_FOUND:
+    "분석 작업을 불러올 수 없어요.\n홈으로 돌아가 새로 시작해 주세요.",
+  NETWORK_FAILED: "일시적인 오류가 발생했어요.\n잠시 후 다시 시도해 주세요.",
+  FETCH_FAILED: "작업 상태를 불러오는 데 실패했습니다.",
 };
 
 const REPORT_ERROR_MESSAGES = {
