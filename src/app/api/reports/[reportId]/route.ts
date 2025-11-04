@@ -24,30 +24,30 @@ async function GET(
     if (isGuestReportId || isSharedReportId) {
       const redis = getRedisClient();
 
-      const cacheResult = await getResultByReportKey<ReportData>(
+      const cachedResult = await getResultByReportKey<ReportData>(
         redis,
         reportId,
       );
 
-      if (!cacheResult) {
+      if (!cachedResult) {
         throw new NotFoundError({
           message: REPORT_ERROR_MESSAGES.NOT_FOUND,
         });
       }
 
-      return NextResponse.json({ report: cacheResult.data }, { status: 200 });
+      return NextResponse.json({ report: cachedResult.data }, { status: 200 });
     }
     const userId = await requireUserId();
 
-    const dbResult = await getReportById(userId, reportId);
+    const dbReport = await getReportById(userId, reportId);
 
-    if (!dbResult) {
+    if (!dbReport) {
       throw new NotFoundError({
         message: REPORT_ERROR_MESSAGES.NOT_FOUND,
       });
     }
 
-    return NextResponse.json({ report: dbResult }, { status: 200 });
+    return NextResponse.json({ report: dbReport }, { status: 200 });
   } catch (error) {
     const message: string =
       error instanceof Error ? error.message : SYSTEM_ERROR_MESSAGES.UNEXPECTED;
