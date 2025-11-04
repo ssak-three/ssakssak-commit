@@ -21,7 +21,7 @@ function Tooltip({ content, children }: TooltipProps) {
       </span>
 
       <div
-        className={`pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 w-max -translate-x-1/2 rounded-md bg-neutral-900 px-3 py-2 text-xs text-white shadow-lg transition-all duration-150 ${
+        className={`pointer-events-none absolute top-1/2 left-full ml-2 w-max -translate-y-1/2 rounded-md bg-neutral-900 px-3 py-2 text-xs text-white shadow-lg transition-all duration-150 ${
           open ? "scale-100 opacity-100" : "scale-95 opacity-0"
         }`}
       >
@@ -34,7 +34,7 @@ function Tooltip({ content, children }: TooltipProps) {
 function InfoTooltip({ content }: { content: React.ReactNode }) {
   return (
     <Tooltip content={content}>
-      <span className="inline-flex h-4 w-4 cursor-default items-center justify-center rounded-full bg-neutral-200 text-[10px] font-semibold text-neutral-700">
+      <span className="inline-flex h-4 w-4 cursor-default items-center justify-center rounded-full bg-neutral-200 text-[10px] leading-none font-semibold text-neutral-700">
         ?
       </span>
     </Tooltip>
