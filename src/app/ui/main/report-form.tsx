@@ -10,7 +10,7 @@ import { submitReportAction } from "@/app/(with-layout)/actions/submit-report-ac
 import SubmitButton from "@/app/ui/main/submit-button";
 import { ReportFormState } from "@/types/report";
 import { InfoTooltip } from "@/app/ui/common/tooltip";
-import { REPORT_INPUT } from "@/constants/validations";
+import { REPORT_INPUT_LIMIT } from "@/constants/validations";
 import { VALIDATION_ERROR_MESSAGES } from "@/constants/error-messages";
 
 function ReportForm() {
@@ -20,18 +20,15 @@ function ReportForm() {
   );
   const [reportTitle, setReportTitle] = useState("");
   const [reportTitleError, setReportTitleError] = useState<string | null>(null);
-  const [reportOverviewError, setReportOverviewError] = useState<string | null>(
-    null,
-  );
+  const [repositoryOverviewError, setRepositoryOverviewError] = useState<
+    string | null
+  >(null);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     const formData = new FormData(e.currentTarget);
-    const reportTitle = String(formData.get("reportTitle") ?? "").trim();
-    const repositoryOverview = String(
-      formData.get("repositoryOverview") ?? "",
-    ).trim();
+    const repositoryOverview = String(formData.get("repositoryOverview") ?? "");
 
-    if (reportTitle.length > REPORT_INPUT.TITLE_MAX_LENGTH) {
+    if (reportTitle.length > REPORT_INPUT_LIMIT.TITLE_MAX_LENGTH) {
       e.preventDefault();
       setReportTitleError(
         VALIDATION_ERROR_MESSAGES.REPORT_INPUT.TITLE_MAX_LENGTH,
@@ -39,15 +36,16 @@ function ReportForm() {
       return;
     }
 
-    if (repositoryOverview.length > REPORT_INPUT.OVERVIEW_MAX_LENGTH) {
+    if (repositoryOverview.length > REPORT_INPUT_LIMIT.OVERVIEW_MAX_LENGTH) {
       e.preventDefault();
-      setReportOverviewError(
+      setRepositoryOverviewError(
         VALIDATION_ERROR_MESSAGES.REPORT_INPUT.REPOSITORY_OVERVIEW_MAX_LENGTH,
       );
       return;
     }
 
     setReportTitleError(null);
+    setRepositoryOverviewError(null);
   };
 
   return (
@@ -74,12 +72,12 @@ function ReportForm() {
           </div>
           <span
             className={`text-sm ${
-              reportTitle.length > REPORT_INPUT.TITLE_MAX_LENGTH
+              reportTitle.length > REPORT_INPUT_LIMIT.TITLE_MAX_LENGTH
                 ? "text-red-500"
                 : "text-neutral-400"
             }`}
           >
-            {reportTitle.length} / {REPORT_INPUT.TITLE_MAX_LENGTH}
+            {reportTitle.length} / {REPORT_INPUT_LIMIT.TITLE_MAX_LENGTH}
           </span>
         </div>
 
@@ -119,14 +117,16 @@ function ReportForm() {
         <Textarea
           name="repositoryOverview"
           className={`min-h-[140px] rounded-lg border border-neutral-200 bg-white px-4 py-3 text-base text-neutral-900 placeholder:text-neutral-400 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 focus:outline-none ${
-            reportOverviewError
+            repositoryOverviewError
               ? "border-red-500 focus:border-red-500 focus:ring-red-100"
               : "border-neutral-300 focus:border-sky-400"
           }`}
           placeholder={`예시: 이 과제는 GitHub API를 활용해 저장소 브랜치와 커밋 내역을 조회하는 기능을 구현하는 과제입니다.\n예시: 주된 목적은 API 연동과 비동기 처리 역량을 확인하는 것입니다.`}
         />
 
-        {reportOverviewError && <ErrorMessage message={reportOverviewError} />}
+        {repositoryOverviewError && (
+          <ErrorMessage message={repositoryOverviewError} />
+        )}
       </div>
 
       <div className="right-0 bottom-0 left-0 z-0 bg-white">

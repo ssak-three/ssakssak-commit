@@ -99,7 +99,6 @@ function RepositoryBranchSelector() {
 
       <div className="flex flex-col gap-2">
         <Input
-          required
           name="repositoryUrl"
           value={repositoryUrl}
           onChange={(e) => setRepositoryUrl(e.target.value)}
