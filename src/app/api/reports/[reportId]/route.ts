@@ -4,7 +4,7 @@ import {
 } from "@/constants/error-messages";
 import { AppError, NotFoundError } from "@/errors";
 import { requireUserId } from "@/lib/auth/require-session";
-import { getReportByReportId } from "@/repositories/report";
+import { getReportById } from "@/repositories/report";
 import { NextRequest, NextResponse } from "next/server";
 import type { ReportData } from "@/types/report";
 import { getResultByReportKey } from "@/infra/cache/report-result-cache";
@@ -39,7 +39,7 @@ async function GET(
     }
     const userId = await requireUserId();
 
-    const dbResult = await getReportByReportId(userId, reportId);
+    const dbResult = await getReportById(userId, reportId);
 
     if (!dbResult) {
       throw new NotFoundError({
