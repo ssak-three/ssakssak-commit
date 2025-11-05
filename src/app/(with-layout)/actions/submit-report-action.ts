@@ -2,6 +2,7 @@
 
 import {
   DATA_ERROR_MESSAGES,
+  GITHUB_REPOSITORY_ERROR_MESSAGES,
   SYSTEM_ERROR_MESSAGES,
 } from "@/constants/error-messages";
 import { ReportFormState } from "@/types/report";
@@ -22,10 +23,17 @@ const submitReportAction = async (
       branch: String(formData.get("branch") ?? "").trim(),
     };
 
-    if (!body.repositoryUrl || !body.branch) {
+    if (!body.repositoryUrl) {
       return {
         ok: false,
-        formError: "리포지토리 URL과 브랜치를 모두 선택해 주세요.",
+        formError: GITHUB_REPOSITORY_ERROR_MESSAGES.EMPTY_URL,
+      };
+    }
+
+    if (!body.branch) {
+      return {
+        ok: false,
+        formError: GITHUB_REPOSITORY_ERROR_MESSAGES.UNSELECTED_BRANCH,
       };
     }
 
