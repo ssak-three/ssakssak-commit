@@ -36,6 +36,14 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
     image: "/create_report.png",
     note: "✅ 필수 항목: URL 입력, 브랜치 선택.",
   },
+  {
+    id: 6,
+    title: "5. 결과 페이지",
+    description:
+      "5. 로딩이 완료된 후, AI가 커밋을 분석하여 결과 리포트를 보여줍니다.",
+    image: "/report_page.png",
+    note: "📊 분석된 리포트에서 커밋 기록과 요약 내용을 확인할 수 있습니다.",
+  },
 ];
 
 export { ONBOARDING_STEPS };
