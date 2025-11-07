@@ -14,27 +14,27 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
     description:
       "로그인 후, 생성한 리포트를 보관함에서 저장·관리할 수 있습니다.",
     image: "/storage_report.png",
-    note: "⚠️ 해당 기능을 로그인한 사용자만 이용 가능합니다.",
+    note: "⚠️ 로그인한 사용자만 이용 가능한 기능입니다.",
   },
   {
     id: 3,
     title: "3. 싹싹커밋 사용 방법",
     description: "📌 4단계로 손쉽게 커밋 분석 리포트를 생성할 수 있습니다.",
     image: "/homepage.png",
-    note: "URL 입력 → 브랜치 선택 → (선택) 제목/개요 작성 → 리포트 생성",
+    note: "리포지토리 URL 입력 → 브랜치 선택 → (선택) 제목/개요 작성 → 리포트 생성",
   },
   {
     id: 4,
     title: "4. 분석 결과",
     description: "생성한 리포트를 통해 AI가 분석한 결과를 확인할 수 있습니다.",
     image: "/report_analysis.png",
-    note: "📊 브랜치에 대한 전체 분석 및 요약, 저장소 정보등을 한눈에 확인할 수 있습니다.",
+    note: "📊 브랜치에 대한 전체 분석 및 요약, 리포지토리 정보등을 한눈에 확인할 수 있습니다.",
   },
   {
     id: 5,
     title: "5. 커밋 리스트",
     description:
-      "우측 커밋 리스트에서 원하는 커밋 박스를 클릭하면 해당 커밋 상세로 이동합니다.",
+      "우측 커밋 리스트에서 원하는 커밋 박스를 클릭하면 해당 커밋의 분석 내용으로 이동합니다.",
     image: "/commitBox.png",
     note: "👆 클릭 시, 선택한 커밋의 분석 결과가 표시됩니다.",
   },
@@ -42,9 +42,9 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
     id: 6,
     title: "6. 커밋 분석_커밋 정보",
     description:
-      "선택한 커밋의 메시지, 작성자, 커밋 날짜 등의 기본 정보를 확인할 수 있습니다. ",
+      "커밋 메시지, 작성자, 커밋 날짜 등의 기본 정보를 확인할 수 있습니다. ",
     image: "/commit_info.png",
-    note: "🔗 커밋 해쉬값을 클릭하면, GitHub에서 원본 커밋을 바로 열 수 있습니다.",
+    note: "🔗 커밋 해시를 클릭하면, GitHub의 원본 커밋 상세 페이지로 이동할 수 있습니다.",
   },
   {
     id: 7,
@@ -58,7 +58,7 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
     id: 8,
     title: "8. 커밋 분석_코드 변경점",
     description:
-      "AI가 중요하다고 판단한 코드 변경 부분을 시각적으로 표시합니다.",
+      "AI가 해당 커밋 내에서 중요하다고 판단한 코드 변경 부분을 시각적으로 표시합니다.",
     image: "/commit_codeDiff.png",
     note: "📊 added(추가), modified(수정), removed(삭제) 3가지 상태로 구분되어 표시됩니다.",
   },
