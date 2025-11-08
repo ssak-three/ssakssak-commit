@@ -14,7 +14,7 @@ const reportCommonFields = Prisma.validator<Prisma.ReportSelect>()({
   branch: true,
 });
 
-async function getByReportId(userId: string, reportId: string) {
+async function getReportById(userId: string, reportId: string) {
   const report = await prisma.report.findUnique({
     where: { reportId, userId, isActive: true },
     select: {
@@ -87,7 +87,7 @@ const saveReport = (data: {
 };
 
 export {
-  getByReportId,
+  getReportById,
   getReports,
   deleteReports,
   findReportsByTitlePrefix,
