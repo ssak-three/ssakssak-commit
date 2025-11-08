@@ -36,7 +36,7 @@ async function ReportViewPage({
       await response.json();
 
     return (
-      <div className="flex min-h-screen w-full flex-col scroll-smooth px-[10%] font-sans break-words break-keep whitespace-normal">
+      <div className="flex min-h-screen w-full flex-col scroll-smooth px-[10%] font-sans break-words break-keep whitespace-normal print:px-4">
         <div className="mt-8 mb-8 flex w-full flex-col">
           <Header
             reportTitle={reportData.reportTitle}

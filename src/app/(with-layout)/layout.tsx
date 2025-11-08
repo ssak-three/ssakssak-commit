@@ -13,18 +13,24 @@ export default async function Layout({
 
   return (
     <>
-      <SignHeader isLoggedIn={isLoggedIn} />
+      <div className="print:hidden">
+        <SignHeader isLoggedIn={isLoggedIn} />
+      </div>
 
       {isLoggedIn ? (
         <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
-          <div className="w-full flex-none md:w-64">
+          <div className="w-full flex-none md:w-64 print:hidden">
             <SideNav />
           </div>
-          <main className="flex-1 md:overflow-y-auto md:p-12">{children}</main>
+          <main className="flex-1 md:overflow-y-auto md:p-12 print:overflow-visible print:p-0">
+            {children}
+          </main>
         </div>
       ) : (
         <div className="min-h-screen">
-          <main className="mx-auto max-w-screen-xl p-6">{children}</main>
+          <main className="mx-auto max-w-screen-xl p-6 print:max-w-full print:p-0">
+            {children}
+          </main>
         </div>
       )}
     </>

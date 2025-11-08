@@ -21,7 +21,7 @@ function MonacoFileViewer({
   });
 
   return (
-    <div className="overflow-hidden rounded border border-gray-200">
+    <div className="monaco-file-container overflow-hidden rounded border border-gray-200">
       <MonacoFileHeader filename={filename} fileStatus={fileStatus} />
 
       <MonacoAutoHeight code={code}>
@@ -40,6 +40,7 @@ function MonacoFileViewer({
               glyphMargin: true,
               folding: true,
               renderWhitespace: "boundary",
+              padding: { top: 4, bottom: 4 },
             }}
             onMount={handleEditorMount}
             theme="vs-light"

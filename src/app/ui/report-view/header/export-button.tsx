@@ -12,7 +12,6 @@ function ExportButton() {
 
     try {
       const currentUrl = window.location.href;
-
       await navigator.clipboard.writeText(currentUrl);
       setCopyDone(true);
 
@@ -22,6 +21,11 @@ function ExportButton() {
       console.error("링크 복사 실패", error);
       alert("링크 복사에 실패했습니다.");
     }
+  };
+
+  const handlePrintPDF = () => {
+    setOpen(false);
+    window.print();
   };
 
   useEffect(() => {
@@ -36,7 +40,7 @@ function ExportButton() {
   }, []);
 
   return (
-    <div ref={menuRef} className="relative inline-block text-left">
+    <div ref={menuRef} className="relative inline-block text-left print:hidden">
       <button
         onClick={() => setOpen((isOpen) => !isOpen)}
         className="cursor-pointer rounded-lg border px-3 py-2 text-sm hover:bg-gray-50"
@@ -52,7 +56,10 @@ function ExportButton() {
           >
             📎 링크 공유
           </button>
-          <button className="w-full cursor-pointer px-4 py-2 text-left text-sm hover:bg-gray-100">
+          <button
+            onClick={handlePrintPDF}
+            className="w-full cursor-pointer px-4 py-2 text-left text-sm hover:bg-gray-100"
+          >
             📄 PDF 저장
           </button>
         </div>
