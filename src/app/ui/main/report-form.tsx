@@ -19,7 +19,7 @@ function ReportForm() {
   return (
     <form
       action={formAction}
-      className="mx-auto mb-14 flex w-full max-w-3xl flex-col gap-12 rounded-xl bg-white p-10 pt-20 pb-32"
+      className="mx-auto mt-4 flex w-full max-w-3xl flex-col gap-8 rounded-xl bg-white px-8 pt-8 pb-4"
     >
       <RepositoryBranchSelector />
 
