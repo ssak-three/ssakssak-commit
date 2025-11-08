@@ -1,12 +1,14 @@
-const formatRemainingTime = (unixTime: number): string => {
+const getRemainingSeconds = (unixTime: number): number => {
   const now = Math.floor(Date.now() / 1000);
-  const remainingSeconds = unixTime - now;
+  return Math.max(0, unixTime - now);
+};
 
-  if (remainingSeconds <= 0) {
+const formatDuration = (seconds: number): string => {
+  if (seconds <= 0) {
     return "0분";
   }
 
-  const minutes = Math.floor(remainingSeconds / 60);
+  const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
 
   if (hours > 0) {
@@ -19,4 +21,9 @@ const formatRemainingTime = (unixTime: number): string => {
   return `${minutes}분`;
 };
 
-export { formatRemainingTime };
+const formatRemainingTime = (unixTime: number): string => {
+  const remainingSeconds = getRemainingSeconds(unixTime);
+  return formatDuration(remainingSeconds);
+};
+
+export { getRemainingSeconds, formatDuration, formatRemainingTime };

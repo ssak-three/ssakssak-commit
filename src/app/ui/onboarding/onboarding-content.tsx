@@ -11,13 +11,13 @@ function OnboardingContent({ onClose }: OnboardingContentProps) {
   const totalSteps = ONBOARDING_STEPS.length;
   const step = ONBOARDING_STEPS[currentStep];
 
-  const handlePrevious = () => {
+  const handlePreviousStep = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
     }
   };
 
-  const handleNext = () => {
+  const handleNextStep = () => {
     if (currentStep < totalSteps - 1) {
       setCurrentStep(currentStep + 1);
     } else {
@@ -58,7 +58,7 @@ function OnboardingContent({ onClose }: OnboardingContentProps) {
       <div className="border-t border-gray-200 px-8 py-6">
         <div className="flex items-center justify-between">
           <button
-            onClick={handlePrevious}
+            onClick={handlePreviousStep}
             disabled={currentStep === 0}
             className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40"
           >
@@ -71,7 +71,7 @@ function OnboardingContent({ onClose }: OnboardingContentProps) {
           </span>
 
           <button
-            onClick={handleNext}
+            onClick={handleNextStep}
             className="flex items-center gap-2 rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-700"
           >
             {currentStep === totalSteps - 1 ? "완료" : "다음"}
