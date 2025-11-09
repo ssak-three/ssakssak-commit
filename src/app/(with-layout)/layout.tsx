@@ -18,11 +18,11 @@ export default async function Layout({
       </div>
 
       {isLoggedIn ? (
-        <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
+        <div className="flex h-screen flex-col md:flex-row md:overflow-hidden print:block print:h-auto">
           <div className="w-full flex-none md:w-64 print:hidden">
             <SideNav />
           </div>
-          <main className="flex-1 md:overflow-y-auto md:p-12 print:overflow-visible print:p-0">
+          <main className="flex-1 md:overflow-y-auto md:p-12 print:w-full print:overflow-visible print:p-0">
             {children}
           </main>
         </div>
