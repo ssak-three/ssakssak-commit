@@ -78,7 +78,7 @@ const DATA_ERROR_MESSAGES = {
 
 const RATE_LIMIT_MESSAGES = {
   INSUFFICIENT_REQUESTS:
-    "현재 비회원 이용 한도가 초과되었습니다. 로그인 후 다시 시도하거나 {restTime} 이후에 이용해주세요.",
+    "현재 비회원 이용 한도가 초과되었습니다. 로그인 후 다시 시도하거나 {remainingTime} 이후에 이용해주세요.",
 };
 const JOB_ERROR_MESSAGES = {
   JOB_ID_REQUIRED: "jobId 값이 필요합니다.",
