@@ -12,6 +12,7 @@ const reportCommonFields = Prisma.validator<Prisma.ReportSelect>()({
   repositoryName: true,
   owner: true,
   branch: true,
+  repositoryUrl: true,
 });
 
 async function getReportById(userId: string, reportId: string) {
