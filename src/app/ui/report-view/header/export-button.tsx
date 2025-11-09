@@ -1,25 +1,45 @@
 "use client";
 
+import { REPORT_SHARE_ERROR_MESSAGES } from "@/constants/error-messages";
+import { ReportData } from "@/types/report";
+import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-function ExportButton() {
+function ExportButton({ report }: { report: ReportData }) {
   const [open, setOpen] = useState(false);
   const [copyDone, setCopyDone] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const { reportId } = useParams<{ reportId: string }>();
 
   const handleCopyLink = async () => {
     setCopyDone(false);
 
     try {
-      const currentUrl = window.location.href;
-      await navigator.clipboard.writeText(currentUrl);
-      setCopyDone(true);
+      if (!reportId || !report) {
+        alert(REPORT_SHARE_ERROR_MESSAGES.REPORT_NOT_FOUND);
+        return;
+      }
 
+      const response = await fetch(`/api/reports/${reportId}/cache`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        cache: "no-store",
+        body: JSON.stringify({ report }),
+      });
+
+      const { ensuredReportId } = (await response.json()) as {
+        ensuredReportId: string;
+      };
+
+      const shareUrl = `${window.location.origin}/report-view/${ensuredReportId}`;
+      await navigator.clipboard.writeText(shareUrl);
+
+      setCopyDone(true);
       setTimeout(() => setCopyDone(false), 1500);
       setOpen(false);
     } catch (error) {
-      console.error("링크 복사 실패", error);
-      alert("링크 복사에 실패했습니다.");
+      console.error(REPORT_SHARE_ERROR_MESSAGES.COPY_FAILED, error);
+      alert(REPORT_SHARE_ERROR_MESSAGES.COPY_FAILED);
     }
   };
 
