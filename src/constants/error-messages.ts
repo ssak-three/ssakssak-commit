@@ -18,10 +18,11 @@ const VALIDATION_ERROR_MESSAGES = {
 };
 
 const GITHUB_REPOSITORY_ERROR_MESSAGES = {
-  INVALID_URL:
-    "유효한 GitHub 리포지토리 URL을 입력해주세요. \n(예: https://github.com/owner/repository(.git), owner: 리포지토리 소유자, repository: 리포지토리 이름)",
+  EMPTY_URL: "리포지토리 URL을 입력해 주세요.",
+  INVALID_URL: "유효한 GitHub 리포지토리 URL을 입력해 주세요.",
   NOT_FOUND:
-    "존재하지 않거나 접근할 수 없는 리포지토리입니다.\n비회원일 경우, 해당 리포지토리가 private 리포지토리인지 확인해 주세요.",
+    "존재하지 않거나 접근할 수 없는 리포지토리입니다.\n비회원일 경우, 해당 리포지토리가 비공개 리포지토리인지 확인해 주세요.",
+  UNSELECTED_BRANCH: "리포트를 생성할 브랜치를 선택해 주세요.",
 };
 
 const SYSTEM_ERROR_MESSAGES = {
