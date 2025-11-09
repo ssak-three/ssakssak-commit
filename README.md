@@ -1,5 +1,7 @@
 # 🧹 싹싹커밋 (Ssakssak Commit)
 
+<div align="center">
+
 <p>
   <img src="./public/logo.svg" alt="Ssakssak Commit Logo" width="160" />
 </p>
@@ -15,48 +17,53 @@ AI 분석 리포트를 통해 지원자의 개발 과정과 의사결정 근거�
 **👨‍💻 개발자**  
 커밋 흐름을 되돌아보며 프로젝트를 회고하고, 성장 과정을 기록하는 학습 자료로 활용할 수 있습니다.
 
+</div>
 <br />
 
 ## 목차
 
 - [📘 프로젝트 소개](#프로젝트-소개)
-  - [🗂️ 레포지토리 구조](#레포지토리-구조)
+  - [🗂️ 리포지토리 구조](#🗂️-리포지토리-구조)
 
 - [🚀 핵심 기능 소개](#핵심-기능-소개)
-  - [1️⃣ GitHub 레포지토리 연결](#1️⃣-github-레포지토리-연결)
+  - [1️⃣ GitHub 리포지토리 연결](#1️⃣-github-리포지토리-연결)
   - [2️⃣ 리포트 생성 요청](#2️⃣-리포트-생성-요청)
   - [3️⃣ 리포트 생성 진행 상태 표시](#3️⃣-리포트-생성-진행-상태-표시)
   - [4️⃣ 분석 결과 리포트 제공](#4️⃣-분석-결과-리포트-제공)
 
 - [🏋️‍♀️ 기능 구현 방식 / 기술 챌린지](#기능-구현-방식--기술-챌린지)
   - [김민지](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)>)
-  - [1. 대용량 커밋 로그를 안정적으로 분석하기 위한 설계](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#1-%EB%8C%80%EC%9A%A9%EB%9F%89-%EC%BB%A4%EB%B0%8B-%EB%A1%9C%EA%B7%B8%EB%A5%BC-%EC%95%88%EC%A0%95%EC%A0%81%EC%9C%BC%EB%A1%9C-%EB%B6%84%EC%84%9D%ED%95%98%EA%B8%B0-%EC%9C%84%ED%95%9C-%EC%84%A4%EA%B3%84>)
-    - [1-1. 왜 커밋 로그를 나누어야 했을까?](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#1-1-%EC%99%9C-%EC%BB%A4%EB%B0%8B-%EB%A1%9C%EA%B7%B8%EB%A5%BC-%EB%82%98%EB%88%84%EC%96%B4%EC%95%BC-%ED%96%88%EC%9D%84%EA%B9%8C>)
-    - [1-2. 커밋을 토큰 기반으로 안정적으로 분할하려면?](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#1-2-%EC%BB%A4%EB%B0%8B%EC%9D%84-%ED%86%A0%ED%81%B0-%EA%B8%B0%EB%B0%98%EC%9C%BC%EB%A1%9C-%EC%95%88%EC%A0%95%EC%A0%81%EC%9C%BC%EB%A1%9C-%EB%B6%84%ED%95%A0%ED%95%98%EB%A0%A4%EB%A9%B4>)
-    - [1-3. 배치를 병렬로-분석하기](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#1-3-%EB%B0%B0%EC%B9%98%EB%A5%BC-%EB%B3%91%EB%A0%AC-%EB%B6%84%EC%84%9D%ED%95%98%EA%B8%B0>)
-    - [1-4. 배치별 결과를 병합해 ‘하나의 리포트 흐름’으로 재구성하기](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#1-4-%EB%B0%B0%EC%B9%98%EB%B3%84-%EA%B2%B0%EA%B3%BC%EB%A5%BC-%EB%B3%91%ED%95%A9%ED%95%B4-%ED%95%98%EB%82%98%EC%9D%98-%EB%A6%AC%ED%8F%AC%ED%8A%B8-%ED%9D%90%EB%A6%84%EC%9C%BC%EB%A1%9C-%EC%9E%AC%EA%B5%AC%EC%84%B1%ED%95%98%EA%B8%B0>)
-  - [2. 서버가 멈추지 않는 비동기 작업 처리 구조](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#2-%EC%84%9C%EB%B2%84%EA%B0%80-%EB%A9%88%EC%B6%94%EC%A7%80-%EC%95%8A%EB%8A%94-%EB%B9%84%EB%8F%99%EA%B8%B0-%EC%9E%91%EC%97%85-%EC%B2%98%EB%A6%AC-%EA%B5%AC%EC%A1%B0>)
-    - [2-1. 긴 AI 분석 작업이 서버를 멈추게 만든 이유](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#2-1-%EA%B8%B4-ai-%EB%B6%84%EC%84%9D-%EC%9E%91%EC%97%85%EC%9D%B4-%EC%84%9C%EB%B2%84%EB%A5%BC-%EB%A9%88%EC%B6%94%EA%B2%8C-%EB%A7%8C%EB%93%A0-%EC%9D%B4%EC%9C%A0>)
-    - [2-2. Queue–Worker 구조로 요청과 처리 분리하기](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#2-2-queueworker-%EA%B5%AC%EC%A1%B0%EB%A1%9C-%EC%9A%94%EC%B2%AD%EA%B3%BC-%EC%B2%98%EB%A6%AC-%EB%B6%84%EB%A6%AC%ED%95%98%EA%B8%B0>)
-    - [2-3. 자동 재시도로 실패 복구 기반 다지기](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#2-3-%EC%9E%90%EB%8F%99-%EC%9E%AC%EC%8B%9C%EB%8F%84%EB%A1%9C-%EC%8B%A4%ED%8C%A8-%EB%B3%B5%EA%B5%AC-%EA%B8%B0%EB%B0%98-%EB%8B%A4%EC%A7%80%EA%B8%B0>)
-    - [2-4. 재시작배포-시-진행-상태-유실을-막고-진행률-추적으로-상태-관리하기](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#2-4-%EC%9E%AC%EC%8B%9C%EC%9E%91%EB%B0%B0%ED%8F%AC-%EC%8B%9C-%EC%A7%84%ED%96%89-%EC%83%81%ED%83%9C-%EC%9C%A0%EC%8B%A4%EC%9D%84-%EB%A7%89%EA%B3%A0-%EC%A7%84%ED%96%89%EB%A5%A0-%EC%B6%94%EC%A0%81%EC%9C%BC%EB%A1%9C-%EC%83%81%ED%83%9C-%EA%B4%80%EB%A6%AC%ED%95%98%EA%B8%B0>)
+    - [1. 대용량 커밋 로그를 안정적으로 분석하기 위한 설계](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#1-%EB%8C%80%EC%9A%A9%EB%9F%89-%EC%BB%A4%EB%B0%8B-%EB%A1%9C%EA%B7%B8%EB%A5%BC-%EC%95%88%EC%A0%95%EC%A0%81%EC%9C%BC%EB%A1%9C-%EB%B6%84%EC%84%9D%ED%95%98%EA%B8%B0-%EC%9C%84%ED%95%9C-%EC%84%A4%EA%B3%84>)
+      - [1-1. 왜 커밋 로그를 나누어야 했을까?](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#1-1-%EC%99%9C-%EC%BB%A4%EB%B0%8B-%EB%A1%9C%EA%B7%B8%EB%A5%BC-%EB%82%98%EB%88%84%EC%96%B4%EC%95%BC-%ED%96%88%EC%9D%84%EA%B9%8C>)
+      - [1-2. 커밋을 토큰 기반으로 안정적으로 분할하려면?](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#1-2-%EC%BB%A4%EB%B0%8B%EC%9D%84-%ED%86%A0%ED%81%B0-%EA%B8%B0%EB%B0%98%EC%9C%BC%EB%A1%9C-%EC%95%88%EC%A0%95%EC%A0%81%EC%9C%BC%EB%A1%9C-%EB%B6%84%ED%95%A0%ED%95%98%EB%A0%A4%EB%A9%B4>)
+      - [1-3. 배치를 병렬로-분석하기](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#1-3-%EB%B0%B0%EC%B9%98%EB%A5%BC-%EB%B3%91%EB%A0%AC-%EB%B6%84%EC%84%9D%ED%95%98%EA%B8%B0>)
+      - [1-4. 배치별 결과를 병합해 ‘하나의 리포트 흐름’으로 재구성하기](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#1-4-%EB%B0%B0%EC%B9%98%EB%B3%84-%EA%B2%B0%EA%B3%BC%EB%A5%BC-%EB%B3%91%ED%95%A9%ED%95%B4-%ED%95%98%EB%82%98%EC%9D%98-%EB%A6%AC%ED%8F%AC%ED%8A%B8-%ED%9D%90%EB%A6%84%EC%9C%BC%EB%A1%9C-%EC%9E%AC%EA%B5%AC%EC%84%B1%ED%95%98%EA%B8%B0>)
+    - [2. 서버가 멈추지 않는 비동기 작업 처리 구조](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#2-%EC%84%9C%EB%B2%84%EA%B0%80-%EB%A9%88%EC%B6%94%EC%A7%80-%EC%95%8A%EB%8A%94-%EB%B9%84%EB%8F%99%EA%B8%B0-%EC%9E%91%EC%97%85-%EC%B2%98%EB%A6%AC-%EA%B5%AC%EC%A1%B0>)
+      - [2-1. 긴 AI 분석 작업이 서버를 멈추게 만든 이유](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#2-1-%EA%B8%B4-ai-%EB%B6%84%EC%84%9D-%EC%9E%91%EC%97%85%EC%9D%B4-%EC%84%9C%EB%B2%84%EB%A5%BC-%EB%A9%88%EC%B6%94%EA%B2%8C-%EB%A7%8C%EB%93%A0-%EC%9D%B4%EC%9C%A0>)
+      - [2-2. Queue–Worker 구조로 요청과 처리 분리하기](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#2-2-queueworker-%EA%B5%AC%EC%A1%B0%EB%A1%9C-%EC%9A%94%EC%B2%AD%EA%B3%BC-%EC%B2%98%EB%A6%AC-%EB%B6%84%EB%A6%AC%ED%95%98%EA%B8%B0>)
+      - [2-3. 자동 재시도로 실패 복구 기반 다지기](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#2-3-%EC%9E%90%EB%8F%99-%EC%9E%AC%EC%8B%9C%EB%8F%84%EB%A1%9C-%EC%8B%A4%ED%8C%A8-%EB%B3%B5%EA%B5%AC-%EA%B8%B0%EB%B0%98-%EB%8B%A4%EC%A7%80%EA%B8%B0>)
+      - [2-4. 재시작배포-시-진행-상태-유실을-막고-진행률-추적으로-상태-관리하기](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EA%B9%80%EB%AF%BC%EC%A7%80)#2-4-%EC%9E%AC%EC%8B%9C%EC%9E%91%EB%B0%B0%ED%8F%AC-%EC%8B%9C-%EC%A7%84%ED%96%89-%EC%83%81%ED%83%9C-%EC%9C%A0%EC%8B%A4%EC%9D%84-%EB%A7%89%EA%B3%A0-%EC%A7%84%ED%96%89%EB%A5%A0-%EC%B6%94%EC%A0%81%EC%9C%BC%EB%A1%9C-%EC%83%81%ED%83%9C-%EA%B4%80%EB%A6%AC%ED%95%98%EA%B8%B0>)
   - [이한세](#)
-  - [조혜주](#조혜주)
-    - [1. 사용자가 더 쉽게 자신의 저장소를 연결할 수 없을까?](#사용자가-더-쉽게-자신의-저장소를-연결할-수-없을까)
-      - [1-1. 세밀한 권한 제어를 위해 도입했던 GitHub App의 한계](#세밀한-권한-제어를-위해-도입했던-github-app의-한계)
-      - [1-2. OAuth 전환으로 접근 과정을 단순화하다](#oauth-전환으로-접근-과정을-단순화하다)
-      - [1-3. OAuth 기반 인증 구조 구현 과정](#oauth-기반-인증-구조-구현-과정)
-    - [2. 리포트 생성 과정을 더 안전하고 일관되게 만들 수 있을까?](#리포트-생성-과정을-더-안전하고-일관되게-만들-수-있을까)
-      - [2-1. 분산된 요청 흐름으로 인한 보안성과 일관성 문제](#분산된-요청-흐름으로-인한-보안성과-일관성-문제)
-      - [2-2. 서버 트랜잭션으로 통합해 흐름을 단일화하다](#서버-트랜잭션으로-통합해-흐름을-단일화하다)
-      - [2-3. 안정적인 서버 주도 트랜잭션 구조로 개선하다](#안정적인-서버-주도-트랜잭션-구조로-개선하다)
+  - [조혜주](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%A1%B0%ED%98%9C%EC%A3%BC)>)
+    - [1. 사용자가 더 쉽게 자신의 저장소를 연결할 수 없을까?](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%A1%B0%ED%98%9C%EC%A3%BC)#1-%EC%82%AC%EC%9A%A9%EC%9E%90%EA%B0%80-%EB%8D%94-%EC%89%BD%EA%B2%8C-%EC%9E%90%EC%8B%A0%EC%9D%98-%EC%A0%80%EC%9E%A5%EC%86%8C%EB%A5%BC-%EC%97%B0%EA%B2%B0%ED%95%A0-%EC%88%98-%EC%97%86%EC%9D%84%EA%B9%8C>)
+      - [1-1. 세밀한 권한 제어를 위해 도입했던 GitHub App의 한계](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%A1%B0%ED%98%9C%EC%A3%BC)#1-1-%EC%84%B8%EB%B0%80%ED%95%9C-%EA%B6%8C%ED%95%9C-%EC%A0%9C%EC%96%B4%EB%A5%BC-%EC%9C%84%ED%95%B4-%EB%8F%84%EC%9E%85%ED%96%88%EB%8D%98-github-app%EC%9D%98-%ED%95%9C%EA%B3%84>)
 
-- [🛠️ 기술 스택](#기술-스택)
-  - [🖥️ 프론트엔드](#️-프론트엔드)
-  - [⚙️ 백엔드](#️-백엔드)
-  - [📀 데이터](#-데이터)
-  - [🤖 AI & 오케스트레이션](#-ai--오케스트레이션)
-  - [🚀 배포](#-배포)
+      - [1-2. OAuth 전환으로 접근 과정을 단순화하다](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%A1%B0%ED%98%9C%EC%A3%BC)#1-2-oauth-%EC%A0%84%ED%99%98%EC%9C%BC%EB%A1%9C-%EC%A0%91%EA%B7%BC-%EA%B3%BC%EC%A0%95%EC%9D%84-%EB%8B%A8%EC%88%9C%ED%99%94%ED%95%98%EB%8B%A4>)
+
+      - [1-3. OAuth 기반 인증 구조 구현 과정](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%A1%B0%ED%98%9C%EC%A3%BC)#1-3-oauth-%EA%B8%B0%EB%B0%98-%EC%9D%B8%EC%A6%9D-%EA%B5%AC%EC%A1%B0-%EA%B5%AC%ED%98%84-%EA%B3%BC%EC%A0%95>)
+
+    - [2. 리포트 생성 과정을 더 안전하고 일관되게 만들 수 있을까?](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%A1%B0%ED%98%9C%EC%A3%BC)#2-%EB%A6%AC%ED%8F%AC%ED%8A%B8-%EC%83%9D%EC%84%B1-%EA%B3%BC%EC%A0%95%EC%9D%84-%EB%8D%94-%EC%95%88%EC%A0%84%ED%95%98%EA%B3%A0-%EC%9D%BC%EA%B4%80%EB%90%98%EA%B2%8C-%EB%A7%8C%EB%93%A4-%EC%88%98-%EC%9E%88%EC%9D%84%EA%B9%8C>)
+      - [2-1. 분산된 요청 흐름으로 인한 보안성과 일관성 문제](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%A1%B0%ED%98%9C%EC%A3%BC)#2-1-%EB%B6%84%EC%82%B0%EB%90%9C-%EC%9A%94%EC%B2%AD-%ED%9D%90%EB%A6%84%EC%9C%BC%EB%A1%9C-%EC%9D%B8%ED%95%9C-%EB%B3%B4%EC%95%88%EC%84%B1%EA%B3%BC-%EC%9D%BC%EA%B4%80%EC%84%B1-%EB%AC%B8%EC%A0%9C>)
+      - [2-2. 서버 트랜잭션으로 통합해 흐름을 단일화하다](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%A1%B0%ED%98%9C%EC%A3%BC)#2-2-%EC%84%9C%EB%B2%84-%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98%EC%9C%BC%EB%A1%9C-%ED%86%B5%ED%95%A9%ED%95%B4-%ED%9D%90%EB%A6%84%EC%9D%84-%EB%8B%A8%EC%9D%BC%ED%99%94>)
+
+      - [2-3. 안정적인 서버 주도 트랜잭션 구조로 개선하다](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%A1%B0%ED%98%9C%EC%A3%BC)#2-3-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8-%EC%A4%91%EC%8B%AC-%ED%9D%90%EB%A6%84%EC%9D%84-%EC%84%9C%EB%B2%84-%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98%EC%9C%BC%EB%A1%9C-%EC%A0%84%ED%99%98>)
+
+- [🛠️ 기술 스택](https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%9B%A0%EF%B8%8F-%EA%B8%B0%EC%88%A0-%EC%8A%A4%ED%83%9D)
+  - [🖥️ 프론트엔드](https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%9B%A0%EF%B8%8F-%EA%B8%B0%EC%88%A0-%EC%8A%A4%ED%83%9D#1-%EF%B8%8F-front-end)
+  - [⚙️ 백엔드](https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%9B%A0%EF%B8%8F-%EA%B8%B0%EC%88%A0-%EC%8A%A4%ED%83%9D#2-%EF%B8%8F-back-end)
+  - [📀 데이터](https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%9B%A0%EF%B8%8F-%EA%B8%B0%EC%88%A0-%EC%8A%A4%ED%83%9D#3--%EB%8D%B0%EC%9D%B4%ED%84%B0)
+  - [🤖 AI & 오케스트레이션](https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%9B%A0%EF%B8%8F-%EA%B8%B0%EC%88%A0-%EC%8A%A4%ED%83%9D#4--ai--%EC%98%A4%EC%BC%80%EC%8A%A4%ED%8A%B8%EB%A0%88%EC%9D%B4%EC%85%98)
+  - [🚀 배포](https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%9B%A0%EF%B8%8F-%EA%B8%B0%EC%88%A0-%EC%8A%A4%ED%83%9D#5--%EB%B0%B0%ED%8F%AC)
 
 - [🪄 작업 방식 / 회고](#작업-방식--회고)
   - [⚡️ 깃 브랜치 전략](#️-깃-브랜치-전략)
@@ -72,7 +79,7 @@ AI 분석 리포트를 통해 지원자의 개발 과정과 의사결정 근거�
 
 ## 📘 프로젝트 소개 <a id="프로젝트-소개"></a>
 
-### 🗂️ 레포지토리 구조
+### 🗂️ 리포지토리 구조
 
 <pre>
   ├── prisma/                  # Prisma 스키마 및 마이그레이션 관리
@@ -95,7 +102,7 @@ AI 분석 리포트를 통해 지원자의 개발 과정과 의사결정 근거�
   └── package.json
 </pre>
 
-싹싹커밋은 **Next.js 기반의 단일 레포지토리(모놀리식 구조)** 로,  
+싹싹커밋은 **Next.js 기반의 단일 리포지토리(모놀리식 구조)** 로,  
 src/app 내부에 UI(Route)와 백엔드(API) 를 함께 구성하여  
 프론트엔드·백엔드·DB·AI 분석 로직을 하나의 파이프라인으로 통합한 구조입니다.
 
@@ -104,21 +111,25 @@ src/app 내부에 UI(Route)와 백엔드(API) 를 함께 구성하여
 
 ## 🚀 핵심 기능 소개 <a id="핵심-기능-소개"></a>
 
-### 1️⃣ GitHub 레포지토리 연결
+### 1️⃣ GitHub 리포지토리 연결
 
-GitHub 레포지토리 URL 입력 시 브랜치 목록이 자동으로 조회되어 분석 대상을 간편하게 선택할 수 있습니다.  
-`Public` 및 로그인 시 `Private` 레포지토리 까지 모두 연결 가능합니다.
+GitHub 리포지토리 URL 입력 시 브랜치 목록이 자동으로 조회되어 분석 대상을 간편하게 선택할 수 있습니다.  
+`Public` 및 로그인 시 `Private` 리포지토리 까지 모두 연결 가능합니다.
 
-<img src="./public/readme/repository-input.png" width="500" alt="Repository Input" />
+<p align="center">
+  <img src="./public/readme/report-main-1.png" width="600" alt="Repository Input" />
+</p>
 
 <br />
 
 ### 2️⃣ 리포트 생성 요청
 
-리포트 이름과 레포지토리 개요를 입력하고 생성 버튼을 클릭하면  
+리포트 이름과 리포지토리 개요를 입력하고 생성 버튼을 클릭하면  
 AI 분석 요청과 리포트 생성이 한 번에 진행됩니다.
 
-<img src="./public/readme/request-report.png" width="500" alt="Repository Input" />
+<p align="center">
+  <img src="./public/readme/report-main-2.png" width="600" alt="Repository Input" />
+</p>
 
 - 리포트명을 입력해 원하는 이름으로 리포트 생성
 - 프로젝트 개요 작성 시 맥락 기반 AI 분석 제공
@@ -129,26 +140,24 @@ AI 분석 요청과 리포트 생성이 한 번에 진행됩니다.
 
 리포트 생성 중인 진행 상황을 시각적으로 확인할 수 있습니다.
 
-|                                     분석 진행 중                                     |                                      분석 완료                                       |
-| :----------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------: |
-| <img src="./public/readme/loading-polling-2.png" width="400" alt="Loading Step 2" /> | <img src="./public/readme/loading-polling-3.png" width="400" alt="Loading Step 3" /> |
+|                                 분석 진행 중                                 |                                  분석 완료                                   |
+| :--------------------------------------------------------------------------: | :--------------------------------------------------------------------------: |
+| <img src="./public/readme/loading-1.png" width="400" alt="Loading Step 2" /> | <img src="./public/readme/loading-2.png" width="400" alt="Loading Step 3" /> |
 
 <br />
 
 ### 4️⃣ 분석 결과 리포트 제공
 
-AI가 커밋을 분석해
+AI가 커밋을 분석해 리포트 형태로 시각화해 보여줍니다.
 
-- 주요 변경 요약
-- 커밋 분석 내용에 맞는 다이어그램(플로우 차트, 시퀀스 다이어그램, 클래스 다이어그램)
-- 주요 code diff(수정 내역)
-- 커밋 목록(클릭 시 해당 커밋 분석 내용으로 이동)
-- 해당 커밋 GitHub 링크
-- 해당 레포지토리 링크
-
-등을 리포트 형태로 시각화해 보여줍니다.
-
-![alt text](./public/readme/result-report.gif)
+|                                           항목                                           |                                  미리보기                                   |
+| :--------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------: |
+|             🗂️ **해당 리포지토리 링크** <br>분석 대상 리포지토리의 원본 링크             |    <img src="./public/readme/result-report-repo-link.png" width="600" />    |
+|               📝 **주요 변경 요약** <br>분석된 커밋의 핵심 변경 사항 요약                |        <img src="./public/readme/result-report-1.png" width="600" />        |
+| 🔄 **커밋 분석 다이어그램** <br>커밋 흐름에 맞는 다이어그램<br>(플로우·시퀀스·클래스 등) |     <img src="./public/readme/result-report-diagram.png" width="600" />     |
+|           💻 **주요 Code Diff** <br>AI가 해당 커밋의 핵심 코드 변경 부분 표시            |      <img src="./public/readme/result-report-diff.png" width="600" />       |
+|              🔗 **해당 커밋 GitHub 링크** <br>GitHub 원본 커밋 페이지 링크               | <img src="./public/readme/result-report-repository-link.png" width="600" /> |
+|              🧾 **커밋 목록 제공** <br>클릭 시 해당 커밋 분석 내용으로 이동              |      <img src="./public/readme/result-report-list.png" width="600" />       |
 
 <br />
 <br />
@@ -239,19 +248,19 @@ AI가 커밋을 분석해
 
 <br/>
 
-### [💁‍♀️ 조혜주](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%A1%B0%ED%98%9C%EC%A3%BC)>)
+### [💁‍♀️ 조혜주](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%A1%B0%ED%98%9C%EC%A3%BC)>)
 
-#### [1. 사용자가 더 쉽게 자신의 저장소를 연결할 수 없을까?](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%92%8E-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EC%A1%B0%ED%98%9C%EC%A3%BC)#1-%EC%82%AC%EC%9A%A9%EC%9E%90%EA%B0%80-%EB%8D%94-%EC%89%BD%EA%B2%8C-%EC%9E%90%EC%8B%A0%EC%9D%98-%EC%A0%80%EC%9E%A5%EC%86%8C%EB%A5%BC-%EC%97%B0%EA%B2%B0%ED%95%A0-%EC%88%98-%EC%97%86%EC%9D%84%EA%B9%8C>) <a id="사용자가-더-쉽게-자신의-저장소를-연결할-수-없을까"></a>
+#### [1. 사용자가 더 쉽게 자신의 저장소를 연결할 수 없을까?](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%A1%B0%ED%98%9C%EC%A3%BC)#1-%EC%82%AC%EC%9A%A9%EC%9E%90%EA%B0%80-%EB%8D%94-%EC%89%BD%EA%B2%8C-%EC%9E%90%EC%8B%A0%EC%9D%98-%EC%A0%80%EC%9E%A5%EC%86%8C%EB%A5%BC-%EC%97%B0%EA%B2%B0%ED%95%A0-%EC%88%98-%EC%97%86%EC%9D%84%EA%B9%8C>) <a id="사용자가-더-쉽게-자신의-저장소를-연결할-수-없을까"></a>
 
 [**1-1. 세밀한 권한 제어를 위해 도입했던 GitHub App의 한계**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%92%8E-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EC%A1%B0%ED%98%9C%EC%A3%BC)#1-1-%EC%84%B8%EB%B0%80%ED%95%9C-%EA%B6%8C%ED%95%9C-%EC%A0%9C%EC%96%B4%EB%A5%BC-%EC%9C%84%ED%95%B4-%EB%8F%84%EC%9E%85%ED%96%88%EB%8D%98-github-app%EC%9D%98-%ED%95%9C%EA%B3%84>) <a id="세밀한-권한-제어를-위해-도입했던-github-app의-한계"></a>  
-[**1-2. OAuth 전환으로 접근 과정을 단순화하다**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%92%8E-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EC%A1%B0%ED%98%9C%EC%A3%BC)#1-2-oauth-%EC%A0%84%ED%99%98%EC%9C%BC%EB%A1%9C-%EC%A0%91%EA%B7%BC-%EA%B3%BC%EC%A0%95%EC%9D%84-%EB%8B%A8%EC%88%9C%ED%99%94%ED%95%98%EB%8B%A4>) <a id="oauth-전환으로-접근-과정을-단순화하다"></a>  
-[**1-3. OAuth 기반 인증 구조 구현 과정**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%92%8E-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EC%A1%B0%ED%98%9C%EC%A3%BC)#1-3-oauth-%EA%B8%B0%EB%B0%98-%EC%9D%B8%EC%A6%9D-%EA%B5%AC%EC%A1%B0-%EA%B5%AC%ED%98%84-%EA%B3%BC%EC%A0%95>) <a id="oauth-기반-인증-구조-구현-과정"></a>
+[**1-2. OAuth 전환으로 접근 과정을 단순화하다**](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%A1%B0%ED%98%9C%EC%A3%BC)#1-2-oauth-%EC%A0%84%ED%99%98%EC%9C%BC%EB%A1%9C-%EC%A0%91%EA%B7%BC-%EA%B3%BC%EC%A0%95%EC%9D%84-%EB%8B%A8%EC%88%9C%ED%99%94%ED%95%98%EB%8B%A4>) <a id="oauth-전환으로-접근-과정을-단순화하다"></a>  
+[**1-3. OAuth 기반 인증 구조 구현 과정**](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%A1%B0%ED%98%9C%EC%A3%BC)#1-3-oauth-%EA%B8%B0%EB%B0%98-%EC%9D%B8%EC%A6%9D-%EA%B5%AC%EC%A1%B0-%EA%B5%AC%ED%98%84-%EA%B3%BC%EC%A0%95>) <a id="oauth-기반-인증-구조-구현-과정"></a>
 
-#### [2. 리포트 생성 과정을 더 안전하고 일관되게 만들 수 있을까?](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%92%8E-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EC%A1%B0%ED%98%9C%EC%A3%BC)#2-%EB%A6%AC%ED%8F%AC%ED%8A%B8-%EC%83%9D%EC%84%B1-%EA%B3%BC%EC%A0%95%EC%9D%84-%EB%8D%94-%EC%95%88%EC%A0%84%ED%95%98%EA%B3%A0-%EC%9D%BC%EA%B4%80%EB%90%98%EA%B2%8C-%EB%A7%8C%EB%93%A4-%EC%88%98-%EC%9E%88%EC%9D%84%EA%B9%8C>) <a id="리포트-생성-과정을-더-안전하고-일관되게-만들-수-있을까"></a>
+#### [2. 리포트 생성 과정을 더 안전하고 일관되게 만들 수 있을까?](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%A1%B0%ED%98%9C%EC%A3%BC)#2-%EB%A6%AC%ED%8F%AC%ED%8A%B8-%EC%83%9D%EC%84%B1-%EA%B3%BC%EC%A0%95%EC%9D%84-%EB%8D%94-%EC%95%88%EC%A0%84%ED%95%98%EA%B3%A0-%EC%9D%BC%EA%B4%80%EB%90%98%EA%B2%8C-%EB%A7%8C%EB%93%A4-%EC%88%98-%EC%9E%88%EC%9D%84%EA%B9%8C>) <a id="리포트-생성-과정을-더-안전하고-일관되게-만들-수-있을까"></a>
 
-[**2-1. 분산된 요청 흐름으로 인한 보안성과 일관성 문제**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%92%8E-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EC%A1%B0%ED%98%9C%EC%A3%BC)#2-1-%EB%B6%84%EC%82%B0%EB%90%9C-%EC%9A%94%EC%B2%AD-%ED%9D%90%EB%A6%84%EC%9C%BC%EB%A1%9C-%EC%9D%B8%ED%95%9C-%EB%B3%B4%EC%95%88%EC%84%B1%EA%B3%BC-%EC%9D%BC%EA%B4%80%EC%84%B1-%EB%AC%B8%EC%A0%9C>) <a id="분산된-요청-흐름으로-인한-보안성과-일관성-문제"></a>  
-[**2-2. 서버 트랜잭션으로 통합해 흐름을 단일화하다**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%92%8E-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EC%A1%B0%ED%98%9C%EC%A3%BC)#2-2-%EC%84%9C%EB%B2%84-%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98%EC%9C%BC%EB%A1%9C-%ED%86%B5%ED%95%A9%ED%95%B4-%ED%9D%90%EB%A6%84%EC%9D%84-%EB%8B%A8%EC%9D%BC%ED%99%94%ED%95%98%EB%8B%A4>) <a id="서버-트랜잭션으로-통합해-흐름을-단일화하다"></a>  
-[**2-3. 안정적인 서버 주도 트랜잭션 구조로 개선하다**](<https://github.com/team-vaco-20/ssakssak-commit/wiki/%F0%9F%92%8E-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D---%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80(%EC%A1%B0%ED%98%9C%EC%A3%BC)#2-3-%EC%95%88%EC%A0%95%EC%A0%81%EC%9D%B8-%EC%84%9C%EB%B2%84-%EC%A3%BC%EB%8F%84-%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98-%EA%B5%AC%EC%A1%B0%EB%A1%9C-%EA%B0%9C%EC%84%A0%ED%95%98%EB%8B%A4>) <a id="안정적인-서버-주도-트랜잭션-구조로-개선하다"></a>
+[**2-1. 분산된 요청 흐름으로 인한 보안성과 일관성 문제**](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%A1%B0%ED%98%9C%EC%A3%BC)#2-1-%EB%B6%84%EC%82%B0%EB%90%9C-%EC%9A%94%EC%B2%AD-%ED%9D%90%EB%A6%84%EC%9C%BC%EB%A1%9C-%EC%9D%B8%ED%95%9C-%EB%B3%B4%EC%95%88%EC%84%B1%EA%B3%BC-%EC%9D%BC%EA%B4%80%EC%84%B1-%EB%AC%B8%EC%A0%9C>) <a id="분산된-요청-흐름으로-인한-보안성과-일관성-문제"></a>  
+[**2-2. 서버 트랜잭션으로 통합해 흐름을 단일화하다**](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%A1%B0%ED%98%9C%EC%A3%BC)#2-2-%EC%84%9C%EB%B2%84-%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98%EC%9C%BC%EB%A1%9C-%ED%86%B5%ED%95%A9%ED%95%B4-%ED%9D%90%EB%A6%84%EC%9D%84-%EB%8B%A8%EC%9D%BC%ED%99%94>) <a id="서버-트랜잭션으로-통합해-흐름을-단일화하다"></a>  
+[**2-3. 안정적인 서버 주도 트랜잭션 구조로 개선하다**](<https://github.com/ssak-three/ssakssak-commit/wiki/%F0%9F%8F%8B%EF%B8%8F%E2%80%8D%E2%99%80%EF%B8%8F-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%EB%B0%A9%EC%8B%9D-%EA%B8%B0%EC%88%A0-%EC%B1%8C%EB%A6%B0%EC%A7%80-(%EC%A1%B0%ED%98%9C%EC%A3%BC)#2-3-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8-%EC%A4%91%EC%8B%AC-%ED%9D%90%EB%A6%84%EC%9D%84-%EC%84%9C%EB%B2%84-%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98%EC%9C%BC%EB%A1%9C-%EC%A0%84%ED%99%98>) <a id="안정적인-서버-주도-트랜잭션-구조로-개선하다"></a>
 
 <br />
 
