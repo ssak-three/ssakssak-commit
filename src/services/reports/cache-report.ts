@@ -11,11 +11,11 @@ const ensureReportCachedById = async (
 ): Promise<string> => {
   const redis = getRedisClient();
 
-  const cached = await getResultByReportKey<ReportData>(redis, reportId);
+  const cachedReport = await getResultByReportKey<ReportData>(redis, reportId);
 
-  if (cached) return reportId;
+  if (cachedReport) return reportId;
 
-  const newReportId = await saveSharedReportToRedis<ReportData>(redis, report);
+  const newReportId = await saveSharedReportToRedis(redis, report);
   return newReportId;
 };
 
