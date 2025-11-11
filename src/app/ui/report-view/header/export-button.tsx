@@ -4,10 +4,15 @@ import { REPORT_SHARE_ERROR_MESSAGES } from "@/constants/error-messages";
 import { ReportData } from "@/types/report";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { AlertModal } from "../../common/Modal";
 
 function ExportButton({ report }: { report: ReportData }) {
   const [open, setOpen] = useState(false);
   const [copyDone, setCopyDone] = useState(false);
+  const [exportErrorMessage, setExportErrorMessage] = useState<
+    string | undefined
+  >(undefined);
+
   const menuRef = useRef<HTMLDivElement>(null);
   const { reportId } = useParams<{ reportId: string }>();
 
@@ -16,7 +21,7 @@ function ExportButton({ report }: { report: ReportData }) {
 
     try {
       if (!reportId || !report) {
-        alert(REPORT_SHARE_ERROR_MESSAGES.REPORT_NOT_FOUND);
+        setExportErrorMessage(REPORT_SHARE_ERROR_MESSAGES.REPORT_NOT_FOUND);
         return;
       }
 
@@ -39,7 +44,7 @@ function ExportButton({ report }: { report: ReportData }) {
       setOpen(false);
     } catch (error) {
       console.error(REPORT_SHARE_ERROR_MESSAGES.COPY_FAILED, error);
-      alert(REPORT_SHARE_ERROR_MESSAGES.COPY_FAILED);
+      setExportErrorMessage(REPORT_SHARE_ERROR_MESSAGES.COPY_FAILED);
     }
   };
 
@@ -90,6 +95,14 @@ function ExportButton({ report }: { report: ReportData }) {
           링크 복사!
         </div>
       )}
+
+      <AlertModal
+        open={!!exportErrorMessage}
+        title="링크 공유에 실패했습니다"
+        description={exportErrorMessage}
+        cancelLabel="닫기"
+        onCancel={() => setExportErrorMessage(undefined)}
+      />
     </div>
   );
 }
