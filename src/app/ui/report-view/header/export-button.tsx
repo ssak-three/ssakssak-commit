@@ -32,6 +32,15 @@ function ExportButton({ report }: { report: ReportData }) {
         body: JSON.stringify({ report }),
       });
 
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        const errorMessage =
+          errorData?.error?.message || REPORT_SHARE_ERROR_MESSAGES.COPY_FAILED;
+        setExportErrorMessage(errorMessage);
+
+        return;
+      }
+
       const { ensuredReportId } = (await response.json()) as {
         ensuredReportId: string;
       };
