@@ -1,0 +1,453 @@
+{
+  "reportTitle": "커밋 분석 및 기능 개선",
+  "reportSummary": "이번 리포트에서는 커밋 분석 기능을 추가하고, 커밋을 청크 단위로 이분화하여 분석하는 로직이 도입되었습니다. 또한 Zod 버전 다운그레이드로 에러 필드명을 변경하였고, pino-pretty를 동적으로 import하여 번들링 문제를 해결하는 작업도 포함되었습니다. 다이어그램 선택 사항을 필수로 바꾸고, OPENAI 관련 상수 구조 개선, 에러 핸들링 구조 개선과 같은 여러 코드 개선이 이뤄졌습니다. 이외에도 코드 직관성을 높이는 폴더명 변경 및 개발 브랜치를 피처 브랜치와 통합하는 작업이 진행되었습니다.",
+  "reportConclusion": "이번 커밋들은 기능의 향상뿐만 아니라 코드의 가독성과 유지보수성을 높이는 데 기여하였습니다. 코드 품질이 전반적으로 개선되었으며, 사용자 경험 또한 향상되었습니다.",
+  "commits": [
+    {
+      "commitId": "362b5a09858367f34f2802595c28ae6007f8435f",
+      "commitDate": "2025-09-03T10:15:15Z",
+      "commitMessage": "✨feat: commit 분석기능 추가, chunk 단위로 커밋 쪼개서 분석하는 로직 추가",
+      "author": "codewith-MJ",
+      "commitLink": "https://github.com/team-vaco-20/ssakssak-commit/commit/362b5a09858367f34f2802595c28ae6007f8435f",
+      "changeSummary": "커밋 분석 기능을 추가하고, 커밋을 청크 단위로 쪼개서 분석하는 로직이 추가되었습니다.",
+      "analyses": [
+        {
+          "type": "explanation",
+          "title": "커밋 분석 기능 추가",
+          "description": "이번 커밋은 커밋 분석 기능을 추가하며, 커밋을 청크 단위로 나누어 처리할 수 있는 새로운 로직이 도입되었습니다."
+        },
+        {
+          "type": "code-diff",
+          "title": "파일 변경 내역",
+          "description": "다음은 변경된 파일들의 핵심 내용입니다.",
+          "files": [
+            {
+              "codeDiffSummary": "커밋 분석 로직을 구현하며, 파일을 청크 단위로 나누는 기능이 추가되었습니다.",
+              "path": "src/app/api/openai/route.ts",
+              "code": "const testOpenAi = async function GET() {\n  const commits: Commit[] = testCommits;\n  const repositoryDescription = \"\";\n  const result = await getAnalysisResult(commits, repositoryDescription);\n  return NextResponse.json({ result: result });\n};",
+              "language": "typescript",
+              "status": "added",
+              "highlights": [
+                { "startLine": 7, "endLine": 7 },
+                { "startLine": 8, "endLine": 8 },
+                { "startLine": 9, "endLine": 9 }
+              ]
+            },
+            {
+              "codeDiffSummary": "Commit 타입 정의를 추가하였습니다.",
+              "path": "src/app/types/commit.ts",
+              "code": "type Commit = {\n  sha: string;\n  author: string;\n  date: string;\n  message: string;\n  files: CommitFile[];\n};",
+              "language": "typescript",
+              "status": "modified",
+              "highlights": [{ "startLine": 11, "endLine": 20 }]
+            },
+            {
+              "codeDiffSummary": "OpenAI 관련 상수를 추가하였습니다.",
+              "path": "src/constants/open-ai.ts",
+              "code": "const MAX_TOKENS_PER_BATCH = 8000;\nconst AVERAGE_CHARS_PER_TOKEN = 3;\nconst OPENAI_MODEL = \"gpt-4o-mini\";\nconst MAX_OUTPUT_TOKENS = 12000;",
+              "language": "typescript",
+              "status": "added",
+              "highlights": [{ "startLine": 1, "endLine": 4 }]
+            },
+            {
+              "codeDiffSummary": "커밋을 청크 단위로 나누는 기능을 구현하였습니다.",
+              "path": "src/infra/openai-api/chunk-commits-by-tokens.ts",
+              "code": "const chunkCommitsByTokens = (commits: Commit[], maxTokensPerBatch: number): Commit[][] => {\n  //... 로직\n};",
+              "language": "typescript",
+              "status": "added",
+              "highlights": [
+                { "startLine": 1, "endLine": 3 },
+                { "startLine": 18, "endLine": 48 }
+              ]
+            },
+            {
+              "codeDiffSummary": "커밋 분석 지침을 명시하였습니다.",
+              "path": "src/infra/openai-api/instructions.ts",
+              "code": "const COMMIT_ANALYSIS_INSTRUCTIONS = `\n//... 데이터 및 지침\n`;\n",
+              "language": "typescript",
+              "status": "added",
+              "highlights": [{ "startLine": 1, "endLine": 160 }]
+            },
+            {
+              "codeDiffSummary": "OpenAI API를 사용하여 커밋 분석을 처리하는 서비스가 추가되었습니다.",
+              "path": "src/infra/openai-api/openai.ts",
+              "code": "const analyzeCommitBatch = async (batch: Commit[], repositoryDescription: string | undefined) => {\n  //... 로직\n};",
+              "language": "typescript",
+              "status": "added",
+              "highlights": [{ "startLine": 1, "endLine": 88 }]
+            },
+            {
+              "codeDiffSummary": "커밋 분석 결과를 검증하는 타입을 정의하였습니다.",
+              "path": "src/lib/validators/structured-analysis-result.ts",
+              "code": "const analyzedCommitSchema = z.object({\n  commitId: z.string(),\n  //... 스키마\n});",
+              "language": "typescript",
+              "status": "added",
+              "highlights": [{ "startLine": 1, "endLine": 79 }]
+            },
+            {
+              "codeDiffSummary": "커밋 분석 결과를 반환하는 서비스가 추가되었습니다.",
+              "path": "src/services/analyze-commits.ts",
+              "code": "const getAnalysisResult = async (commits: Commit[], repositoryDescription: string | undefined) => {\n  //... 로직\n};",
+              "language": "typescript",
+              "status": "added",
+              "highlights": [{ "startLine": 1, "endLine": 62 }]
+            }
+          ],
+          "caption": "다수의 파일이 변경되며, 새로운 커밋 분석 기능이 추가되었습니다."
+        },
+        {
+          "type": "diagram",
+          "diagram": "sequence",
+          "title": "커밋 분석 과정",
+          "description": "커밋 분석 과정에서 발생하는 주요 상호작용을 나타냅니다.",
+          "chart": "sequenceDiagram\n  participant User as 사용자\n  participant API as 서버\n  User->>API: 분석할 커밋 요청\n  API-->>User: 분석 결과 반환",
+          "caption": "사용자가 요청한 커밋 분석 결과를 서버가 반환하는 구조입니다."
+        }
+      ],
+      "commitConclusion": "이 커밋은 커밋 분석 기능 추가와 함께 여러 파일에서 기능이 향상된 것을 보여줍니다."
+    },
+    {
+      "commitId": "89ff839ab8623be29c8e9ed54530c24b321b1941",
+      "commitDate": "2025-09-03T10:23:28Z",
+      "commitMessage": "🔨fix: zod 다운그레이드로 인해 error필드를 message로 변경",
+      "author": "codewith-MJ",
+      "commitLink": "https://github.com/team-vaco-20/ssakssak-commit/commit/89ff839ab8623be29c8e9ed54530c24b321b1941",
+      "changeSummary": "Zod 버전 다운그레이드로 인해 에러 필드의 이름을 'error'에서 'message'로 변경하였습니다.",
+      "analyses": [
+        {
+          "type": "explanation",
+          "title": "Zod 에러 필드 수정",
+          "description": "이번 커밋에서는 Zod의 버전 변경으로 인해 에러 필드의 이름이 'error'에서 'message'로 변경되었습니다."
+        },
+        {
+          "type": "code-diff",
+          "title": "파일 변경 내역",
+          "description": "다음은 변경된 파일의 핵심 내용입니다.",
+          "files": [
+            {
+              "codeDiffSummary": "에러 필드명을 변경하였습니다.",
+              "path": "src/lib/validators/repository-url.ts",
+              "code": "repositoryUrl: z.string().regex(REPOSITORY_REGEX, { message: INVALID_URL }),",
+              "language": "typescript",
+              "status": "modified",
+              "highlights": [{ "startLine": 9, "endLine": 9 }]
+            }
+          ],
+          "caption": "특정 파일에서 에러 필드명이 변경되었습니다."
+        },
+        {
+          "type": "diagram",
+          "diagram": "flowchart",
+          "title": "Zod 검증 과정",
+          "description": "Zod에서 validation 과정의 흐름을 나타냅니다.",
+          "chart": "flowchart TD\n  A[사용자 입력] --> B{검증 비즈니스 로직}\n  B -->|성공| C[데이터 저장]\n  B -->|실패| D[에러 반환]",
+          "caption": "검증이 성공하면 데이터를 저장하고, 실패하면 에러를 반환하는 구조입니다."
+        }
+      ],
+      "commitConclusion": "이 커밋은 Zod 에러 필드명을 변경하여 검증 로직의 일관성을 유지하였습니다."
+    },
+    {
+      "commitId": "e53e616f4012c8c0235c98df7f08c703cfb8b086",
+      "commitDate": "2025-09-03T13:14:03Z",
+      "commitMessage": "🔨fix: 개발환경에서 pino-pretty 동적 import 적용으로 번들 문제 해결",
+      "author": "codewith-MJ",
+      "commitLink": "https://github.com/team-vaco-20/ssakssak-commit/commit/e53e616f4012c8c0235c98df7f08c703cfb8b086",
+      "changeSummary": "개발환경에서 pino-pretty를 동적으로 import하여 번들링 문제를 해결하였습니다.",
+      "analyses": [
+        {
+          "type": "explanation",
+          "title": "pino-pretty 동적 import 적용",
+          "description": "이번 커밋에서는 개발 환경에서 'pino-pretty'를 동적으로 import하여 발생하는 번들링 문제를 해결했습니다."
+        },
+        {
+          "type": "code-diff",
+          "title": "파일 변경 내역",
+          "description": "다음은 변경된 파일의 핵심 내용입니다.",
+          "files": [
+            {
+              "codeDiffSummary": "pino-pretty를 동적으로 import하도록 변경하였습니다.",
+              "path": "src/lib/logger.ts",
+              "code": "if (isDev) {\n  const pretty = await import(\"pino-pretty\");\n  //... 로직\n} else {\n  logger = pino({\n    level: \"info\",\n    base: undefined,\n  });",
+              "language": "typescript",
+              "status": "modified",
+              "highlights": [{ "startLine": 12, "endLine": 31 }]
+            }
+          ],
+          "caption": "logger.ts 파일 내 pino-pretty의 동적 import가 추가되었습니다."
+        },
+        {
+          "type": "diagram",
+          "diagram": "flowchart",
+          "title": "pino-pretty 동적 import 과정",
+          "description": "pino-pretty의 동적 import 과정을 설명합니다.",
+          "chart": "flowchart TD\n  A[상태 체크] --> B{개발 환경?}\n  B -->|예| C[pino-pretty 동적 import]\n  B -->|아니오| D[기본 로거 사용]",
+          "caption": "여기서 pino-pretty의 동적 import 여부를 판단하는 구조를 확인할 수 있습니다."
+        }
+      ],
+      "commitConclusion": "이 커밋은 pino-pretty를 동적으로 import하여 번들링 문제를 해결하였습니다."
+    },
+    {
+      "commitId": "2c362739280b0034fc0f3c59a11da6bef7bac32d",
+      "commitDate": "2025-09-03T13:15:42Z",
+      "commitMessage": "✨feat: 커밋 분석 과정 로깅 추가",
+      "author": "codewith-MJ",
+      "commitLink": "https://github.com/team-vaco-20/ssakssak-commit/commit/2c362739280b0034fc0f3c59a11da6bef7bac32d",
+      "changeSummary": "커밋 분석 과정에 로깅 기능을 추가하였습니다.",
+      "analyses": [
+        {
+          "type": "explanation",
+          "title": "커밋 분석 로깅 추가",
+          "description": "이번 커밋에서 커밋 분석 과정에 로깅 기능이 추가되어 분석 과정을 보다 투명하게 대처할 수 있게 되었습니다."
+        },
+        {
+          "type": "code-diff",
+          "title": "파일 변경 내역",
+          "description": "다음은 변경된 파일의 핵심 내용입니다.",
+          "files": [
+            {
+              "codeDiffSummary": "커밋 분석 프로세스에 로깅 정보를 추가하였습니다.",
+              "path": "src/infra/openai-api/chunk-commits-by-tokens.ts",
+              "code": "logger.info({ batchCount: batches.length, commitCount: commits.length }, `커밋 ${commits.length}개를 ${batches.length}개의 배치로 분할 완료`);",
+              "language": "typescript",
+              "status": "modified",
+              "highlights": [{ "startLine": 37, "endLine": 38 }]
+            }
+          ],
+          "caption": "분석 프로세스의 배치 수와 커밋 수를 로깅하는 코드가 추가되었습니다."
+        },
+        {
+          "type": "diagram",
+          "diagram": "flowchart",
+          "title": "커밋 분석 프로세스",
+          "description": "커밋 분석 프로세스에서 로깅의 흐름을 나타냅니다.",
+          "chart": "flowchart TD\n  A[커밋 분석 시작] --> B[배치 수 계산]\n  B --> C[분할 결과 로깅]\n  C --> D[분석 종료]",
+          "caption": "커밋 분석 과정에서 로깅이 수행되는 흐름을 보여줍니다."
+        }
+      ],
+      "commitConclusion": "이번 커밋은 커밋 분석 과정에 로깅 기능을 추가하여 분석 과정을 한층 더 명확하게 하였습니다."
+    },
+    {
+      "commitId": "6cea3a54bee179b4ae1a54120653aac0d4e18b7d",
+      "commitDate": "2025-09-03T13:17:03Z",
+      "commitMessage": "🔨fix: diagram 선택적으로 명령한 것을 강제로 변경 후 해당 mock 데이터에 수정된 버전 반영",
+      "author": "codewith-MJ",
+      "commitLink": "https://github.com/team-vaco-20/ssakssak-commit/commit/6cea3a54bee179b4ae1a54120653aac0d4e18b7d",
+      "changeSummary": "다이어그램 선택 사항을 필수로 변경하고, 이에 따라 mock 데이터도 수정하였습니다.",
+      "analyses": [
+        {
+          "type": "explanation",
+          "title": "다이어그램 필수화",
+          "description": "이번 커밋에서는 다이어그램 생성 조건을 선택 사항에서 필수 사항으로 변경하였습니다."
+        },
+        {
+          "type": "code-diff",
+          "title": "파일 변경 내역",
+          "description": "다음은 변경된 파일의 핵심 내용입니다.",
+          "files": [
+            {
+              "codeDiffSummary": "다이어그램 요구 조건이 필수로 변경되었습니다.",
+              "path": "src/infra/openai-api/instructions.ts",
+              "code": "• diagram: 1개 이상.",
+              "language": "typescript",
+              "status": "modified",
+              "highlights": [{ "startLine": 28, "endLine": 28 }]
+            }
+          ],
+          "caption": "다이어그램 생성 요구 조건을 수정하였습니다."
+        },
+        {
+          "type": "diagram",
+          "diagram": "flowchart",
+          "title": "다이어그램 생성 조건",
+          "description": "커밋 분석 과정에서 다이어그램 생성 조건을 설명합니다.",
+          "chart": "flowchart TD\n  A[다이어그램 생성 요청] --> B{조건 충족?}\n  B -->|예| C[다이어그램 생성]\n  B -->|아니오| D[다이어그램 생성 실패]",
+          "caption": "조건이 충족되면 다이어그램 생성이 가능하다는 흐름을 보여줍니다."
+        }
+      ],
+      "commitConclusion": "이 커밋은 다이어그램 생성 조건을 필수로 변경하여 요구사항의 일관성을 강화하였습니다."
+    },
+    {
+      "commitId": "3d82a98ac2d2f64782d559280ba53abeace7aa74",
+      "commitDate": "2025-09-03T14:05:57Z",
+      "commitMessage": "♻️refactor: OPENAI 상수 구조 변경",
+      "author": "codewith-MJ",
+      "commitLink": "https://github.com/team-vaco-20/ssakssak-commit/commit/3d82a98ac2d2f64782d559280ba53abeace7aa74",
+      "changeSummary": "OPENAI 관련 상수들을 객체로 묶어 구조를 변경했습니다.",
+      "analyses": [
+        {
+          "type": "explanation",
+          "title": "상수 구조 변경",
+          "description": "OPENAI 모델과 관련된 여러 상수를 객체 형태로 정리하여 코드의 가독성 및 관리성을 높였습니다."
+        },
+        {
+          "type": "code-diff",
+          "title": "상수 변경",
+          "description": "OPENAI 관련 상수를 객체로 묶는 변경이 포함되었습니다.",
+          "files": [
+            {
+              "codeDiffSummary": "상수들을 객체 형태로 변경하여 관리하기 쉽게 수정했습니다.",
+              "path": "src/constants/open-ai.ts",
+              "code": "const TOKEN_LIMITS = {\n  MAX_TOKENS_PER_BATCH: 8000,\n  MAX_OUTPUT_TOKENS: 8000,\n  AVERAGE_CHARS_PER_TOKEN: 3,\n};\nexport { TOKEN_LIMITS, OPENAI_MODEL };",
+              "language": "typescript",
+              "status": "modified",
+              "highlights": [{ "startLine": 1, "endLine": 9 }]
+            }
+          ],
+          "caption": "상수들이 객체로 통합되어 코드가 더 직관적으로 작성되었습니다."
+        },
+        {
+          "type": "diagram",
+          "diagram": "class",
+          "title": "OPENAI 모델 상수 클래스 다이어그램",
+          "description": "OPENAI 모델에 필요한 상수를 모아놓은 클래스 구조를 나타냅니다.",
+          "chart": "classDiagram\n  class TokenLimits {\n    +int MAX_TOKENS_PER_BATCH\n    +int MAX_OUTPUT_TOKENS\n    +int AVERAGE_CHARS_PER_TOKEN\n  }\n  class OpenAI {\n    +String MODEL\n  }\n  TokenLimits --> OpenAI",
+          "caption": "OPENAI 모델과 관련된 상수를 객체로 구성하여 구조화하였습니다."
+        }
+      ],
+      "commitConclusion": "OPENAI와 관련된 상수 구조가 개선되어 코드의 유지보수성과 가독성이 향상되었습니다."
+    },
+    {
+      "commitId": "46886c6ffe5ae0618a0df108eddd88b1f232f3af",
+      "commitDate": "2025-09-04T01:44:21Z",
+      "commitMessage": "♻️refactor: sortMergedResultsByCommitDate 내부 변수 네이밍 개선",
+      "author": "codewith-MJ",
+      "commitLink": "https://github.com/team-vaco-20/ssakssak-commit/commit/46886c6ffe5ae0618a0df108eddd88b1f232f3af",
+      "changeSummary": "sortMergedResultsByCommitDate 함수 내 변수 이름을 의미 있게 변경했습니다.",
+      "analyses": [
+        {
+          "type": "explanation",
+          "title": "변수 이름 개선",
+          "description": "이전 변수 이름을 더 의미 있는 이름으로 변경하여 코드의 가독성을 높였습니다."
+        },
+        {
+          "type": "code-diff",
+          "title": "변수 이름 변경",
+          "description": "sortMergedResultsByCommitDate 함수 내 변수가 변경되었습니다.",
+          "files": [
+            {
+              "codeDiffSummary": "정확한 의미를 가진 변수 네이밍으로 변경하였습니다.",
+              "path": "src/services/analyze-commits.ts",
+              "code": "const sortedList = [...merged].sort((commitA, commitB) => {\n    const commitTimeA = new Date(commitA.commitDate).getTime();\n    const commitTimeB = new Date(commitB.commitDate).getTime();\n    if (commitTimeA !== commitTimeB) {\n      return commitTimeA - commitTimeB;\n    }\n    return commitA.commitId.localeCompare(commitB.commitId);\n  });",
+              "language": "typescript",
+              "status": "modified",
+              "highlights": [
+                { "startLine": 82, "endLine": 82 },
+                { "startLine": 84, "endLine": 84 },
+                { "startLine": 87, "endLine": 87 },
+                { "startLine": 89, "endLine": 89 }
+              ]
+            }
+          ],
+          "caption": "변수명이 변경되어 이해하기 쉬운 코드로 개선되었습니다."
+        },
+        {
+          "type": "diagram",
+          "diagram": "flowchart",
+          "title": "sortMergedResultsByCommitDate 함수 흐름도",
+          "description": "sortMergedResultsByCommitDate 함수의 전체 흐름을 제시합니다.",
+          "chart": "flowchart TD\n  A[merged 데이터 수신] --> B[정렬 시작]\n  B --> C{시간 비교}\n  C -->|다름| D[정렬]\n  C -->|같음| E[commitId로 정렬]\n  D --> F[정렬된 리스트 반환]\n  E --> F",
+          "caption": "sortMergedResultsByCommitDate 함수의 로직 흐름을 명확하게 나타냅니다."
+        }
+      ],
+      "commitConclusion": "변수 명확성을 높임으로써 코드 가독성이 향상되었습니다."
+    },
+    {
+      "commitId": "6698780cfc2ed24700de2b514a879fa4fa2d2252",
+      "commitDate": "2025-09-04T10:44:29Z",
+      "commitMessage": "♻️refactor: 에러핸들링 구조 개선 및 함수 모듈 분리",
+      "author": "codewith-MJ",
+      "commitLink": "https://github.com/team-vaco-20/ssakssak-commit/commit/6698780cfc2ed24700de2b514a879fa4fa2d2252",
+      "changeSummary": "에러 핸들링 구조를 개선하고, 관련 함수들을 모듈로 분리하였습니다.",
+      "analyses": [
+        {
+          "type": "explanation",
+          "title": "",
+          "description": "이번 커밋은 에러 핸들링 구조를 개선하고 다양한 기능을 모듈화하여 코드의 재사용성을 높이는 개발 의도를 가지고 있습니다."
+        },
+        {
+          "type": "code-diff",
+          "title": "커밋 변경사항 요약",
+          "description": "주요 변경 사항은`, import getAnalysisResult` 경로 변경과 새로운 에러 메시지를 추가하며, 에러 클래스를 정의하는 패턴으로 변경되었습니다.",
+          "files": [
+            {
+              "codeDiffSummary": "에러 메시지를 추가하고 에러 핸들링 방식 개선",
+              "path": "src/constants/error-messages.ts",
+              "code": "const OPENAI_ERROR_MESSAGES = {\n  ZOD_VALIDATION_FAILED: \"모델 출력이 스키마와 일치하지 않습니다.\",\n  RESPONSE_CREATION_FAILED: \"OpenAI 응답 생성에 실패했습니다.\",\n  MODEL_REFUSAL: \"모델이 요청을 거절했습니다. 요청 내용을 점검하세요.\",\n};",
+              "language": "typescript",
+              "status": "modified",
+              "highlights": [{ "startLine": 1, "endLine": 12 }]
+            }
+          ],
+          "caption": "에러 메시지가 추가되었으며, 이를 통해 보다 세부적인 오류 처리를 수행할 수 있게 되었습니다."
+        },
+        {
+          "type": "diagram",
+          "diagram": "flowchart",
+          "title": "에러 핸들링 흐름도",
+          "description": "에러 핸들링의 주요 흐름을 보여주는 다이어그램입니다.",
+          "chart": "flowchart TD\n  A[요청 수신] --> B[에러 발생 여부 체크]\n  B -->|아니오| C[핵심 로직 실행]\n  B -->|예| D[에러 처리]\n  D --> E[에러 응답 반환]",
+          "caption": "이 다이어그램은 에러 핸들링 프로세스를 시각적으로 정리한 것입니다."
+        }
+      ],
+      "commitConclusion": "이번 변경을 통해 에러 핸들링 구조를 개선하고 코드의 모듈화를 통해 유지보수성을 향상시켰습니다."
+    },
+    {
+      "commitId": "1a2902193135d057d917b40c898ca638e7a1abba",
+      "commitDate": "2025-09-04T11:24:56Z",
+      "commitMessage": "♻️refactor: 폴더명 명사형으로 수정",
+      "author": "codewith-MJ",
+      "commitLink": "https://github.com/team-vaco-20/ssakssak-commit/commit/1a2902193135d057d917b40c898ca638e7a1abba",
+      "changeSummary": "폴더명 변경으로 코드의 직관성을 높였습니다.",
+      "analyses": [
+        {
+          "type": "explanation",
+          "title": "",
+          "description": "이 커밋은 폴더명의 명사형 수정을 통해 구조적인 개선과 가독성을 증대시키는 것을 목표로 하고 있습니다."
+        },
+        {
+          "type": "code-diff",
+          "title": "폴더명 변경",
+          "description": "폴더명 변경으로 인해 코드의 경로가 수정되었습니다.",
+          "files": [
+            {
+              "codeDiffSummary": "폴더 경로가 명사형으로 바뀌었습니다.",
+              "path": "src/app/api/openai/route.ts",
+              "code": "import getAnalysisResult from \"@/services/commit-analysis/analyze-commits\";",
+              "language": "typescript",
+              "status": "modified",
+              "highlights": [{ "startLine": 1, "endLine": 1 }]
+            }
+          ],
+          "caption": "폴더명을 명사형으로 변경하여 코드의 직관성을 높였습니다."
+        },
+        {
+          "type": "diagram",
+          "diagram": "flowchart",
+          "title": "폴더 구조 변경 흐름도",
+          "description": "폴더 구조 변경의 흐름을 나타내는 다이어그램입니다.",
+          "chart": "flowchart TD\n  A[폴더명 변경 요청] --> B[변경할 폴더명 결정]\n  B --> C[기존 코드 경로 수정]\n  C --> D[테스트 수행]\n  D --> E[변경 완료]",
+          "caption": "이 다이어그램은 폴더명 변경에 따른 작업 흐름을 정리한 것입니다."
+        }
+      ],
+      "commitConclusion": "이번 리팩토링을 통해 코드의 경로를 명확히 하고, 가독성을 향상시켰습니다."
+    },
+    {
+      "commitId": "24173c6ed22144bbcdd6b9616982a1b537403fd5",
+      "commitDate": "2025-09-04T13:07:14Z",
+      "commitMessage": "Merge remote-tracking branch 'origin/develop' into feat/#26-openai-commit-analysis",
+      "author": "codewith-MJ",
+      "commitLink": "https://github.com/team-vaco-20/ssakssak-commit/commit/24173c6ed22144bbcdd6b9616982a1b537403fd5",
+      "changeSummary": "개발 브랜치를 피처 브랜치에 병합하는 작업입니다.",
+      "analyses": [
+        {
+          "type": "explanation",
+          "title": "",
+          "description": "이 커밋은 'develop' 브랜치를 'feat/#26-openai-commit-analysis' 브랜치에 병합하는 내용을 포함하고 있습니다."
+        }
+      ],
+      "commitConclusion": "개발 브랜치의 변경사항을 피처 브랜치에 안전하게 통합하였습니다."
+    }
+  ],
+  "repositoryUrl": "https://github.com/team-vaco-20/ssakssak-commit/",
+  "branch": "feat/#26-openai-commit-analysis"
+}

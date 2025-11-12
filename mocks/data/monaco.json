@@ -1,0 +1,84 @@
+{
+  "files": [
+    {
+      "path": "src/infra/github-api/commits.ts",
+      "code": "// infra API에서 커밋 정보를 가져오는 맞춤형 로직으로 변경\nimport { getGithubCommitList } from \"@/infra/github-api/commits/get-commit-list\";\nimport { getGithubCommitDetails } from \"@/infra/github-api/commits/get-commit-details\";",
+      "language": "typescript",
+      "status": "modified",
+      "highlights": [
+        { "startLine": 1, "endLine": 1 },
+        { "startLine": 4, "endLine": 4 }
+      ]
+    },
+    {
+      "path": "src/pages/index.tsx",
+      "code": "import { NextPage } from 'next';\n\nconst HomePage: NextPage = () => {\n  return (\n    <div>\n      <h1>Welcome to Next.js!</h1>\n      <p>This is the home page.</p>\n    </div>\n  );\n};\n\nexport default HomePage;\n",
+      "language": "typescript",
+      "highlights": [
+        {
+          "startLine": 6,
+          "endLine": 8,
+          "reason": "새로운 기능 추가: 클릭 이벤트가 있는 버튼을 추가했습니다."
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "path": "src/styles/globals.css",
+      "code": "body {\n  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;\n  background-color: #f0f2f5;\n  color: #333;\n  line-height: 1.6;\n}\n\n.container {\n  max-width: 960px;\n  margin: 0 auto;\n  padding: 2rem;\n}\n",
+      "language": "css",
+      "highlights": [
+        {
+          "startLine": 2,
+          "endLine": 5,
+          "reason": "글꼴 및 배경색상 변경: 가독성을 위해 스타일을 수정했습니다."
+        },
+        {
+          "startLine": 7,
+          "endLine": 10,
+          "reason": "컨테이너 스타일 추가: 레이아웃을 위해 새로운 클래스를 추가했습니다."
+        }
+      ],
+      "status": "modified"
+    },
+    {
+      "path": "src/components/oldComponent.tsx",
+      "code": "import React from 'react';\n\nconst OldComponent = () => {\n  return <div>This component is no longer used.</div>;\n};\n\nexport default OldComponent;\n",
+      "language": "typescript",
+      "highlights": [
+        {
+          "startLine": 1,
+          "endLine": 8,
+          "reason": "이 컴포넌트는 더 이상 사용되지 않아 삭제되었습니다."
+        }
+      ],
+      "status": "deleted"
+    },
+    {
+      "path": "src/features/auth/login.tsx",
+      "code": "import React from 'react';\n\nconst LoginComponent = () => {\n  return <div>login logic</div>;\n};\n\nexport default LoginComponent;\n",
+      "language": "typescript",
+      "highlights": [
+        {
+          "startLine": 3,
+          "endLine": 3,
+          "reason": "파일 이름이 'login.tsx'에서 'userLogin.tsx'로 변경되었습니다."
+        }
+      ],
+      "status": "renamed"
+    },
+    {
+      "path": "src/utils/newApi.ts",
+      "code": "export const fetchUsers = async () => {\n  try {\n    const response = await fetch('https://api.example.com/users');\n    const data = await response.json();\n    return data;\n  } catch (error) {\n    console.error('Failed to fetch users:', error);\n    throw error;\n  }\n};\n",
+      "language": "typescript",
+      "highlights": [
+        {
+          "startLine": 1,
+          "endLine": 10,
+          "reason": "기존의 'api.ts' 파일이 'newApi.ts'로 복사되었습니다."
+        }
+      ],
+      "status": "copied"
+    }
+  ]
+}

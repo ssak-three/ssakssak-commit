@@ -1,0 +1,587 @@
+{
+  "result": {
+    "reportTitle": "API 기능 추가 및 코드 구조 개선",
+    "reportSummary": "이번 커밋들은 커밋 데이터를 가져오는 API 기능을 추가하고, 타입 이름을 변경하여 일관성을 높였으며, getAllCommits의 export 방식을 수정하여 모듈화를 향상시켰습니다. 또한, 기능 요청 방식을 GET에서 POST로 변경하였고, 인프라 로직을 분리하여 코드 가독성을 증가시켰습니다. 커밋 목록 조회와 커밋 상세 조회 로직의 분리 작업에 의해 코드 구조가 개선되었으며, 함수 이름의 오타 수정, 최근 기준으로 커밋 데이터를 정렬하는 기능 추가, 특정 파일 형식 필터링 로직도 포함되었습니다. 마지막으로, 페이지네이션 처리 및 파일 반환 로직의 구조도 변경되었습니다.",
+    "reportConclusion": "전반적으로 이번 커밋들은 API 사용성 및 코드 가독성을 향상시켰으며, 코드 구조의 일관성을 높여 유지보수성을 개선하는 긍정적인 결과를 가져왔습니다.",
+    "commits": [
+      {
+        "commitId": "3e119329a69a2a49cc876da20972acfca0bd33b3",
+        "commitDate": "2025-08-31T05:53:04Z",
+        "commitMessage": "✨feat: 커밋 데이터 가져오기 기능 추가",
+        "author": "hanse",
+        "changeSummary": "커밋 데이터를 가져오는 API 기능을 추가했습니다.",
+        "analyses": [
+          {
+            "type": "explanation",
+            "title": "새로운 커밋 데이터 API 추가",
+            "description": "이 커밋은 GitHub API를 통해 커밋 데이터를 가져오는 기능을 추가하는 내용을 담고 있습니다. 사용자는 요청 시 owner, repo, branch 정보를 지정할 수 있습니다."
+          },
+          {
+            "type": "code-diff",
+            "title": "파일 추가",
+            "description": "route.ts, githubCommit.ts, commits.ts, commit.ts 파일을 새로 추가하였습니다.",
+            "files": [
+              {
+                "path": "src/app/api/commits/route.ts",
+                "code": "import { NextRequest, NextResponse } from \"next/server\";\nimport { getAllCommits } from \"@/services/commit/commit\";\nimport AppError from \"@/errors/app-error\";\n\nasync function GET(req: NextRequest) {\n  try {\n    const url = req.nextUrl;\n    const owner = url.searchParams.get(\"owner\") || \"defaultOwner\";\n    const repositoryName = url.searchParams.get(\"repo\") || \"defaultRepo\";\n    const branch = url.searchParams.get(\"branch\") || \"main\";\n\n    const commits = await getAllCommits(owner, repositoryName, branch);\n    return NextResponse.json(commits);\n  } catch (error) {\n    const message = error instanceof Error ? error.message : \"Unexpected error\";\n    const status = error instanceof AppError ? error.status : 500;\n\n    return NextResponse.json({ error: { message, status } }, { status });\n  }\n}\n\nexport { GET };",
+                "language": "typescript",
+                "status": "added",
+                "highlights": [
+                  {
+                    "startLine": 1,
+                    "endLine": 22
+                  }
+                ]
+              },
+              {
+                "path": "src/app/types/githubCommit.ts",
+                "code": "interface CommitFile {\n  filename: string;\n  status: string;\n  patch: string | null;\n}\n\ninterface CommitDetail {\n  sha: string;\n  author: string;\n  date: string;\n  message: string;\n  files: CommitFile[] | null;\n}\n\nexport type { CommitFile, CommitDetail };",
+                "language": "typescript",
+                "status": "added",
+                "highlights": [
+                  {
+                    "startLine": 1,
+                    "endLine": 15
+                  }
+                ]
+              },
+              {
+                "path": "src/infra/github-api/commits.ts",
+                "code": "import { Octokit, RequestError } from \"octokit\";\nimport { Endpoints } from \"@octokit/types\";\nimport { CommitDetail, CommitFile } from \"@/app/types/githubCommit\";\nimport NotFoundError from \"@/errors/not-found-error\";\nimport { GITHUB_REPOSITORY_ERROR_MESSAGES } from \"@/constants/error-messages\";\n\n// ... (중략 보안상 생략) \n\nexport { getCommits };",
+                "language": "typescript",
+                "status": "added",
+                "highlights": [
+                  {
+                    "startLine": 1,
+                    "endLine": 74
+                  }
+                ]
+              },
+              {
+                "path": "src/services/commit/commit.ts",
+                "code": "import { CommitDetail } from \"@/app/types/githubCommit\";\nimport { getCommits } from \"@/infra/github-api/commits\";\n\nexport const getAllCommits = async (\n  owner: string,\n  repositoryName: string,\n  branch: string,\n): Promise<CommitDetail[]> => {\n  return await getCommits(owner, repositoryName, branch);\n};",
+                "language": "typescript",
+                "status": "added",
+                "highlights": [
+                  {
+                    "startLine": 1,
+                    "endLine": 10
+                  }
+                ]
+              }
+            ],
+            "caption": "추가된 파일 목록 및 주요 변경사항입니다."
+          },
+          {
+            "type": "diagram",
+            "diagram": "sequence",
+            "title": "GET 요청 처리 흐름",
+            "description": "GET 요청을 통해 커밋 데이터를 가져오는 과정을 나타낸 다이어그램입니다.",
+            "chart": "sequenceDiagram\n    participant 클라이언트 as Client\n    participant API as API\n    Client->>API: GET 요청 전송\n    API-->>Client: 커밋 데이터 반환\n",
+            "caption": "GET 요청이 처리되는 과정을 보여줍니다."
+          }
+        ],
+        "commitConclusion": "이번 커밋은 커밋 데이터를 가져오는 기능을 성공적으로 추가하였으며, API의 구조를 효과적으로 개선하였습니다."
+      },
+      {
+        "commitId": "205ec344aa94ef7aa91871a764b21710de4d7742",
+        "commitDate": "2025-08-31T05:55:16Z",
+        "commitMessage": "📦️chore: types 이름 변경",
+        "author": "hanse",
+        "changeSummary": "타입 이름을 변경하여 일관성을 높였습니다.",
+        "analyses": [
+          {
+            "type": "explanation",
+            "title": "타입 이름 변경",
+            "description": "기존의 CommitInfo 타입을 CommitFile 및 CommitDetail로 변경하여, 더 명확한 타입 구조를 제공합니다."
+          },
+          {
+            "type": "code-diff",
+            "title": "타입 수정",
+            "description": "Commit 관련 타입의 이름을 변경했습니다.",
+            "files": [
+              {
+                "path": "src/app/types/commit.ts",
+                "code": "interface CommitFile {\n  filename: string;\n  status: string;\n  patch: string | null;\n}\n\ninterface CommitDetail {\n  sha: string;\n  author: string;\n  date: string;\n  message: string;\n  files: CommitFile[] | null;\n}\n\nexport type { CommitFile, CommitDetail };",
+                "language": "typescript",
+                "status": "modified",
+                "highlights": [
+                  {
+                    "startLine": 1,
+                    "endLine": 15
+                  }
+                ]
+              },
+              {
+                "path": "src/app/types/githubCommit.ts",
+                "code": "// 기존 타입을 제거하였습니다.",
+                "language": "typescript",
+                "status": "removed",
+                "highlights": []
+              },
+              {
+                "path": "src/app/types/mock_commitInfo.ts",
+                "code": "type CommitInfo = {\n  id: string;\n  message: string;\n};\n\nexport type { CommitInfo };",
+                "language": "typescript",
+                "status": "added",
+                "highlights": [
+                  {
+                    "startLine": 1,
+                    "endLine": 6
+                  }
+                ]
+              },
+              {
+                "path": "src/app/ui/report-view/aside-area/commit-box.tsx",
+                "code": "import { CommitInfo } from \"@/app/types/mock_commitInfo\";\n\nfunction CommitBox({ id, message }: CommitInfo) {\n  return (",
+                "language": "typescript",
+                "status": "modified",
+                "highlights": [
+                  {
+                    "startLine": 1,
+                    "endLine": 4
+                  }
+                ]
+              }
+            ],
+            "caption": "변경된 타입 이름과 신규 파일에 대한 정보입니다."
+          },
+          {
+            "type": "diagram",
+            "diagram": "class",
+            "title": "Commit 타입 구조",
+            "description": "타입 간의 관계를 나타내는 클래스 다이어그램입니다.",
+            "chart": "classDiagram\n    class CommitFile {\n      +String filename\n      +String status\n      +String patch\n    }\n\n    class CommitDetail {\n      +String sha\n      +String author\n      +String date\n      +String message\n      +CommitFile[] files\n    }\n\n    CommitDetail --> CommitFile : contains\n",
+            "caption": "CommitFile과 CommitDetail 타입 간의 관계를 보여주는 다이어그램입니다."
+          }
+        ],
+        "commitConclusion": "타입 이름 변경으로 인해 코드 구조의 일관성을 향상시켰습니다."
+      },
+      {
+        "commitId": "98083223b49550cae397b7d0b4770337a619c4f1",
+        "commitDate": "2025-08-31T06:13:18Z",
+        "commitMessage": "🎨style: export 방법 변경",
+        "author": "hanse",
+        "changeSummary": "getAllCommits의 export 방식이 수정되었습니다.",
+        "analyses": [
+          {
+            "type": "explanation",
+            "title": "export 방식 수정",
+            "description": "getAllCommits 함수를 새로운 방식으로 export하여 모듈화를 개선하였습니다."
+          },
+          {
+            "type": "code-diff",
+            "title": "export 수정",
+            "description": "getAllCommits의 export 방식을 변경하였습니다.",
+            "files": [
+              {
+                "path": "src/services/commit/commit.ts",
+                "code": "const getAllCommits = async (\n  owner: string,\n  repositoryName: string,\n  branch: string,\n): Promise<CommitDetail[]> => {\n  return await getCommits(owner, repositoryName, branch);\n};\n\nexport { getAllCommits };",
+                "language": "typescript",
+                "status": "modified",
+                "highlights": [
+                  {
+                    "startLine": 1,
+                    "endLine": 12
+                  }
+                ]
+              }
+            ],
+            "caption": "수정된 export 문장입니다."
+          },
+          {
+            "type": "diagram",
+            "diagram": "class",
+            "title": "getAllCommits 함수",
+            "description": "getAllCommits 함수의 구조를 나타냅니다.",
+            "chart": "classDiagram\n    class CommitService {\n      +Promise<CommitDetail[]> getAllCommits(String owner, String repositoryName, String branch)\n    }\n",
+            "caption": "getAllCommits 함수에 대한 클래스 다이어그램입니다."
+          }
+        ],
+        "commitConclusion": "함수의 export 방식 수정으로 모듈화가 향상되었습니다."
+      },
+      {
+        "commitId": "77954d4b1abb2a7d5252710aa029c4c3a8219b24",
+        "commitDate": "2025-08-31T21:37:13Z",
+        "commitMessage": "✨feat: GET -> POST 기능 변경",
+        "author": "hanse",
+        "changeSummary": "기능을 GET에서 POST로 변경하여 요청 방식을 수정하였습니다.",
+        "analyses": [
+          {
+            "type": "explanation",
+            "title": "기능 변경",
+            "description": "기존의 GET 요청을 POST 요청으로 변경하여 API의 사용성을 높였습니다."
+          },
+          {
+            "type": "code-diff",
+            "title": "GET에서 POST로 변경",
+            "description": "HTTP 메소드가 GET에서 POST로 변경되었습니다.",
+            "files": [
+              {
+                "path": "src/app/api/commits/route.ts",
+                "code": "async function POST(req: NextRequest) {\n  try {\n    const body = await req.json();\n    const owner = body.owner || GITHUB_API.DEFAULTS.DEFAULT_OWNER;\n    const repositoryName = body.repo || GITHUB_API.DEFAULTS.DEFAULT_REPO;\n    const branch = body.branch || GITHUB_API.DEFAULTS.DEFAULT_BRANCH;\n    const commits = await getAllCommits(owner, repositoryName, branch);\n    return NextResponse.json(commits);\n  } catch (error) {\n    const message = error instanceof Error ? error.message : \"Unexpected error\";\n    const status = error instanceof AppError ? error.status : 500;\n\n    return NextResponse.json({ error: { message, status } }, { status });\n  }\n}\n",
+                "language": "typescript",
+                "status": "modified",
+                "highlights": [
+                  {
+                    "startLine": 1,
+                    "endLine": 15
+                  }
+                ]
+              }
+            ],
+            "caption": "변경된 함수의 코드입니다."
+          },
+          {
+            "type": "diagram",
+            "diagram": "flowchart",
+            "title": "POST 요청 처리 흐름",
+            "description": "POST 요청을 통해 커밋 데이터를 가져오는 과정을 나타낸 다이어그램입니다.",
+            "chart": "flowchart TD\n    A[POST 요청 수신] --> B[요청 본문 데이터 파싱]\n    B --> C{특성 확인}\n    C -->|owner| D[기본 owner 설정]\n    C -->|repo| E[기본 repo 설정]\n    C -->|branch| F[기본 branch 설정]\n    D --> G[커밋 가져오기]\n    E --> G\n    F --> G\n    G --> H[커밋 데이터 반환]\n",
+            "caption": "POST 요청이 처리되는 과정을 보여줍니다."
+          }
+        ],
+        "commitConclusion": "기능 변경이 API의 사용성과 유연성을 향상시키고 있습니다."
+      },
+      {
+        "commitId": "97b1cf46fd5ba7407297d884919c8707741273cf",
+        "commitDate": "2025-08-31T21:54:26Z",
+        "commitMessage": "♻️refactor: infra 로직 분리",
+        "author": "hanse",
+        "changeSummary": "인프라 로직을 분리하여 코드의 가독성을 증가시켰습니다.",
+        "analyses": [
+          {
+            "type": "explanation",
+            "title": "로직 분리",
+            "description": "인프라 관련 로직을 별도의 파일로 분리함으로써 가독성을 높였습니다."
+          },
+          {
+            "type": "code-diff",
+            "title": "로직 이동",
+            "description": "인프라 로직을 새로운 파일로 분리했습니다.",
+            "files": [
+              {
+                "path": "src/infra/github-api/commits.ts",
+                "code": "// 인프라 관련 코드가 많은 부분이 수정되었습니다.",
+                "language": "typescript",
+                "status": "modified",
+                "highlights": []
+              },
+              {
+                "path": "src/infra/github-api/commits/get-commit-details.ts",
+                "code": "import { Octokit } from \"octokit\";\nimport { Endpoints } from \"@octokit/types\";\nimport { CommitDetail, CommitFile } from \"@/app/types/commit\";\nimport { GITHUB_API } from \"@/constants/github-api\";\n\nconst getGithubCommitDetails = async (\n  owner: string,\n  repository: string,\n  shas: string[],\n): Promise<CommitDetail[]> => {\n  const octokit = new Octokit();\n  ...\n};",
+                "language": "typescript",
+                "status": "added",
+                "highlights": []
+              },
+              {
+                "path": "src/infra/github-api/commits/get-commit-list.ts",
+                "code": "import { Octokit, RequestError } from \"octokit\";\nimport { Endpoints } from \"@octokit/types\";\nimport NotFoundError from \"@/errors/not-found-error\";\nimport { GITHUB_API } from \"@/constants/github-api\";\n\nconst getGithubCommitList = async (\n  owner: string,\n  repositoryName: string,\n  branch: string,\n): Promise<SimpleCommit[]> => {\n  const octokit = new Octokit();\n  ...\n};",
+                "language": "typescript",
+                "status": "added",
+                "highlights": []
+              },
+              {
+                "path": "src/services/commit/commit.ts",
+                "code": "// 불필요한 로직이 삭제되었습니다.",
+                "language": "typescript",
+                "status": "removed",
+                "highlights": []
+              }
+            ],
+            "caption": "로직을 분리하여 코드를 정리한 내용입니다."
+          },
+          {
+            "type": "diagram",
+            "diagram": "sequence",
+            "title": "커밋 상세조회 로직 흐름",
+            "description": "커밋 상세조회 로직 흐름을 나타낸 시퀀스 다이어그램입니다.",
+            "chart": "sequenceDiagram\n    participant API as API\n    participant GitHub as GitHub\n    API->>GitHub: 커밋 상세 요청\n    GitHub-->>API: 커밋 상세 반환\n",
+            "caption": "커밋 상세 조회 시퀀스를 설명하는 다이어그램입니다."
+          }
+        ],
+        "commitConclusion": "코드의 가독성을 높이기 위한 로직 분리가 성공적으로 이루어졌습니다."
+      },
+      {
+        "commitId": "f4d44b76e581b9e40a4b616bb8f19d1b83d95b6f",
+        "commitDate": "2025-09-01T07:28:15Z",
+        "commitMessage": "♻️refactor: 커밋 목록 조회와 커밋 상세 조회 로직 분리 및 파일명 변경",
+        "author": "hanse",
+        "changeSummary": "커밋 목록 조회와 커밋 상세 조회로직을 분리하여 코드 구조를 개선하였습니다.",
+        "analyses": [
+          {
+            "type": "explanation",
+            "title": "로직 분리 및 파일명 변경",
+            "description": "커밋 목록 조회와 커밋 상세 조회를 위한 로직을 각각 분리하여 코드의 책임을 명확히 하였습니다."
+          },
+          {
+            "type": "code-diff",
+            "title": "로직 분리 및 파일 명 변경",
+            "description": "관련 파일들을 수정하였습니다.",
+            "files": [
+              {
+                "path": "src/app/api/branches/route.ts",
+                "code": "import { getBranchList } from \"@/services/branch/get-branch-list\";\nimport { NextRequest, NextResponse } from \"next/server\";\nimport { validateRepositoryUrl } from \"@/lib/validators/repository-url\";\nimport AppError from \"@/errors/app-error\";\n// ...",
+                "language": "typescript",
+                "status": "modified",
+                "highlights": []
+              },
+              {
+                "path": "src/app/api/commits/route.ts",
+                "code": "import { creaeteReport } from \"@/services/reports/create-report\";\n// ...",
+                "language": "typescript",
+                "status": "modified",
+                "highlights": []
+              },
+              {
+                "path": "src/infra/github-api/branches/get-branch-list.ts",
+                "code": "const getGithubBranchList = async (\n  owner: string,\n  repositoryName: string,\n): Promise<BranchName[]> => {\n  // ...\n};",
+                "language": "typescript",
+                "status": "modified",
+                "highlights": []
+              },
+              {
+                "path": "src/infra/github-api/commits.ts",
+                "code": "// 기존 커밋 조회 로직 삭제되었습니다.",
+                "language": "typescript",
+                "status": "removed",
+                "highlights": []
+              },
+              {
+                "path": "src/infra/github-api/commits/get-commit-details.ts",
+                "code": "// 커밋 상세 조회 로직이 추가되었습니다.",
+                "language": "typescript",
+                "status": "added",
+                "highlights": []
+              },
+              {
+                "path": "src/infra/github-api/commits/get-commit-list.ts",
+                "code": "const getGithubCommitList = async (\n  owner: string,\n  repositoryName: string,\n  branch: string,\n): Promise<SimpleCommit[]> => {\n  // ...\n};",
+                "language": "typescript",
+                "status": "added",
+                "highlights": []
+              },
+              {
+                "path": "src/services/commit/commit.ts",
+                "code": "// 해당 커밋 조회 로직 삭제됨.",
+                "language": "typescript",
+                "status": "removed",
+                "highlights": []
+              }
+            ],
+            "caption": "로드된 로직에 대한 주요 변경사항입니다."
+          },
+          {
+            "type": "diagram",
+            "diagram": "flowchart",
+            "title": "커밋 조회 로직 흐름",
+            "description": "커밋 조회 로직 흐름을 보여주는 플로우차트입니다.",
+            "chart": "flowchart TD\n    A[커밋 목록 요청] --> B[getGithubCommitList 호출]\n    B --> C[커밋 상세 요청]\n    C --> D[커밋 상세 반환]\n    D --> E[최종 응답 반환]",
+            "caption": "커밋 조회 로직의 흐름을 설명하는 다이어그램입니다."
+          }
+        ],
+        "commitConclusion": "커밋 목록과 상세 조회 로직의 분리로 코드 구조의 명확성을 확보했습니다."
+      },
+      {
+        "commitId": "17a69bebeab8391037bab1c299a43adcaab7242a",
+        "commitDate": "2025-09-01T09:07:37Z",
+        "commitMessage": "🔨fix: creaeteReport -> createReport 오타 수정",
+        "author": "2hanse",
+        "changeSummary": "`creaeteReport` 함수의 이름을 `createReport`로 수정하였습니다.",
+        "analyses": [
+          {
+            "type": "explanation",
+            "title": "",
+            "description": "이 커밋은 잘못 작성된 함수 이름을 수정하는 작업입니다. 이를 통해 함수가 올바르게 호출될 수 있도록 합니다."
+          },
+          {
+            "type": "code-diff",
+            "title": "함수 이름 수정",
+            "description": "함수 이름을 올바르게 수정한 부분입니다.",
+            "files": [
+              {
+                "path": "src/app/api/commits/route.ts",
+                "code": "-import { creaeteReport } from \"@/services/reports/create-report\";\n+import { createReport } from \"@/services/reports/create-report\";\n\n-    const commits = await creaeteReport(owner, repositoryName, branch);\n+    const commits = await createReport(owner, repositoryName, branch);",
+                "language": "typescript",
+                "status": "modified",
+                "highlights": [
+                  {
+                    "startLine": 2,
+                    "endLine": 2
+                  },
+                  {
+                    "startLine": 5,
+                    "endLine": 5
+                  }
+                ]
+              },
+              {
+                "path": "src/services/reports/create-report.ts",
+                "code": "-const creaeteReport = async (\n+const createReport = async (\n\n-export { creaeteReport };\n+export { createReport };",
+                "language": "typescript",
+                "status": "modified",
+                "highlights": [
+                  {
+                    "startLine": 1,
+                    "endLine": 1
+                  },
+                  {
+                    "startLine": 3,
+                    "endLine": 3
+                  }
+                ]
+              }
+            ],
+            "caption": ""
+          },
+          {
+            "type": "diagram",
+            "diagram": "sequence",
+            "title": "함수 호출 흐름",
+            "description": "이 다이어그램은 `createReport` 함수가 호출되는 흐름을 나타냅니다.",
+            "chart": "sequenceDiagram\n    participant API as API\n    participant Service as 서비스\n    API->>Service: createReport 호출\n    Service-->>API: 결과 반환",
+            "caption": ""
+          }
+        ],
+        "commitConclusion": "이 커밋은 함수 이름의 오타를 수정하여 코드의 일관성을 향상시킵니다."
+      },
+      {
+        "commitId": "b7aee951fcec1b93e0df143b44018a0065696529",
+        "commitDate": "2025-09-01T11:04:49Z",
+        "commitMessage": "✨feat: 커밋 데이터 과거 커밋 -> 최신 커밋순으로 정렬 로직 추가",
+        "author": "2hanse",
+        "changeSummary": "커밋 데이터에서 최신 순으로 정렬하는 기능이 추가되었습니다.",
+        "analyses": [
+          {
+            "type": "explanation",
+            "title": "",
+            "description": "이 커밋은 커밋 데이터를 최신 커밋 순으로 정렬하는 로직을 추가한 것입니다."
+          },
+          {
+            "type": "code-diff",
+            "title": "정렬 로직 추가",
+            "description": "최신 커밋 순으로 정렬하는 부분을 추가한 변경 사항입니다.",
+            "files": [
+              {
+                "path": "src/infra/github-api/commits/get-commit-list.ts",
+                "code": "+          sort: \"author-date\",\n+          direction: \"asc\",\n\n+    allCommits.sort(\n+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),\n+    );",
+                "language": "typescript",
+                "status": "modified",
+                "highlights": [
+                  {
+                    "startLine": 6,
+                    "endLine": 6
+                  },
+                  {
+                    "startLine": 16,
+                    "endLine": 16
+                  }
+                ]
+              }
+            ],
+            "caption": ""
+          },
+          {
+            "type": "diagram",
+            "diagram": "flowchart",
+            "title": "커밋 정렬 프로세스",
+            "description": "이 다이어그램은 커밋 정렬 프로세스를 설명합니다.",
+            "chart": "flowchart TD\n    A[커밋 데이터 수집] --> B[정렬 기준 설정]\n    B --> C[최신 순으로 정렬]\n    C --> D[정렬된 데이터 반환]",
+            "caption": ""
+          }
+        ],
+        "commitConclusion": "이 커밋은 커밋 데이터를 최근 기준으로 정렬하여 사용자에게 더 유용한 정보를 제공합니다."
+      },
+      {
+        "commitId": "d51da3b038aa53f886f720f0d6ca12bd0422fa97",
+        "commitDate": "2025-09-01T11:51:44Z",
+        "commitMessage": "✨feat: 파일 형식 필터링 로직 추가 (package.json, package-lock.json, .gitignore, .md)",
+        "author": "2hanse",
+        "changeSummary": "특정 파일 형식에 대한 필터링 로직이 추가되었습니다.",
+        "analyses": [
+          {
+            "type": "explanation",
+            "title": "",
+            "description": "이 커밋은 특정 파일 형식의 필터링 로직을 추가하여, 불필요한 파일이 커밋 데이터에서 제외되도록 합니다."
+          },
+          {
+            "type": "code-diff",
+            "title": "파일 형식 필터링 로직 추가",
+            "description": "파일 형식 필터링을 추가한 변경 사항입니다.",
+            "files": [
+              {
+                "path": "src/infra/github-api/commits/get-commit-details.ts",
+                "code": "+const excludedFiles = [\n+  \"package.json\",\n+  \"package-lock.json\",\n+  \".gitignore\",\n+  /\\.md$/,\n+];\n\n+      const filteredFiles = commitDetail.files?.filter(\n+        (file) =>\n+          !excludedFiles.some((excludedFile) =>\n+            typeof excludedFile === \"string\"\n+              ? file.filename === excludedFile\n+              : excludedFile.test(file.filename),\n+          ),\n+      );",
+                "language": "typescript",
+                "status": "modified",
+                "highlights": [
+                  {
+                    "startLine": 3,
+                    "endLine": 7
+                  },
+                  {
+                    "startLine": 20,
+                    "endLine": 34
+                  }
+                ]
+              }
+            ],
+            "caption": ""
+          },
+          {
+            "type": "diagram",
+            "diagram": "flowchart",
+            "title": "파일 필터링 프로세스",
+            "description": "이 다이어그램은 파일 필터링 과정을 보여줍니다.",
+            "chart": "flowchart TD\n    A[커밋 세부정보 가져오기] --> B[파일 목록 확인]\n    B --> C[제외할 파일 확인]\n    C --> D[필터링된 파일 목록 반환]",
+            "caption": ""
+          }
+        ],
+        "commitConclusion": "이 커밋은 특정 형식을 가진 파일들을 제외하여 재사용 가능한 커밋 정보를 제공합니다."
+      },
+      {
+        "commitId": "71b3692344fbdeac34e9bc890fe1e7722acc91f9",
+        "commitDate": "2025-09-01T13:57:56Z",
+        "commitMessage": "♻️refactor: 페이지네이션 조건 처리 방식 변경 & return 문 내 map 로직 분리",
+        "author": "2hanse",
+        "changeSummary": "페이지네이션 처리 및 파일 반환 로직의 구조가 변경되었습니다.",
+        "analyses": [
+          {
+            "type": "explanation",
+            "title": "",
+            "description": "이 커밋은 페이지네이션 조건 처리 방식을 변경하여 코드의 가독성을 향상시킵니다."
+          },
+          {
+            "type": "code-diff",
+            "title": "페이지네이션 및 반환 로직 변경",
+            "description": "페이지네이션 로직과 파일 반환 방식의 개선 내용입니다.",
+            "files": [
+              {
+                "path": "src/infra/github-api/commits/get-commit-details.ts",
+                "code": "+      const files = filteredFiles\n+        ? filteredFiles.map(\n+            (file): CommitFile => ({\n+              filename: file.filename,\n+              status: file.status as CommitFile[\"status\"],\n+              patch: file.patch ?? null,\n+            }),\n+          )\n+        : null;",
+                "language": "typescript",
+                "status": "modified",
+                "highlights": [
+                  {
+                    "startLine": 38,
+                    "endLine": 45
+                  }
+                ]
+              }
+            ],
+            "caption": ""
+          },
+          {
+            "type": "diagram",
+            "diagram": "flowchart",
+            "title": "페이지네이션 및 반환 프로세스",
+            "description": "이 다이어그램은 페이지네이션 및 반환 프로세스를 설명합니다.",
+            "chart": "flowchart TD\n    A[페이지 네이션 시작] --> B[응답 데이터 확인]\n    B -->|데이터 존재| C[파일 반환]\n    B -->|데이터 없음| D[빈 데이터 반환]",
+            "caption": ""
+          }
+        ],
+        "commitConclusion": "이 커밋은 코드의 가독성을 높이고 유지보수를 용이하게 만드는 변경을 포함하고 있습니다."
+      }
+    ]
+  }
+}

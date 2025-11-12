@@ -1,0 +1,29 @@
+[
+  {
+    "diagrams": [
+      {
+        "title": "user-flow",
+        "description": "간단한 시퀀스 다이어그램 예시 (사용자와 서버 간 요청/응답 흐름).",
+        "chart": "sequenceDiagram\n  participant A as Alice\n  participant B as Bob\n  A->>B: Request data\n  B-->>A: Response\n  note over A,B: Happy path"
+      },
+      {
+        "title": "pipeline",
+        "description": "프로세스 파이프라인을 표현한 플로우차트.",
+        "chart": "flowchart TD\n  A([Start]) --> B{Valid?}\n  B -- Yes --> C[Process]\n  B -- No  --> D[Error]\n  C --> E[Save]\n  D --> E\n  E --> F([End])"
+      },
+      {
+        "title": "auth",
+        "description": "인증 관련 클래스 다이어그램 (User와 Session의 관계).",
+        "chart": "classDiagram\n  class User {\n    +id: string\n    +login(): boolean\n  }\n  class Session {\n    +token: string\n  }\n  User \"1\" --> \"0..*\" Session : \"has\"\n"
+      }
+    ],
+    "config": {
+      "theme": "default",
+      "themeVariables": {
+        "actorBkg": "#f8f8ff",
+        "signalColor": "#333",
+        "noteBkgColor": "#fff8c5"
+      }
+    }
+  }
+]

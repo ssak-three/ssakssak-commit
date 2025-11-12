@@ -1,0 +1,237 @@
+[
+  {
+    "sha": "3e119329a69a2a49cc876da20972acfca0bd33b3",
+    "author": "hanse",
+    "date": "2025-08-31T05:53:04Z",
+    "message": "✨feat: 커밋 데이터 가져오기 기능 추가",
+    "files": [
+      {
+        "filename": "src/app/api/commits/route.ts",
+        "status": "added",
+        "patch": "@@ -0,0 +1,22 @@\n+import { NextRequest, NextResponse } from \"next/server\";\n+import { getAllCommits } from \"@/services/commit/commit\";\n+import AppError from \"@/errors/app-error\";\n+\n+async function GET(req: NextRequest) {\n+  try {\n+    const url = req.nextUrl;\n+    const owner = url.searchParams.get(\"owner\") || \"defaultOwner\";\n+    const repositoryName = url.searchParams.get(\"repo\") || \"defaultRepo\";\n+    const branch = url.searchParams.get(\"branch\") || \"main\";\n+\n+    const commits = await getAllCommits(owner, repositoryName, branch);\n+    return NextResponse.json(commits);\n+  } catch (error) {\n+    const message = error instanceof Error ? error.message : \"Unexpected error\";\n+    const status = error instanceof AppError ? error.status : 500;\n+\n+    return NextResponse.json({ error: { message, status } }, { status });\n+  }\n+}\n+\n+export { GET };"
+      },
+      {
+        "filename": "src/app/types/githubCommit.ts",
+        "status": "added",
+        "patch": "@@ -0,0 +1,15 @@\n+interface CommitFile {\n+  filename: string;\n+  status: string;\n+  patch: string | null;\n+}\n+\n+interface CommitDetail {\n+  sha: string;\n+  author: string;\n+  date: string;\n+  message: string;\n+  files: CommitFile[] | null;\n+}\n+\n+export type { CommitFile, CommitDetail };"
+      },
+      {
+        "filename": "src/infra/github-api/commits.ts",
+        "status": "added",
+        "patch": "@@ -0,0 +1,74 @@\n+import { Octokit, RequestError } from \"octokit\";\n+import { Endpoints } from \"@octokit/types\";\n+import { CommitDetail, CommitFile } from \"@/app/types/githubCommit\";\n+import NotFoundError from \"@/errors/not-found-error\";\n+import { GITHUB_REPOSITORY_ERROR_MESSAGES } from \"@/constants/error-messages\";\n+\n+type ListCommitsResponse =\n+  Endpoints[\"GET /repos/{owner}/{repo}/commits\"][\"response\"][\"data\"];\n+type CommitDetailResponse =\n+  Endpoints[\"GET /repos/{owner}/{repo}/commits/{ref}\"][\"response\"][\"data\"];\n+\n+const getCommits = async (\n+  owner: string,\n+  repositoryName: string,\n+  branch: string,\n+): Promise<CommitDetail[]> => {\n+  const octokit = new Octokit();\n+  let allCommits: CommitDetail[] = [];\n+  let page = 1;\n+  const perPage = 100;\n+\n+  try {\n+    while (true) {\n+      const response = await octokit.request(\n+        \"GET /repos/{owner}/{repo}/commits\",\n+        { owner, repo: repositoryName, sha: branch, per_page: perPage, page },\n+      );\n+\n+      if (response.data.length === 0) break;\n+\n+      const commitsDetails = await Promise.all(\n+        response.data.map(async (commit: ListCommitsResponse[number]) => {\n+          const sha = commit.sha;\n+\n+          const { data: commitDetail }: { data: CommitDetailResponse } =\n+            await octokit.request(\"GET /repos/{owner}/{repo}/commits/{sha}\", {\n+              owner,\n+              repo: repositoryName,\n+              sha,\n+            });\n+\n+          return {\n+            sha,\n+            author: commit.commit.author?.name || \"Unknown\",\n+            date: commit.commit.author?.date || \"\",\n+            message: commit.commit.message,\n+            files:\n+              commitDetail.files?.map(\n+                (file): CommitFile => ({\n+                  filename: file.filename,\n+                  status: file.status as CommitFile[\"status\"],\n+                  patch: file.patch ?? null,\n+                }),\n+              ) ?? null,\n+          };\n+        }),\n+      );\n+\n+      allCommits = allCommits.concat(commitsDetails);\n+      page += 1;\n+    }\n+\n+    return allCommits;\n+  } catch (error) {\n+    if (error instanceof RequestError && error.status === 404) {\n+      throw new NotFoundError({\n+        message: GITHUB_REPOSITORY_ERROR_MESSAGES.NOT_FOUND,\n+      });\n+    }\n+    throw error;\n+  }\n+};\n+\n+export { getCommits };"
+      },
+      {
+        "filename": "src/services/commit/commit.ts",
+        "status": "added",
+        "patch": "@@ -0,0 +1,10 @@\n+import { CommitDetail } from \"@/app/types/githubCommit\";\n+import { getCommits } from \"@/infra/github-api/commits\";\n+\n+export const getAllCommits = async (\n+  owner: string,\n+  repositoryName: string,\n+  branch: string,\n+): Promise<CommitDetail[]> => {\n+  return await getCommits(owner, repositoryName, branch);\n+};"
+      }
+    ]
+  },
+  {
+    "sha": "205ec344aa94ef7aa91871a764b21710de4d7742",
+    "author": "hanse",
+    "date": "2025-08-31T05:55:16Z",
+    "message": "📦️chore: types 이름 변경",
+    "files": [
+      {
+        "filename": "src/app/types/commit.ts",
+        "status": "modified",
+        "patch": "@@ -1,6 +1,15 @@\n-type CommitInfo = {\n-  id: string;\n+interface CommitFile {\n+  filename: string;\n+  status: string;\n+  patch: string | null;\n+}\n+\n+interface CommitDetail {\n+  sha: string;\n+  author: string;\n+  date: string;\n   message: string;\n-};\n+  files: CommitFile[] | null;\n+}\n \n-export type { CommitInfo };\n+export type { CommitFile, CommitDetail };"
+      },
+      {
+        "filename": "src/app/types/githubCommit.ts",
+        "status": "removed",
+        "patch": "@@ -1,15 +0,0 @@\n-interface CommitFile {\n-  filename: string;\n-  status: string;\n-  patch: string | null;\n-}\n-\n-interface CommitDetail {\n-  sha: string;\n-  author: string;\n-  date: string;\n-  message: string;\n-  files: CommitFile[] | null;\n-}\n-\n-export type { CommitFile, CommitDetail };"
+      },
+      {
+        "filename": "src/app/types/mock_commitInfo.ts",
+        "status": "added",
+        "patch": "@@ -0,0 +1,6 @@\n+type CommitInfo = {\n+  id: string;\n+  message: string;\n+};\n+\n+export type { CommitInfo };"
+      },
+      {
+        "filename": "src/app/ui/report-view/aside-area/commit-box.tsx",
+        "status": "modified",
+        "patch": "@@ -1,4 +1,4 @@\n-import { CommitInfo } from \"@/app/types/commit\";\n+import { CommitInfo } from \"@/app/types/mock_commitInfo\";\n \n function CommitBox({ id, message }: CommitInfo) {\n   return ("
+      },
+      {
+        "filename": "src/infra/github-api/commits.ts",
+        "status": "modified",
+        "patch": "@@ -1,6 +1,6 @@\n import { Octokit, RequestError } from \"octokit\";\n import { Endpoints } from \"@octokit/types\";\n-import { CommitDetail, CommitFile } from \"@/app/types/githubCommit\";\n+import { CommitDetail, CommitFile } from \"@/app/types/commit\";\n import NotFoundError from \"@/errors/not-found-error\";\n import { GITHUB_REPOSITORY_ERROR_MESSAGES } from \"@/constants/error-messages\";\n "
+      },
+      {
+        "filename": "src/services/commit/commit.ts",
+        "status": "modified",
+        "patch": "@@ -1,4 +1,4 @@\n-import { CommitDetail } from \"@/app/types/githubCommit\";\n+import { CommitDetail } from \"@/app/types/commit\";\n import { getCommits } from \"@/infra/github-api/commits\";\n \n export const getAllCommits = async ("
+      }
+    ]
+  },
+  {
+    "sha": "98083223b49550cae397b7d0b4770337a619c4f1",
+    "author": "hanse",
+    "date": "2025-08-31T06:13:18Z",
+    "message": "🎨style: export 방법 변경",
+    "files": [
+      {
+        "filename": "src/services/commit/commit.ts",
+        "status": "modified",
+        "patch": "@@ -1,10 +1,12 @@\n import { CommitDetail } from \"@/app/types/commit\";\n import { getCommits } from \"@/infra/github-api/commits\";\n \n-export const getAllCommits = async (\n+const getAllCommits = async (\n   owner: string,\n   repositoryName: string,\n   branch: string,\n ): Promise<CommitDetail[]> => {\n   return await getCommits(owner, repositoryName, branch);\n };\n+\n+export { getAllCommits };"
+      }
+    ]
+  },
+  {
+    "sha": "77954d4b1abb2a7d5252710aa029c4c3a8219b24",
+    "author": "hanse",
+    "date": "2025-08-31T21:37:13Z",
+    "message": "✨feat: GET -> POST 기능 변경",
+    "files": [
+      {
+        "filename": "src/app/api/commits/route.ts",
+        "status": "modified",
+        "patch": "@@ -1,13 +1,15 @@\n import { NextRequest, NextResponse } from \"next/server\";\n import { getAllCommits } from \"@/services/commit/commit\";\n import AppError from \"@/errors/app-error\";\n+import { GITHUB_API } from \"@/constants/github-api\";\n \n-async function GET(req: NextRequest) {\n+async function POST(req: NextRequest) {\n   try {\n-    const url = req.nextUrl;\n-    const owner = url.searchParams.get(\"owner\") || \"defaultOwner\";\n-    const repositoryName = url.searchParams.get(\"repo\") || \"defaultRepo\";\n-    const branch = url.searchParams.get(\"branch\") || \"main\";\n+    const body = await req.json();\n+\n+    const owner = body.owner || GITHUB_API.DEFAULTS.DEFAULT_OWNER;\n+    const repositoryName = body.repo || GITHUB_API.DEFAULTS.DEFAULT_REPO;\n+    const branch = body.branch || GITHUB_API.DEFAULTS.DEFAULT_BRANCH;\n \n     const commits = await getAllCommits(owner, repositoryName, branch);\n     return NextResponse.json(commits);\n@@ -19,4 +21,4 @@ async function GET(req: NextRequest) {\n   }\n }\n \n-export { GET };\n+export { POST };"
+      },
+      {
+        "filename": "src/constants/github-api.ts",
+        "status": "modified",
+        "patch": "@@ -7,6 +7,16 @@ const GITHUB_API = {\n     BRANCH: {\n       LIST: \"GET /repos/{owner}/{repo}/branches\",\n     },\n+    COMMITS: {\n+      LIST: \"GET /repos/{owner}/{repo}/commits\",\n+      DETAIL: \"GET /repos/{owner}/{repo}/commits/{sha}\",\n+    },\n+  },\n+  DEFAULTS: {\n+    PER_PAGE: 100,\n+    DEFAULT_BRANCH: \"main\",\n+    DEFAULT_OWNER: \"defaultOwner\",\n+    DEFAULT_REPO: \"defaultRepo\",\n   },\n };\n "
+      }
+    ]
+  },
+  {
+    "sha": "97b1cf46fd5ba7407297d884919c8707741273cf",
+    "author": "hanse",
+    "date": "2025-08-31T21:54:26Z",
+    "message": "♻️refactor: infra 로직 분리",
+    "files": [
+      {
+        "filename": "src/infra/github-api/commits.ts",
+        "status": "modified",
+        "patch": "@@ -2,13 +2,42 @@ import { Octokit, RequestError } from \"octokit\";\n import { Endpoints } from \"@octokit/types\";\n import { CommitDetail, CommitFile } from \"@/app/types/commit\";\n import NotFoundError from \"@/errors/not-found-error\";\n-import { GITHUB_REPOSITORY_ERROR_MESSAGES } from \"@/constants/error-messages\";\n+import { GITHUB_API } from \"@/constants/github-api\";\n \n type ListCommitsResponse =\n   Endpoints[\"GET /repos/{owner}/{repo}/commits\"][\"response\"][\"data\"];\n type CommitDetailResponse =\n   Endpoints[\"GET /repos/{owner}/{repo}/commits/{ref}\"][\"response\"][\"data\"];\n \n+const getCommitDetails = async (\n+  octokit: Octokit,\n+  owner: string,\n+  repo: string,\n+  sha: string,\n+): Promise<CommitDetail> => {\n+  const { data: commitDetail }: { data: CommitDetailResponse } =\n+    await octokit.request(GITHUB_API.ENDPOINTS.COMMITS.DETAIL, {\n+      owner,\n+      repo,\n+      sha,\n+    });\n+\n+  return {\n+    sha,\n+    author: commitDetail.commit.author?.name || \"Unknown\",\n+    date: commitDetail.commit.author?.date || \"\",\n+    message: commitDetail.commit.message,\n+    files:\n+      commitDetail.files?.map(\n+        (file): CommitFile => ({\n+          filename: file.filename,\n+          status: file.status as CommitFile[\"status\"],\n+          patch: file.patch ?? null,\n+        }),\n+      ) ?? null,\n+  };\n+};\n+\n const getCommits = async (\n   owner: string,\n   repositoryName: string,\n@@ -17,54 +46,38 @@ const getCommits = async (\n   const octokit = new Octokit();\n   let allCommits: CommitDetail[] = [];\n   let page = 1;\n-  const perPage = 100;\n+  let responseData: ListCommitsResponse = [];\n \n   try {\n-    while (true) {\n+    do {\n       const response = await octokit.request(\n-        \"GET /repos/{owner}/{repo}/commits\",\n-        { owner, repo: repositoryName, sha: branch, per_page: perPage, page },\n+        GITHUB_API.ENDPOINTS.COMMITS.LIST,\n+        {\n+          owner,\n+          repo: repositoryName,\n+          sha: branch,\n+          per_page: GITHUB_API.DEFAULTS.PER_PAGE,\n+          page,\n+        },\n       );\n \n-      if (response.data.length === 0) break;\n+      responseData = response.data;\n \n-      const commitsDetails = await Promise.all(\n-        response.data.map(async (commit: ListCommitsResponse[number]) => {\n-          const sha = commit.sha;\n-\n-          const { data: commitDetail }: { data: CommitDetailResponse } =\n-            await octokit.request(\"GET /repos/{owner}/{repo}/commits/{sha}\", {\n-              owner,\n-              repo: repositoryName,\n-              sha,\n-            });\n-\n-          return {\n-            sha,\n-            author: commit.commit.author?.name || \"Unknown\",\n-            date: commit.commit.author?.date || \"\",\n-            message: commit.commit.message,\n-            files:\n-              commitDetail.files?.map(\n-                (file): CommitFile => ({\n-                  filename: file.filename,\n-                  status: file.status as CommitFile[\"status\"],\n-                  patch: file.patch ?? null,\n-                }),\n-              ) ?? null,\n-          };\n-        }),\n+      const commitDetails = await Promise.all(\n+        responseData.map((commit: ListCommitsResponse[number]) =>\n+          getCommitDetails(octokit, owner, repositoryName, commit.sha),\n+        ),\n       );\n \n-      allCommits = allCommits.concat(commitsDetails);\n+      allCommits = allCommits.concat(commitDetails);\n       page += 1;\n-    }\n+    } while (responseData.length > 0);\n \n     return allCommits;\n   } catch (error) {\n     if (error instanceof RequestError && error.status === 404) {\n       throw new NotFoundError({\n-        message: GITHUB_REPOSITORY_ERROR_MESSAGES.NOT_FOUND,\n+        message: \"GitHub repository not found.\",\n       });\n     }\n     throw error;"
+      }
+    ]
+  },
+  {
+    "sha": "f4d44b76e581b9e40a4b616bb8f19d1b83d95b6f",
+    "author": "hanse",
+    "date": "2025-09-01T07:28:15Z",
+    "message": "♻️refactor: 커밋 목록 조회와 커밋 상세 조회 로직 분리 및 파일명 변경",
+    "files": [
+      {
+        "filename": "src/app/api/branches/route.ts",
+        "status": "modified",
+        "patch": "@@ -1,4 +1,4 @@\n-import { getRepositoryBranches } from \"@/services/branch/branch\";\n+import { getBranchList } from \"@/services/branch/get-branch-list\";\n import { NextRequest, NextResponse } from \"next/server\";\n import { validateRepositoryUrl } from \"@/lib/validators/repository-url\";\n import AppError from \"@/errors/app-error\";\n@@ -11,7 +11,7 @@ const handleGetBranches = async function GET(\n     const repositoryUrl: string = validateRepositoryUrl(\n       request.nextUrl.searchParams,\n     );\n-    const branches: BranchName[] = await getRepositoryBranches(repositoryUrl);\n+    const branches: BranchName[] = await getBranchList(repositoryUrl);\n \n     return NextResponse.json({ branches });\n   } catch (error) {"
+      },
+      {
+        "filename": "src/app/api/commits/route.ts",
+        "status": "modified",
+        "patch": "@@ -1,5 +1,5 @@\n import { NextRequest, NextResponse } from \"next/server\";\n-import { getAllCommits } from \"@/services/commit/commit\";\n+import { creaeteReport } from \"@/services/reports/create-report\";\n import AppError from \"@/errors/app-error\";\n import { GITHUB_API } from \"@/constants/github-api\";\n \n@@ -11,7 +11,7 @@ async function POST(req: NextRequest) {\n     const repositoryName = body.repo || GITHUB_API.DEFAULTS.DEFAULT_REPO;\n     const branch = body.branch || GITHUB_API.DEFAULTS.DEFAULT_BRANCH;\n \n-    const commits = await getAllCommits(owner, repositoryName, branch);\n+    const commits = await creaeteReport(owner, repositoryName, branch);\n     return NextResponse.json(commits);\n   } catch (error) {\n     const message = error instanceof Error ? error.message : \"Unexpected error\";"
+      },
+      {
+        "filename": "src/infra/github-api/branches/get-branch-list.ts",
+        "status": "renamed",
+        "patch": "@@ -7,7 +7,7 @@ import { GITHUB_API } from \"@/constants/github-api\";\n const { HEADERS, ENDPOINTS } = GITHUB_API;\n const { X_GITHUB_API_VERSION, VERSION } = HEADERS;\n \n-const getBranches = async (\n+const getGithubBranchList = async (\n   owner: string,\n   repositoryName: string,\n ): Promise<BranchName[]> => {\n@@ -38,4 +38,4 @@ const getBranches = async (\n   }\n };\n \n-export { getBranches };\n+export { getGithubBranchList };"
+      },
+      {
+        "filename": "src/infra/github-api/commits.ts",
+        "status": "removed",
+        "patch": "@@ -1,87 +0,0 @@\n-import { Octokit, RequestError } from \"octokit\";\n-import { Endpoints } from \"@octokit/types\";\n-import { CommitDetail, CommitFile } from \"@/app/types/commit\";\n-import NotFoundError from \"@/errors/not-found-error\";\n-import { GITHUB_API } from \"@/constants/github-api\";\n-\n-type ListCommitsResponse =\n-  Endpoints[\"GET /repos/{owner}/{repo}/commits\"][\"response\"][\"data\"];\n-type CommitDetailResponse =\n-  Endpoints[\"GET /repos/{owner}/{repo}/commits/{ref}\"][\"response\"][\"data\"];\n-\n-const getCommitDetails = async (\n-  octokit: Octokit,\n-  owner: string,\n-  repo: string,\n-  sha: string,\n-): Promise<CommitDetail> => {\n-  const { data: commitDetail }: { data: CommitDetailResponse } =\n-    await octokit.request(GITHUB_API.ENDPOINTS.COMMITS.DETAIL, {\n-      owner,\n-      repo,\n-      sha,\n-    });\n-\n-  return {\n-    sha,\n-    author: commitDetail.commit.author?.name || \"Unknown\",\n-    date: commitDetail.commit.author?.date || \"\",\n-    message: commitDetail.commit.message,\n-    files:\n-      commitDetail.files?.map(\n-        (file): CommitFile => ({\n-          filename: file.filename,\n-          status: file.status as CommitFile[\"status\"],\n-          patch: file.patch ?? null,\n-        }),\n-      ) ?? null,\n-  };\n-};\n-\n-const getCommits = async (\n-  owner: string,\n-  repositoryName: string,\n-  branch: string,\n-): Promise<CommitDetail[]> => {\n-  const octokit = new Octokit();\n-  let allCommits: CommitDetail[] = [];\n-  let page = 1;\n-  let responseData: ListCommitsResponse = [];\n-\n-  try {\n-    do {\n-      const response = await octokit.request(\n-        GITHUB_API.ENDPOINTS.COMMITS.LIST,\n-        {\n-          owner,\n-          repo: repositoryName,\n-          sha: branch,\n-          per_page: GITHUB_API.DEFAULTS.PER_PAGE,\n-          page,\n-        },\n-      );\n-\n-      responseData = response.data;\n-\n-      const commitDetails = await Promise.all(\n-        responseData.map((commit: ListCommitsResponse[number]) =>\n-          getCommitDetails(octokit, owner, repositoryName, commit.sha),\n-        ),\n-      );\n-\n-      allCommits = allCommits.concat(commitDetails);\n-      page += 1;\n-    } while (responseData.length > 0);\n-\n-    return allCommits;\n-  } catch (error) {\n-    if (error instanceof RequestError && error.status === 404) {\n-      throw new NotFoundError({\n-        message: \"GitHub repository not found.\",\n-      });\n-    }\n-    throw error;\n-  }\n-};\n-\n-export { getCommits };"
+      },
+      {
+        "filename": "src/infra/github-api/commits/get-commit-details.ts",
+        "status": "added",
+        "patch": "@@ -0,0 +1,45 @@\n+import { Octokit } from \"octokit\";\n+import { Endpoints } from \"@octokit/types\";\n+import { CommitDetail, CommitFile } from \"@/app/types/commit\";\n+import { GITHUB_API } from \"@/constants/github-api\";\n+\n+type CommitDetailResponse =\n+  Endpoints[\"GET /repos/{owner}/{repo}/commits/{ref}\"][\"response\"][\"data\"];\n+\n+const getGithubCommitDetails = async (\n+  owner: string,\n+  repository: string,\n+  shas: string[],\n+): Promise<CommitDetail[]> => {\n+  const octokit = new Octokit();\n+\n+  const commitDetails = await Promise.all(\n+    shas.map(async (sha) => {\n+      const { data: commitDetail }: { data: CommitDetailResponse } =\n+        await octokit.request(GITHUB_API.ENDPOINTS.COMMITS.DETAIL, {\n+          owner,\n+          repository,\n+          sha,\n+        });\n+\n+      return {\n+        sha,\n+        author: commitDetail.commit.author?.name || \"Unknown\",\n+        date: commitDetail.commit.author?.date || \"\",\n+        message: commitDetail.commit.message,\n+        files:\n+          commitDetail.files?.map(\n+            (file): CommitFile => ({\n+              filename: file.filename,\n+              status: file.status as CommitFile[\"status\"],\n+              patch: file.patch ?? null,\n+            }),\n+          ) ?? null,\n+      };\n+    }),\n+  );\n+\n+  return commitDetails;\n+};\n+\n+export { getGithubCommitDetails };"
+      },
+      {
+        "filename": "src/infra/github-api/commits/get-commit-list.ts",
+        "status": "added",
+        "patch": "@@ -0,0 +1,57 @@\n+import { Octokit, RequestError } from \"octokit\";\n+import { Endpoints } from \"@octokit/types\";\n+import NotFoundError from \"@/errors/not-found-error\";\n+import { GITHUB_API } from \"@/constants/github-api\";\n+\n+type ListCommitsResponse =\n+  Endpoints[\"GET /repos/{owner}/{repo}/commits\"][\"response\"][\"data\"];\n+\n+type SimpleCommit = {\n+  sha: string;\n+};\n+\n+const getGithubCommitList = async (\n+  owner: string,\n+  repositoryName: string,\n+  branch: string,\n+): Promise<SimpleCommit[]> => {\n+  const octokit = new Octokit();\n+  let allCommits: SimpleCommit[] = [];\n+  let page = 1;\n+  let responseData: ListCommitsResponse = [];\n+\n+  try {\n+    do {\n+      const response = await octokit.request(\n+        GITHUB_API.ENDPOINTS.COMMITS.LIST,\n+        {\n+          owner,\n+          repository: repositoryName,\n+          sha: branch,\n+          per_page: GITHUB_API.DEFAULTS.PER_PAGE,\n+          page,\n+        },\n+      );\n+\n+      responseData = response.data;\n+\n+      const commits = responseData.map((commit) => ({\n+        sha: commit.sha,\n+      }));\n+\n+      allCommits = allCommits.concat(commits);\n+      page += 1;\n+    } while (responseData.length > 0);\n+\n+    return allCommits;\n+  } catch (error) {\n+    if (error instanceof RequestError && error.status === 404) {\n+      throw new NotFoundError({\n+        message: \"GitHub repository not found.\",\n+      });\n+    }\n+    throw error;\n+  }\n+};\n+\n+export { getGithubCommitList };"
+      },
+      {
+        "filename": "src/services/branch/branch.ts",
+        "status": "removed",
+        "patch": "@@ -1,14 +0,0 @@\n-import { BranchName } from \"@/app/types/branch\";\n-import { getBranches } from \"@/infra/github-api/github\";\n-import parseRepositoryUrl from \"@/lib/parse-repository-url\";\n-\n-const getRepositoryBranches = async (\n-  repositoryUrl: string,\n-): Promise<BranchName[]> => {\n-  const { owner, repositoryName } = parseRepositoryUrl(repositoryUrl);\n-  const branches: BranchName[] = await getBranches(owner, repositoryName);\n-\n-  return branches;\n-};\n-\n-export { getRepositoryBranches };"
+      },
+      {
+        "filename": "src/services/branch/get-branch-list.ts",
+        "status": "added",
+        "patch": "@@ -0,0 +1,15 @@\n+import { BranchName } from \"@/app/types/branch\";\n+import { getGithubBranchList } from \"@/infra/github-api/branches/get-branch-list\";\n+import parseRepositoryUrl from \"@/lib/parse-repository-url\";\n+\n+const getBranchList = async (repositoryUrl: string): Promise<BranchName[]> => {\n+  const { owner, repositoryName } = parseRepositoryUrl(repositoryUrl);\n+  const branches: BranchName[] = await getGithubBranchList(\n+    owner,\n+    repositoryName,\n+  );\n+\n+  return branches;\n+};\n+\n+export { getBranchList };"
+      },
+      {
+        "filename": "src/services/commit/commit.ts",
+        "status": "removed",
+        "patch": "@@ -1,12 +0,0 @@\n-import { CommitDetail } from \"@/app/types/commit\";\n-import { getCommits } from \"@/infra/github-api/commits\";\n-\n-const getAllCommits = async (\n-  owner: string,\n-  repositoryName: string,\n-  branch: string,\n-): Promise<CommitDetail[]> => {\n-  return await getCommits(owner, repositoryName, branch);\n-};\n-\n-export { getAllCommits };"
+      },
+      {
+        "filename": "src/services/reports/create-report.ts",
+        "status": "added",
+        "patch": "@@ -0,0 +1,23 @@\n+import { CommitDetail } from \"@/app/types/commit\";\n+import { getGithubCommitList } from \"@/infra/github-api/commits/get-commit-list\";\n+import { getGithubCommitDetails } from \"@/infra/github-api/commits/get-commit-details\";\n+\n+const creaeteReport = async (\n+  owner: string,\n+  repositoryName: string,\n+  branch: string,\n+): Promise<CommitDetail[]> => {\n+  const commits = await getGithubCommitList(owner, repositoryName, branch);\n+\n+  const shas = commits.map((commit) => commit.sha);\n+\n+  const commitDetails = await getGithubCommitDetails(\n+    owner,\n+    repositoryName,\n+    shas,\n+  );\n+\n+  return commitDetails;\n+};\n+\n+export { creaeteReport };"
+      }
+    ]
+  },
+  {
+    "sha": "17a69bebeab8391037bab1c299a43adcaab7242a",
+    "author": "2hanse",
+    "date": "2025-09-01T09:07:37Z",
+    "message": "🔨fix: creaeteReport -> createReport 오타 수정",
+    "files": [
+      {
+        "filename": "src/app/api/commits/route.ts",
+        "status": "modified",
+        "patch": "@@ -1,5 +1,5 @@\n import { NextRequest, NextResponse } from \"next/server\";\n-import { creaeteReport } from \"@/services/reports/create-report\";\n+import { createReport } from \"@/services/reports/create-report\";\n import AppError from \"@/errors/app-error\";\n import { GITHUB_API } from \"@/constants/github-api\";\n \n@@ -11,7 +11,7 @@ async function POST(req: NextRequest) {\n     const repositoryName = body.repo || GITHUB_API.DEFAULTS.DEFAULT_REPO;\n     const branch = body.branch || GITHUB_API.DEFAULTS.DEFAULT_BRANCH;\n \n-    const commits = await creaeteReport(owner, repositoryName, branch);\n+    const commits = await createReport(owner, repositoryName, branch);\n     return NextResponse.json(commits);\n   } catch (error) {\n     const message = error instanceof Error ? error.message : \"Unexpected error\";"
+      },
+      {
+        "filename": "src/services/reports/create-report.ts",
+        "status": "modified",
+        "patch": "@@ -2,7 +2,7 @@ import { CommitDetail } from \"@/app/types/commit\";\n import { getGithubCommitList } from \"@/infra/github-api/commits/get-commit-list\";\n import { getGithubCommitDetails } from \"@/infra/github-api/commits/get-commit-details\";\n \n-const creaeteReport = async (\n+const createReport = async (\n   owner: string,\n   repositoryName: string,\n   branch: string,\n@@ -20,4 +20,4 @@ const creaeteReport = async (\n   return commitDetails;\n };\n \n-export { creaeteReport };\n+export { createReport };"
+      }
+    ]
+  },
+  {
+    "sha": "b7aee951fcec1b93e0df143b44018a0065696529",
+    "author": "2hanse",
+    "date": "2025-09-01T11:04:49Z",
+    "message": "✨feat: 커밋 데이터 과거 커밋 -> 최신 커밋순으로 정렬 로직 추가",
+    "files": [
+      {
+        "filename": "src/infra/github-api/commits/get-commit-details.ts",
+        "status": "modified",
+        "patch": "@@ -8,7 +8,7 @@ type CommitDetailResponse =\n \n const getGithubCommitDetails = async (\n   owner: string,\n-  repository: string,\n+  repo: string,\n   shas: string[],\n ): Promise<CommitDetail[]> => {\n   const octokit = new Octokit();\n@@ -18,7 +18,7 @@ const getGithubCommitDetails = async (\n       const { data: commitDetail }: { data: CommitDetailResponse } =\n         await octokit.request(GITHUB_API.ENDPOINTS.COMMITS.DETAIL, {\n           owner,\n-          repository,\n+          repo,\n           sha,\n         });\n "
+      },
+      {
+        "filename": "src/infra/github-api/commits/get-commit-list.ts",
+        "status": "modified",
+        "patch": "@@ -8,6 +8,7 @@ type ListCommitsResponse =\n \n type SimpleCommit = {\n   sha: string;\n+  date: string;\n };\n \n const getGithubCommitList = async (\n@@ -26,23 +27,30 @@ const getGithubCommitList = async (\n         GITHUB_API.ENDPOINTS.COMMITS.LIST,\n         {\n           owner,\n-          repository: repositoryName,\n+          repo: repositoryName,\n           sha: branch,\n           per_page: GITHUB_API.DEFAULTS.PER_PAGE,\n           page,\n+          sort: \"author-date\",\n+          direction: \"asc\",\n         },\n       );\n \n       responseData = response.data;\n \n       const commits = responseData.map((commit) => ({\n         sha: commit.sha,\n+        date: commit.commit.author?.date || \"\",\n       }));\n \n       allCommits = allCommits.concat(commits);\n       page += 1;\n     } while (responseData.length > 0);\n \n+    allCommits.sort(\n+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),\n+    );\n+\n     return allCommits;\n   } catch (error) {\n     if (error instanceof RequestError && error.status === 404) {"
+      }
+    ]
+  },
+  {
+    "sha": "d51da3b038aa53f886f720f0d6ca12bd0422fa97",
+    "author": "2hanse",
+    "date": "2025-09-01T11:51:44Z",
+    "message": "✨feat: 파일 형식 필터링 로직 추가 (package.json, package-lock.json, .gitignore, .md)",
+    "files": [
+      {
+        "filename": "src/infra/github-api/commits/get-commit-details.ts",
+        "status": "modified",
+        "patch": "@@ -3,6 +3,13 @@ import { Endpoints } from \"@octokit/types\";\n import { CommitDetail, CommitFile } from \"@/app/types/commit\";\n import { GITHUB_API } from \"@/constants/github-api\";\n \n+const excludedFiles = [\n+  \"package.json\",\n+  \"package-lock.json\",\n+  \".gitignore\",\n+  /\\.md$/,\n+];\n+\n type CommitDetailResponse =\n   Endpoints[\"GET /repos/{owner}/{repo}/commits/{ref}\"][\"response\"][\"data\"];\n \n@@ -22,19 +29,29 @@ const getGithubCommitDetails = async (\n           sha,\n         });\n \n+      const filteredFiles = commitDetail.files?.filter(\n+        (file) =>\n+          !excludedFiles.some((excludedFile) =>\n+            typeof excludedFile === \"string\"\n+              ? file.filename === excludedFile\n+              : excludedFile.test(file.filename),\n+          ),\n+      );\n+\n       return {\n         sha,\n         author: commitDetail.commit.author?.name || \"Unknown\",\n         date: commitDetail.commit.author?.date || \"\",\n         message: commitDetail.commit.message,\n-        files:\n-          commitDetail.files?.map(\n-            (file): CommitFile => ({\n-              filename: file.filename,\n-              status: file.status as CommitFile[\"status\"],\n-              patch: file.patch ?? null,\n-            }),\n-          ) ?? null,\n+        files: filteredFiles\n+          ? filteredFiles.map(\n+              (file): CommitFile => ({\n+                filename: file.filename,\n+                status: file.status as CommitFile[\"status\"],\n+                patch: file.patch ?? null,\n+              }),\n+            )\n+          : null,\n       };\n     }),\n   );"
+      }
+    ]
+  },
+  {
+    "sha": "71b3692344fbdeac34e9bc890fe1e7722acc91f9",
+    "author": "2hanse",
+    "date": "2025-09-01T13:57:56Z",
+    "message": "♻️refactor: 페이지네이션 조건 처리 방식 변경 & return 문  내 map 로직 분리",
+    "files": [
+      {
+        "filename": "src/infra/github-api/commits/get-commit-details.ts",
+        "status": "modified",
+        "patch": "@@ -38,20 +38,22 @@ const getGithubCommitDetails = async (\n           ),\n       );\n \n+      const files = filteredFiles\n+        ? filteredFiles.map(\n+            (file): CommitFile => ({\n+              filename: file.filename,\n+              status: file.status as CommitFile[\"status\"],\n+              patch: file.patch ?? null,\n+            }),\n+          )\n+        : null;\n+\n       return {\n         sha,\n         author: commitDetail.commit.author?.name || \"Unknown\",\n         date: commitDetail.commit.author?.date || \"\",\n         message: commitDetail.commit.message,\n-        files: filteredFiles\n-          ? filteredFiles.map(\n-              (file): CommitFile => ({\n-                filename: file.filename,\n-                status: file.status as CommitFile[\"status\"],\n-                patch: file.patch ?? null,\n-              }),\n-            )\n-          : null,\n+        files,\n       };\n     }),\n   );"
+      },
+      {
+        "filename": "src/infra/github-api/commits/get-commit-list.ts",
+        "status": "modified",
+        "patch": "@@ -2,6 +2,7 @@ import { Octokit, RequestError } from \"octokit\";\n import { Endpoints } from \"@octokit/types\";\n import NotFoundError from \"@/errors/not-found-error\";\n import { GITHUB_API } from \"@/constants/github-api\";\n+import { GITHUB_REPOSITORY_ERROR_MESSAGES } from \"@/constants/error-messages\";\n \n type ListCommitsResponse =\n   Endpoints[\"GET /repos/{owner}/{repo}/commits\"][\"response\"][\"data\"];\n@@ -20,9 +21,10 @@ const getGithubCommitList = async (\n   let allCommits: SimpleCommit[] = [];\n   let page = 1;\n   let responseData: ListCommitsResponse = [];\n+  let pagesRemaining = true;\n \n   try {\n-    do {\n+    while (pagesRemaining) {\n       const response = await octokit.request(\n         GITHUB_API.ENDPOINTS.COMMITS.LIST,\n         {\n@@ -38,14 +40,17 @@ const getGithubCommitList = async (\n \n       responseData = response.data;\n \n-      const commits = responseData.map((commit) => ({\n-        sha: commit.sha,\n-        date: commit.commit.author?.date || \"\",\n-      }));\n-\n-      allCommits = allCommits.concat(commits);\n-      page += 1;\n-    } while (responseData.length > 0);\n+      if (responseData.length === 0) {\n+        pagesRemaining = false;\n+      } else {\n+        const commits = responseData.map((commit) => ({\n+          sha: commit.sha,\n+          date: commit.commit.author?.date || \"\",\n+        }));\n+        allCommits = allCommits.concat(commits);\n+        page += 1;\n+      }\n+    }\n \n     allCommits.sort(\n       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),\n@@ -55,7 +60,7 @@ const getGithubCommitList = async (\n   } catch (error) {\n     if (error instanceof RequestError && error.status === 404) {\n       throw new NotFoundError({\n-        message: \"GitHub repository not found.\",\n+        message: GITHUB_REPOSITORY_ERROR_MESSAGES.NOT_FOUND,\n       });\n     }\n     throw error;"
+      }
+    ]
+  }
+]

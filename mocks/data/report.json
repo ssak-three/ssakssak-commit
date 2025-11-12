@@ -1,0 +1,33 @@
+{
+  "mockTitle": {
+    "reportTitle": "2025 싹싹컴퍼니 기업 과제 분석 결과"
+  },
+  "mockChanges": {
+    "overall": "이 프로젝트는 기업 면접관을 대상으로 한 서비스로, 커밋을 요약하고 분석하여 제공합니다."
+  },
+  "mockCommit": {
+    "commitId": "aaa123",
+    "commitMessage": "Feat: 로그인 기능 추가",
+    "commitSummary": "로그인 기능을 추가하고, 사용자 인증 로직을 구현했습니다.",
+    "commitChanges": "LoginForm.tsx 파일 추가, 에러 처리 로직 추가"
+  },
+  "mockDiagram": {
+    "diagramTitle": "기능 흐름 다이어그램",
+    "diagramDescription": "다이어그램 이미지 삽입"
+  },
+  "mockCommits": [
+    { "commitId": "aaa123", "commitMessage": "feat: \"새로운 기능 추가\"" },
+    { "commitId": "bbb456", "commitMessage": "fix: \"로그인 오류 수정\"" },
+    { "commitId": "ccc789", "commitMessage": "refactor: \"코드 리팩토링\"" },
+    { "commitId": "ddd123", "commitMessage": "docs: \"문서 수정\"" },
+    { "commitId": "eee456", "commitMessage": "feat: \"새로운 기능 추가\"" },
+    { "commitId": "fff789", "commitMessage": "feat: \"새로운 기능 추가\"" }
+  ],
+  "mockRequirements": [
+    "사용자는 로그인할 수 있어야 한다.",
+    "비밀번호는 암호화되어 저장 되어야 한다.",
+    "모바일에서도 작동해야 한다.",
+    "사용자 세션은 만료 전까지 유지되어야 한다.",
+    "에러 처리를 상세하게 해야한다."
+  ]
+}
