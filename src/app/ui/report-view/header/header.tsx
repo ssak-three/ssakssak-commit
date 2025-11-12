@@ -1,15 +1,18 @@
-interface HeaderProps {
-  reportTitle: string;
-  repositoryUrl: string;
-  branch: string;
-}
-function Header({ reportTitle, repositoryUrl, branch }: HeaderProps) {
+import { ReportData } from "@/types/report";
+import ExportButton from "./export-button";
+
+function Header({ report }: { report: ReportData }) {
+  const { reportTitle, repositoryUrl, branch } = report;
+
   return (
     <div className="mb-2 w-full px-2">
       <header className="flex h-[100px] flex-col justify-between">
-        <h1 className="text-left text-4xl font-extrabold tracking-tight text-gray-900">
-          🧪 {reportTitle}
-        </h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-left text-4xl font-extrabold tracking-tight text-gray-900">
+            🧪 {reportTitle}
+          </h1>
+          <ExportButton report={report} />
+        </div>
         <div className="flex flex-wrap items-center space-x-4 text-sm">
           <a
             href={repositoryUrl}

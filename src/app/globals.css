@@ -127,6 +127,76 @@
   }
 }
 
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 1cm;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .flex.h-screen {
+    display: block !important;
+    height: auto !important;
+  }
+
+  main {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: none !important;
+  }
+
+  .md\:w-64 {
+    width: 0 !important;
+    display: none !important;
+  }
+
+  .lg\:flex-row > *:first-child {
+    width: 100% !important;
+  }
+
+  .monaco-file-container {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .monaco-editor {
+    overflow: hidden !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .monaco-editor .overflow-guard {
+    overflow: hidden !important;
+    width: 100% !important;
+  }
+
+  .monaco-editor .monaco-scrollable-element {
+    overflow: hidden !important;
+    width: 100% !important;
+  }
+
+  .monaco-editor .view-lines,
+  .monaco-editor .lines-content {
+    width: 100% !important;
+  }
+
+  .monaco-editor .decorationsOverviewRuler,
+  .monaco-editor .monaco-scrollable-element > .scrollbar {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+  }
+}
+
 html,
 body {
   font-family: var(--font-pretendard);
