@@ -1,4 +1,4 @@
-import IORedis from "ioredis";
+import type IORedis from "ioredis";
 import { randomBytes } from "crypto";
 import { REPORT_ID_PREFIX } from "@/constants/report-key";
 import { ReportData } from "@/types/report";
