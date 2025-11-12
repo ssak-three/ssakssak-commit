@@ -22,16 +22,14 @@ export default async function Layout({
           <div className="w-full flex-none md:w-64 print:hidden">
             <SideNav />
           </div>
-          <main className="flex-1 md:overflow-y-auto md:p-12 print:w-full print:overflow-visible print:p-0">
+          <main className="flex-1 md:px-12 md:py-4 md:pb-0 print:w-full print:overflow-visible print:p-0">
             {children}
           </main>
         </div>
       ) : (
-        <div className="min-h-screen">
-          <main className="mx-auto max-w-screen-xl p-6 print:max-w-full print:p-0">
-            {children}
-          </main>
-        </div>
+        <main className="mx-auto max-w-screen-xl px-6 pt-2 pb-0 print:max-w-full print:p-0">
+          {children}
+        </main>
       )}
     </>
   );
