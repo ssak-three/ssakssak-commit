@@ -22,7 +22,7 @@ export default async function Layout({
           <div className="w-full flex-none md:w-64 print:hidden">
             <SideNav />
           </div>
-          <main className="flex-1 md:px-12 md:py-4 md:pb-0 print:w-full print:overflow-visible print:p-0">
+          <main className="flex-1 overflow-y-auto md:px-12 md:py-4 md:pb-0 print:w-full print:overflow-visible print:p-0">
             {children}
           </main>
         </div>
