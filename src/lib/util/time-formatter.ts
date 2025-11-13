@@ -5,7 +5,7 @@ const getRemainingSeconds = (unixTime: number): number => {
 
 const formatDuration = (seconds: number): string => {
   if (seconds <= 0) {
-    return "0분";
+    return "0초";
   }
 
   const minutes = Math.floor(seconds / 60);
@@ -18,6 +18,9 @@ const formatDuration = (seconds: number): string => {
       : `${hours}시간`;
   }
 
+  if (minutes === 0) {
+    return `${seconds}초`;
+  }
   return `${minutes}분`;
 };
 
