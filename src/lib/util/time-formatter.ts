@@ -3,9 +3,9 @@ const getRemainingSeconds = (unixTime: number): number => {
   return Math.max(0, unixTime - now);
 };
 
-const formatDuration = (seconds: number): string => {
+const formatDuration = (seconds: number): string | null => {
   if (seconds <= 0) {
-    return "0초";
+    return null;
   }
 
   const minutes = Math.floor(seconds / 60);
@@ -24,7 +24,7 @@ const formatDuration = (seconds: number): string => {
   return `${minutes}분`;
 };
 
-const formatRemainingTime = (unixTime: number): string => {
+const formatRemainingTime = (unixTime: number): string | null => {
   const remainingSeconds = getRemainingSeconds(unixTime);
   return formatDuration(remainingSeconds);
 };

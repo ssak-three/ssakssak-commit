@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ONBOARDING_STEPS } from "./onboarding-steps";
 import { OnboardingContentProps } from "@/types/onboarding";
+import { ONBOARDING_IMAGE_DIMENSIONS } from "@/constants/onboarding";
 
 function OnboardingContent({ onClose }: OnboardingContentProps) {
   const [currentStep, setCurrentStep] = useState(0);
@@ -38,8 +39,8 @@ function OnboardingContent({ onClose }: OnboardingContentProps) {
           <Image
             src={step.image}
             alt={step.title}
-            width={4200}
-            height={2385}
+            width={ONBOARDING_IMAGE_DIMENSIONS.WIDTH}
+            height={ONBOARDING_IMAGE_DIMENSIONS.HEIGHT}
             className="h-auto w-full"
             priority
           />

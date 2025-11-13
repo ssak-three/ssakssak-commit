@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ONBOARDING_STEPS } from "./onboarding-steps";
+import { ONBOARDING_IMAGE_DIMENSIONS } from "@/constants/onboarding";
 
 function OnboardingPreloader() {
   return (
@@ -9,8 +10,8 @@ function OnboardingPreloader() {
           key={step.id}
           src={step.image}
           alt={step.title}
-          width={4200}
-          height={2385}
+          width={ONBOARDING_IMAGE_DIMENSIONS.WIDTH}
+          height={ONBOARDING_IMAGE_DIMENSIONS.HEIGHT}
           priority
         />
       ))}

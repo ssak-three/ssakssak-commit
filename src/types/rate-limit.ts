@@ -7,7 +7,7 @@ interface RateLimitInfo {
 interface RateLimitCheckResult {
   canProceed: boolean;
   remaining: number;
-  remainingTime: string;
+  remainingTime: string | null;
   message?: string;
 }
 
