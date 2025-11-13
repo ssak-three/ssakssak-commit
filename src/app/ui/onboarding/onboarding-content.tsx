@@ -38,8 +38,8 @@ function OnboardingContent({ onClose }: OnboardingContentProps) {
           <Image
             src={step.image}
             alt={step.title}
-            width={1456}
-            height={794}
+            width={4200}
+            height={2385}
             className="h-auto w-full"
             priority
           />
