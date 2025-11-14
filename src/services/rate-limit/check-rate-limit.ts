@@ -15,7 +15,7 @@ const checkRateLimit = async (): Promise<
     const canProceed =
       rateLimitInfo.remaining > GITHUB_RATE_LIMIT_CONFIG.MINIMUM_REQUESTS;
 
-    if (!canProceed) {
+    if (!canProceed && remainingTime !== null) {
       const message = RATE_LIMIT_MESSAGES.INSUFFICIENT_REQUESTS.replace(
         "{remainingTime}",
         remainingTime,
