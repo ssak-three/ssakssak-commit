@@ -20,7 +20,7 @@ function OnboardingTriggerButton() {
     <>
       <button
         onClick={handleOpen}
-        className="fixed right-6 bottom-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-gray-900 shadow-lg transition-all hover:scale-110 hover:bg-gray-700"
+        className="fixed right-6 bottom-6 z-40 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-gray-900 shadow-lg transition-all hover:scale-110 hover:bg-gray-700"
       >
         <HelpCircle className="h-6 w-6 text-white" />
       </button>
